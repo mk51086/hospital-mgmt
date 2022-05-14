@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import "./About.css";
 import { StyledHeader } from "../styles/Header.styled";
 import { Flex } from "../styles/Flex.styled";
@@ -6,16 +6,18 @@ import { Bluedot } from "../styles/Bluedot.styled";
 import { Image } from "../styles/Header.styled";
 import Button from "../Button/Button";
 import logo from "../../assets/images/2.gif";
+import { useAuthContext } from "../../hooks/useAuthContext";
+
 // components
 import content from '../../content';
 import Container from "@mui/material/Container";
 
 import Card from '../../components/Card';
-import ListCard from '../../components/ListCard';
 
 export default function About() {
+const { user } = useAuthContext();
+
   const cardContent = content.filter(item => item.list === false)
-  const listContent = content.filter(item => item.list === true)
   const navigate = useNavigate();
   const theme = {
     colors: {
@@ -44,7 +46,11 @@ export default function About() {
         Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s
         </p>
         <Flex jc="space-around">
-        <Button text={"Register Now"} handleClick={handleClick} />
+        {!user && (
+              <>
+              <Button text={"Register Now"} handleClick={handleClick} />
+              </>
+            )}
         </Flex>
       </div>
       <Image src={logo} alt="" />

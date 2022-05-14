@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const patientController = require("../controllers/patient.controller");
+const patientController = require("../../controllers/patient.controller");
 
 // post requests
 router.post("/register", patientController.patient_register);

@@ -11,10 +11,7 @@ const app = express();
 app.use(cors());
 
 const PORT = process.env.PORT || 5000;
-
 const db = process.env.MONGO_URI;
-
-
 
 mongoose
   .connect(db)
@@ -26,4 +23,5 @@ mongoose
 app.use(bp.json());
 app.use(bp.urlencoded({ extended: true }));
 
-app.use('/patients',require('./routes/patient.route'));
+app.use('/patients',require('./routes/patient/patient.route'));
+app.use("/staff", require("./routes/staff/staff.route"));

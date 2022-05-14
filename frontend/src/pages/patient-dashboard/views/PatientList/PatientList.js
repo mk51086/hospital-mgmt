@@ -19,10 +19,9 @@ import DialogTitle from '@mui/material/DialogTitle';
 import Slide from '@mui/material/Slide';
 import { Box } from "@mui/system";
 import { TextField } from "@mui/material";
-import { useNavigate } from "react-router-dom";
 import api from "../../../../api/axios";
 import { useState, useEffect } from "react";
-import { useAuthContext } from "../../../../hooks/useAuthContext";
+// import { useAuthContext } from "../../../../hooks/useAuthContext";
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
@@ -37,13 +36,6 @@ export default function AppointmentList() {
   const [gender, setGender] = useState("");
   const [address, setAddress] = useState("");
   const [phone, setPhone] = useState("");
-  const [password, setPassword] = useState("");
-
-
-
-
-  const navigate = useNavigate();
-
 
   
   const handleSubmit = async (e,id) => {
@@ -51,7 +43,7 @@ export default function AppointmentList() {
 
     const data = {name,email,age,gender,address,phone};
     try {
-      const response = await api.put(`/patients/${id}`, data).then(userData => {
+      await api.put(`/patients/${id}`, data).then(userData => {
         console.log('saved',userData);
         handleClose2();
       });
@@ -66,7 +58,7 @@ export default function AppointmentList() {
 
   const handleClickOpen2 = async (e,id) => {
     try {
-      const response = await api.get(`/patients/${id}`).then(patient => {
+      await api.get(`/patients/${id}`).then(patient => {
         setName(patient.data.name);
         setEmail(patient.data.email);
         setAge(patient.data.age);
@@ -90,20 +82,24 @@ export default function AppointmentList() {
   
   };
 
-  const { user } = useAuthContext();
+  // const { user } = useAuthContext();
   const [records, setRecords] = useState([]);
-  const id = user.id;
-  useEffect(async () => {
-    const response = await api.get(`/patients/all`).then(userData => {
-      setRecords(userData.data);
-      console.log(userData)
-    });
-  }, []);
+  // const id = user.id;
+
+  useEffect(() => {
+    const fetchData = async () => {
+        await api.get(`/patients/all`).then(userData => {
+        setRecords(userData.data);
+    })}
+  
+    fetchData()
+      .catch(console.error);
+  }, [])
 
   const deletePatient = async (e,id) => {
     e.preventDefault();
     try {
-      const response = await api.delete(`/patients/${id}`).then(userData => {
+      await api.delete(`/patients/${id}`).then(userData => {
         console.log('deleted');
         handleClose();
       });

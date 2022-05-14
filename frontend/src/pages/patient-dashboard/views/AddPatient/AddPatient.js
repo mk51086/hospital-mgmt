@@ -6,11 +6,10 @@ import { useState } from "react";
 import { Box } from "@mui/system";
 import api from "../../../../api/axios";
 import { useAuthContext } from "../../../../hooks/useAuthContext";
-// styles
 import {useNavigate} from "react-router-dom"
 
 export default function BookAppointment() {
-  const [date, setDate] = useState(new Date(Date.now()));
+  // const [date, setDate] = useState(new Date(Date.now()));
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [age, setAge] = useState("");
@@ -26,7 +25,7 @@ export default function BookAppointment() {
 
     const data = { name,email,age,gender,address,phone,password, id: user.id };
     try {
-      const response = await api.post("/patients/register", data).then(userData => {
+       await api.post("/patients/register", data).then(userData => {
         setPassword("");
         setName("");
         setEmail("");
