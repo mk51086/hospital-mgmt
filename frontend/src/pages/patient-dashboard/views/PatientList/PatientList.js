@@ -21,6 +21,7 @@ import { Box } from "@mui/system";
 import { TextField } from "@mui/material";
 import api from "../../../../api/axios";
 import { useState, useEffect } from "react";
+
 // import { useAuthContext } from "../../../../hooks/useAuthContext";
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -29,7 +30,7 @@ export default function AppointmentList() {
   const [open, setOpen] = React.useState(false);
   const [open2, setOpen2] = React.useState(false);
 
-
+  const [id,setId] = useState("");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [age, setAge] = useState("");
@@ -37,7 +38,6 @@ export default function AppointmentList() {
   const [address, setAddress] = useState("");
   const [phone, setPhone] = useState("");
 
-  
   const handleSubmit = async (e,id) => {
     e.preventDefault();
 
@@ -46,6 +46,8 @@ export default function AppointmentList() {
       await api.put(`/patients/${id}`, data).then(userData => {
         console.log('saved',userData);
         handleClose2();
+        fetchData()
+        .catch(console.error);
       });
     } catch (err) {
       console.log(`Error : ${err.message}`);
@@ -59,6 +61,7 @@ export default function AppointmentList() {
   const handleClickOpen2 = async (e,id) => {
     try {
       await api.get(`/patients/${id}`).then(patient => {
+        setId(id);
         setName(patient.data.name);
         setEmail(patient.data.email);
         setAge(patient.data.age);
@@ -85,13 +88,12 @@ export default function AppointmentList() {
   // const { user } = useAuthContext();
   const [records, setRecords] = useState([]);
   // const id = user.id;
+  const fetchData = async () => {
+    await api.get(`/patients/all`).then(userData => {
+    setRecords(userData.data);
+})}
 
   useEffect(() => {
-    const fetchData = async () => {
-        await api.get(`/patients/all`).then(userData => {
-        setRecords(userData.data);
-    })}
-  
     fetchData()
       .catch(console.error);
   }, [])
@@ -102,6 +104,8 @@ export default function AppointmentList() {
       await api.delete(`/patients/${id}`).then(userData => {
         console.log('deleted');
         handleClose();
+        fetchData()
+        .catch(console.error);
       });
     } catch (err) {
       console.log(`Error : ${err.message}`);
@@ -161,7 +165,7 @@ export default function AppointmentList() {
                         </DialogContent>
                         <DialogActions>
                           <Button onClick={handleClose}>NO</Button>
-                          <Button onClick={(e) => {  deletePatient(e,record._id)  }}>YES</Button>
+                          <Button onClick={(e) => {  deletePatient(e,record._id) }}>YES</Button>
                         </DialogActions>
                       </Dialog>
 
@@ -174,7 +178,7 @@ export default function AppointmentList() {
                       >
                         <DialogTitle>{"Edit Patient"}</DialogTitle>
                         <DialogContent>
-                        <Box component="form" onSubmit={handleSubmit}  sx={{
+                        <Box component="form" sx={{
                             '& .MuiTextField-root': { m: 2, width: '20ch' },
                           }}>
                               <div>
@@ -249,7 +253,7 @@ export default function AppointmentList() {
                         </DialogContent>
                         <DialogActions>
                           <Button type="submit" variant="contained" onClick={handleClose2}>Cancel</Button>
-                          <Button type="submit" variant="contained" onClick={(e) => {  handleSubmit(e,record._id)  }}>Save Changes</Button>
+                          <Button type="submit" variant="contained" onClick={(e) => {  handleSubmit(e,id)  }}>Save Changes</Button>
                         </DialogActions>
                       </Dialog>
                   </TableRow>

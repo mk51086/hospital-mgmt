@@ -11,30 +11,23 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { ThemeProvider } from "@mui/material/styles";
 import api from "../../../api/axios";
-// useState for states
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuthContext } from "../../../hooks/useAuthContext";
 
-// custom theme
 import theme from "../../../assets/js/theme";
 import colors from "../../../assets/js/colors";
 
-// components
 import Copyright from "../../Copyright/Copyright";
 
-// hooks
 
 export default function Auth({ isPatient, handleSwitch }) {
-  // states
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const { login_user } = useAuthContext();
 
-  // hooks
   const navigate = useNavigate();
 
-  // form submit handler
   const handleSubmit = async e => {
     e.preventDefault();
     console.log(email, password);
@@ -44,8 +37,7 @@ export default function Auth({ isPatient, handleSwitch }) {
       const response = await api.post(route, data).then(userData => {
         console.log(userData.data);
         login_user(userData.data);
-        //  loginUser(userData.data);
-        //  navigate("/");
+
       });
     } catch (err) {
       console.log(`Error : ${err.message}`);
