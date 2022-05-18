@@ -33,12 +33,6 @@ export default function MenuItems({ handleRouteChange }) {
         </ListItemIcon>
         <ListItemText primary="Book Appointment" />
       </ListItem>
-      <ListItem button onClick={() => handleRouteChange("/view-appointments")}>
-        <ListItemIcon>
-          <LibraryBooksIcon />
-        </ListItemIcon>
-        <ListItemText primary="View Appointments" />
-      </ListItem>
     </div>
   );
 }
