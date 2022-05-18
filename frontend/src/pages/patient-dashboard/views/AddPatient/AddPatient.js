@@ -8,8 +8,8 @@ import api from "../../../../api/axios";
 import { useAuthContext } from "../../../../hooks/useAuthContext";
 import {useNavigate} from "react-router-dom"
 
-export default function BookAppointment() {
-  // const [date, setDate] = useState(new Date(Date.now()));
+export default function AddPatient() {
+  // const [date, setaDate] = useState(new Date(Date.now()));
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [age, setAge] = useState("");
@@ -25,7 +25,7 @@ export default function BookAppointment() {
 
     const data = { name,email,age,gender,address,phone,password, id: user.id };
     try {
-       await api.post("/patients/register", data).then(userData => {
+       await api.post("/patient/register", data).then(userData => {
         setPassword("");
         setName("");
         setEmail("");
@@ -34,7 +34,6 @@ export default function BookAppointment() {
         setAddress("");
         setPhone("");
         console.log(userData);
-        navigate("/patient/dashboard/view-patients");
       });
     } catch (err) {
       console.log(`Error : ${err.message}`);

@@ -1,7 +1,7 @@
 const Patient = require("../models/patient.model");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-
+const Appointment = require ("../models/appointment.model");
 // Register a patient
 const patient_register = (req, res) => {
   const { name, email, password, age, gender, address, dob, phone } = req.body;
@@ -139,6 +139,65 @@ const patient_update = (req, res, next) => {
     });
 };
 
+
+const appointment_book = (req, res, next) => {
+  const appointment = new Appointment({
+    patient: req.body.patient,
+    date: req.body.date,
+    description: req.body.description,
+    doctor: req.body.doctor
+  });
+  appointment.save(appointment)
+    .then(() => {
+      res.status(200).json({
+        patient: appointment.patient,
+        message: "appointment created",
+      });
+    })
+    .catch((error) => {
+      res.status(404).json({
+        message: error.message,
+      });
+    });
+};
+
+const appointment_update = (req, res, next) => {
+  const appointment = new Appointment({
+    _id: req.params.id,
+    patient: req.body.name,
+    date: req.body.email,
+    description: req.body.age,
+    doctor: req.body.gender
+  });
+  Appointment.updateOne({ _id: req.params.id }, appointment)
+    .then(() => {
+      res.status(200).json({
+        appointment,
+        message: "appointment updated",
+      });
+    })
+    .catch((error) => {
+      res.status(404).json({
+        message: error.message,
+      });
+    });
+};
+
+const appointment_list = (req, res) => {
+  const id = req.params.id;
+  Appointment.find({'appointment' : id})
+    .then((appointment) => res.json(appointment));
+};
+
+
+const appointment_delete = (req, res) => {
+  Appointment.deleteOne({ _id: req.params.id }).then(() => {
+    res.status(200).json({
+      message: "appointment deleted",
+    });
+  });
+};
+
 // Exporting the Controllers
 module.exports = {
   patient_register,
@@ -147,4 +206,8 @@ module.exports = {
   patient_update,
   patient_delete,
   patient_get,
+  appointment_book,
+  appointment_list,
+  appointment_delete,
+  appointment_update
 };

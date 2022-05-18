@@ -68,7 +68,28 @@ const App = () => {
             />
             <Route
               path="/patient/dashboard/view-patients"
-              element={<PatientDashboard option={"/view-patients"} />}
+              element={
+                !user ? (
+                  <Navigate to="/login" />
+                ) : user.isStaff ? (
+                  <Navigate to="/staff/dashboard" />
+                ) : (
+                  <PatientDashboard option={"/view-patients"} />
+                )
+              }
+            />
+
+            <Route
+              path="/patient/dashboard/book-appointment"
+              element={
+                !user ? (
+                  <Navigate to="/login" />
+                ) : user.isStaff ? (
+                  <Navigate to="/staff/dashboard" />
+                ) : (
+                  <PatientDashboard option={"/book-appointment"} />
+                )
+              }
             />
 
             <Route

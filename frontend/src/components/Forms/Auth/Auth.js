@@ -31,10 +31,10 @@ export default function Auth({ isPatient, handleSwitch }) {
   const handleSubmit = async e => {
     e.preventDefault();
     console.log(email, password);
-    const route = isPatient ? "/patients/login" : "/staff/login";
+    const route = isPatient ? "/patient/login" : "/staff/login";
     const data = { email, password };
     try {
-      const response = await api.post(route, data).then(userData => {
+        await api.post(route, data).then(userData => {
         console.log(userData.data);
         login_user(userData.data);
 

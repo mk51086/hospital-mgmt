@@ -23,5 +23,5 @@ mongoose
 app.use(bp.json());
 app.use(bp.urlencoded({ extended: true }));
 
-app.use('/patients',require('./routes/patient/patient.route'));
+app.use('/patient',require('./routes/patient/patient.route'));
 app.use("/staff", require("./routes/staff/staff.route"));

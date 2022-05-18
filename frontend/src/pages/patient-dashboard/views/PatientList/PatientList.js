@@ -21,14 +21,16 @@ import { Box } from "@mui/system";
 import { TextField } from "@mui/material";
 import api from "../../../../api/axios";
 import { useState, useEffect } from "react";
+import Notifybar from "../../../../components/shared/Notifybar";
 
 // import { useAuthContext } from "../../../../hooks/useAuthContext";
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
-export default function AppointmentList() {
+export default function PatientList() {
   const [open, setOpen] = React.useState(false);
   const [open2, setOpen2] = React.useState(false);
+  const [bar,setBar] = React.useState(false);
 
   const [id,setId] = useState("");
   const [name, setName] = useState("");
@@ -38,17 +40,24 @@ export default function AppointmentList() {
   const [address, setAddress] = useState("");
   const [phone, setPhone] = useState("");
 
+
+  const [message,setMessage] = useState("");
+  const [severity,setSeverity] = useState("");
+
   const handleSubmit = async (e,id) => {
     e.preventDefault();
 
     const data = {name,email,age,gender,address,phone};
     try {
-      await api.put(`/patients/${id}`, data).then(userData => {
+      await api.put(`/patient/${id}`, data).then(userData => {
         console.log('saved',userData);
         handleClose2();
         fetchData()
         .catch(console.error);
       });
+      setMessage('Updated Successfully!');
+      setSeverity('success');
+      showBar();
     } catch (err) {
       console.log(`Error : ${err.message}`);
     }
@@ -60,7 +69,7 @@ export default function AppointmentList() {
 
   const handleClickOpen2 = async (e,id) => {
     try {
-      await api.get(`/patients/${id}`).then(patient => {
+      await api.get(`/patient/${id}`).then(patient => {
         setId(id);
         setName(patient.data.name);
         setEmail(patient.data.email);
@@ -85,11 +94,19 @@ export default function AppointmentList() {
   
   };
 
+  const showBar = () => {
+    setBar(true);
+  }
+
+  const hideBar = () => {
+    setBar(false);
+  }
+
   // const { user } = useAuthContext();
   const [records, setRecords] = useState([]);
   // const id = user.id;
   const fetchData = async () => {
-    await api.get(`/patients/all`).then(userData => {
+    await api.get(`/patient/all`).then(userData => {
     setRecords(userData.data);
 })}
 
@@ -101,13 +118,17 @@ export default function AppointmentList() {
   const deletePatient = async (e,id) => {
     e.preventDefault();
     try {
-      await api.delete(`/patients/${id}`).then(userData => {
-        console.log('deleted');
+      await api.delete(`/patient/${id}`).then(userData => {
+        setMessage('Deleted Successfully!');
+        setSeverity('success');
+        showBar();
         handleClose();
         fetchData()
         .catch(console.error);
       });
     } catch (err) {
+      setMessage('Failed. Could not delete!');
+      setSeverity('error');
       console.log(`Error : ${err.message}`);
     }
   };
@@ -262,6 +283,10 @@ export default function AppointmentList() {
             </TableBody>
           </Table>
         </TableContainer>
+              <Notifybar  open={bar} 
+              onClose={hideBar}
+              severity={severity} 
+              message={message}/>
       </Paper>
       
     </Grid>

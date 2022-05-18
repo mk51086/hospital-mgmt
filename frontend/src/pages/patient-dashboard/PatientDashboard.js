@@ -16,7 +16,8 @@ import PatientRoutes from "./routes/PatientRoutes";
 
 import AppointmentList from "./views/PatientList/PatientList";
 import Profile from "./views/Profile/Profile";
-import BookAppointment from "./views/AddPatient/AddPatient";
+import AddPatient from "./views/AddPatient/AddPatient";
+import BookAppointment from "./views/BookAppointment/BookAppointment";
 
 const drawerWidth = 240;
 
@@ -95,8 +96,9 @@ function DashboardContent(props) {
           <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
             <Grid container spacing={3}>
               {option === "" && <Profile />}
-              {option === "/add-patient" && <BookAppointment />}
+              {option === "/add-patient" && <AddPatient />}
               {option === "/view-patients" && <AppointmentList />}
+              {option === "/book-appointment" && <BookAppointment />}
             </Grid>
             <Copyright sx={{ pt: 4 }} text={"Hospital Management System"} />
           </Container>
