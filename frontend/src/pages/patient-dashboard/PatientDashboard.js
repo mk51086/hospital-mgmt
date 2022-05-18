@@ -14,10 +14,11 @@ import { useNavigate } from "react-router-dom";
 
 import PatientRoutes from "./routes/PatientRoutes";
 
-import AppointmentList from "./views/PatientList/PatientList";
+import PatientList from "./views/PatientList/PatientList";
 import Profile from "./views/Profile/Profile";
 import AddPatient from "./views/AddPatient/AddPatient";
 import BookAppointment from "./views/BookAppointment/BookAppointment";
+import AppointmentList from "./views/AppointmentList/AppointmentList";
 
 const drawerWidth = 240;
 
@@ -97,8 +98,9 @@ function DashboardContent(props) {
             <Grid container spacing={3}>
               {option === "" && <Profile />}
               {option === "/add-patient" && <AddPatient />}
-              {option === "/view-patients" && <AppointmentList />}
+              {option === "/view-patients" && <PatientList />}
               {option === "/book-appointment" && <BookAppointment />}
+              {option === "/view-appointments" && <AppointmentList />}
             </Grid>
             <Copyright sx={{ pt: 4 }} text={"Hospital Management System"} />
           </Container>
