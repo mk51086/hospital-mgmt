@@ -6,6 +6,7 @@ import ListItemText from "@mui/material/ListItemText";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import MedicationIcon from '@mui/icons-material/Medication';
 import { useAuthContext } from "../../../hooks/useAuthContext";
+import AddCircleIcon from "@mui/icons-material/AddCircle";
 
 export default function MenuItems({ handleRouteChange }) {
   const { user } = useAuthContext();
@@ -35,11 +36,11 @@ export default function MenuItems({ handleRouteChange }) {
         </ListItem>
       )}
       {user.jobTitle === "receptionist" && (
-        <ListItem button onClick={() => handleRouteChange("/receptionist")}>
+        <ListItem button onClick={() => handleRouteChange("/createroom")}>
           <ListItemIcon>
-            <MedicationIcon />
+            <AddCircleIcon />
           </ListItemIcon>
-          <ListItemText primary="Receptionist" />
+          <ListItemText primary="Create Room" />
         </ListItem>
       )}
       {user.jobTitle === "labassistant" && (
