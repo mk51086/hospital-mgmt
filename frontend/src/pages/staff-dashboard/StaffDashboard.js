@@ -16,7 +16,7 @@ import { useNavigate } from "react-router-dom";
 import StaffRoutes from "./routes/staff.route";
 
 // views
-import Cashier from "./views/Cashier/Cashier";
+import CreateBill from "./views/Cashier/CreateBill";
 import Doctor from "./views/Doctor/Doctor";
 import LabAssistant from "./views/LabAssistant/LabAssistant";
 import Nurse from "./views/Nurse/Nurse";
@@ -107,7 +107,7 @@ function DashboardContent(props) {
             <Grid container spacing={3}>
               {option === "" && <Profile />}
               {user.jobTitle === "doctor" && option === "/doctor" && <Doctor />}
-              {user.jobTitle === "cashier" && option === "/cashier" && <Cashier />}
+              {user.jobTitle === "cashier" && option === "/createbill" && <CreateBill />}
               {user.jobTitle === "receptionist" && option === "/createroom" && <CreateRoom />}
               {user.jobTitle === "labassistant" && option === "/labassistant" && <LabAssistant />}
               {user.jobTitle === "nurse" && option === "/nurse" && <Nurse />}

@@ -28,11 +28,11 @@ export default function MenuItems({ handleRouteChange }) {
         </ListItem>
       )}
       {user.jobTitle === "cashier" && (
-        <ListItem button onClick={() => handleRouteChange("/cashier")}>
+        <ListItem button onClick={() => handleRouteChange("/createbill")}>
           <ListItemIcon>
             <MedicationIcon />
           </ListItemIcon>
-          <ListItemText primary="Cashier" />
+          <ListItemText primary="Bills" />
         </ListItem>
       )}
       {user.jobTitle === "receptionist" && (
