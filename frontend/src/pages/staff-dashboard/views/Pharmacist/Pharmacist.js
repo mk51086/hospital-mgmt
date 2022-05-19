@@ -1,7 +1,7 @@
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
 
-export default function Doctor() {
+export default function Pharmacist() {
 
 
 

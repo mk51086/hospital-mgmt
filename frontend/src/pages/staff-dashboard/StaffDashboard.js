@@ -21,8 +21,8 @@ import Doctor from "./views/Doctor/Doctor";
 import LabAssistant from "./views/LabAssistant/LabAssistant";
 import Nurse from "./views/Nurse/Nurse";
 import Profile from "./views/Profile/Profile";
-import CreateRoom from "./views/Pharmacist/CreateRoom";
-import Pharmacist from "./views/Pharmacist/CreateRoom";
+import CreateRoom from "./views/Receptionist/CreateRoom";
+import Pharmacist from "./views/Pharmacist/Pharmacist";
 import { useAuthContext } from "./../../hooks/useAuthContext";
 
 const drawerWidth = 240;
