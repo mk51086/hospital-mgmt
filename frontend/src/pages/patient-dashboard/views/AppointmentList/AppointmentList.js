@@ -7,12 +7,11 @@ import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
-import Slide from '@mui/material/Slide';
 import api from "../../../../api/axios";
 import { useState, useEffect } from "react";
 import { useAuthContext } from "../../../../hooks/useAuthContext";
 
-export default function PatientList() {
+export default function AppointmentList() {
 
   const { user } = useAuthContext();
   const [records, setRecords] = useState([]);
@@ -37,7 +36,7 @@ export default function PatientList() {
           height: "auto",
         }}
       >
-        <h2 className="dashboard-title">View Patients</h2>
+        <h2 className="dashboard-title">Your Appointments</h2>
         <TableContainer>
           <Table sx={{ minWidth: 650 }} aria-label="simple table">
             <TableHead>

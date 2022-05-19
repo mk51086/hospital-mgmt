@@ -35,7 +35,7 @@ export default function MenuItems({ handleRouteChange }) {
       </ListItem>
       <ListItem button onClick={() => handleRouteChange("/view-appointments")}>
         <ListItemIcon>
-          <AddCircleIcon />
+          <LibraryBooksIcon />
         </ListItemIcon>
         <ListItemText primary="View Appointments" />
       </ListItem>
