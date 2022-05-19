@@ -3,6 +3,7 @@ const router = express.Router();
 const receptionistController = require("../../../controllers/recepsionist.controller");
 
 
-router.post("/", receptionistController.receptionist_appointment_post);
+router.post("/room", receptionistController.room_create);
+
 
 module.exports = router;

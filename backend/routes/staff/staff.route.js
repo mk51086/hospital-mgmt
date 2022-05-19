@@ -5,8 +5,8 @@ const staffController = require("../../controllers/staff.controller");
 // --- STAFF ROUTES ---
 
 router.post("/login", staffController.staff_login);
-
 router.post("/register", staffController.staff_register);
+router.use("/receptionist", require("./receptionist/recepsionist.route"));
 
 
 /*

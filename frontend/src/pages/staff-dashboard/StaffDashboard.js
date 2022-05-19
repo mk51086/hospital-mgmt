@@ -21,8 +21,8 @@ import Doctor from "./views/Doctor/Doctor";
 import LabAssistant from "./views/LabAssistant/LabAssistant";
 import Nurse from "./views/Nurse/Nurse";
 import Profile from "./views/Profile/Profile";
-import Receptionist from "./views/Receptionist/Receptionist";
-import Pharmacist from "./views/Pharmacist/Pharmacist";
+import CreateRoom from "./views/Pharmacist/CreateRoom";
+import Pharmacist from "./views/Pharmacist/CreateRoom";
 import { useAuthContext } from "./../../hooks/useAuthContext";
 
 const drawerWidth = 240;
@@ -108,7 +108,7 @@ function DashboardContent(props) {
               {option === "" && <Profile />}
               {user.jobTitle === "doctor" && option === "/doctor" && <Doctor />}
               {user.jobTitle === "cashier" && option === "/cashier" && <Cashier />}
-              {user.jobTitle === "receptionist" && option === "/receptionist" && <Receptionist />}
+              {user.jobTitle === "receptionist" && option === "/createroom" && <CreateRoom />}
               {user.jobTitle === "labassistant" && option === "/labassistant" && <LabAssistant />}
               {user.jobTitle === "nurse" && option === "/nurse" && <Nurse />}
               {user.jobTitle === "pharmacist" && option === "/pharmacist" && <Pharmacist />}
