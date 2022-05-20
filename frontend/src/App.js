@@ -174,7 +174,7 @@ const App = () => {
               }
             />
             <Route
-              path="/staff/dashboard/nurse"
+              path="/staff/dashboard/createExamination"
               element={
                 !user ? (
                   <Navigate to="/login" />
@@ -182,7 +182,7 @@ const App = () => {
                   <Navigate to="/patient/dashboard" />
                 ) : (
                   user.jobTitle === "nurse" && (
-                    <StaffDashboard option={"/nurse"} />
+                    <StaffDashboard option={"/createExamination"} />
                   )
                 )
               }

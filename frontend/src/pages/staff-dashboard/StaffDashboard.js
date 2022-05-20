@@ -8,7 +8,7 @@ import Divider from "@mui/material/Divider";
 import IconButton from "@mui/material/IconButton";
 import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid";
-import MenuIcon from '@mui/icons-material/Menu';
+import MenuIcon from "@mui/icons-material/Menu";
 import Copyright from "../../components/Copyright/Copyright";
 import { useNavigate } from "react-router-dom";
 
@@ -27,7 +27,9 @@ import { useAuthContext } from "./../../hooks/useAuthContext";
 
 const drawerWidth = 240;
 
-const Drawer = styled(MuiDrawer, { shouldForwardProp: prop => prop !== "open" })(({ theme, open }) => ({
+const Drawer = styled(MuiDrawer, {
+  shouldForwardProp: (prop) => prop !== "open",
+})(({ theme, open }) => ({
   "& .MuiDrawer-paper": {
     position: "relative",
     whiteSpace: "nowrap",
@@ -66,7 +68,7 @@ function DashboardContent(props) {
   // set views and change routes
   const [option, setOption] = React.useState(props.option);
 
-  const handleRouteChange = view => {
+  const handleRouteChange = (view) => {
     setOption(view);
     navigate("/staff/dashboard" + view);
   };
@@ -96,8 +98,10 @@ function DashboardContent(props) {
           style={{ height: "calc(100vh - 6rem)" }}
           component="main"
           sx={{
-            backgroundColor: theme =>
-              theme.palette.mode === "light" ? theme.palette.grey[100] : theme.palette.grey[900],
+            backgroundColor: (theme) =>
+              theme.palette.mode === "light"
+                ? theme.palette.grey[100]
+                : theme.palette.grey[900],
             flexGrow: 1,
             overflow: "auto",
           }}
@@ -107,11 +111,20 @@ function DashboardContent(props) {
             <Grid container spacing={3}>
               {option === "" && <Profile />}
               {user.jobTitle === "doctor" && option === "/doctor" && <Doctor />}
-              {user.jobTitle === "cashier" && option === "/createbill" && <CreateBill />}
-              {user.jobTitle === "receptionist" && option === "/createroom" && <CreateRoom />}
-              {user.jobTitle === "labassistant" && option === "/labassistant" && <LabAssistant />}
-              {user.jobTitle === "nurse" && option === "/nurse" && <Nurse />}
-              {user.jobTitle === "pharmacist" && option === "/pharmacist" && <Pharmacist />}
+              {user.jobTitle === "cashier" && option === "/createbill" && (
+                <CreateBill />
+              )}
+              {user.jobTitle === "receptionist" && option === "/createroom" && (
+                <CreateRoom />
+              )}
+              {user.jobTitle === "labassistant" &&
+                option === "/labassistant" && <LabAssistant />}
+              {user.jobTitle === "nurse" && option === "/createExamination" && (
+                <Nurse />
+              )}
+              {user.jobTitle === "pharmacist" && option === "/pharmacist" && (
+                <Pharmacist />
+              )}
             </Grid>
             <Copyright sx={{ pt: 4 }} text={"Hospital Management System"} />
           </Container>
