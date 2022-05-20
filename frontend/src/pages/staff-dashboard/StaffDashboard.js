@@ -20,6 +20,7 @@ import CreateBill from "./views/Cashier/CreateBill";
 import Doctor from "./views/Doctor/Doctor";
 import LabAssistant from "./views/LabAssistant/LabAssistant";
 import Nurse from "./views/Nurse/Nurse";
+import ExaminationList from "./views/Nurse/ExaminationList";
 import Profile from "./views/Profile/Profile";
 import CreateRoom from "./views/Receptionist/CreateRoom";
 import Pharmacist from "./views/Pharmacist/Pharmacist";
@@ -119,9 +120,11 @@ function DashboardContent(props) {
               )}
               {user.jobTitle === "labassistant" &&
                 option === "/labassistant" && <LabAssistant />}
-              {user.jobTitle === "nurse" && option === "/createExamination" && (
-                <Nurse />
+              {user.jobTitle === "nurse" && option === "/view-examinations" && (
+                <ExaminationList />
               )}
+              {user.jobTitle === "nurse" &&
+                option === "/createexaminations" && <Nurse />}
               {user.jobTitle === "pharmacist" && option === "/pharmacist" && (
                 <Pharmacist />
               )}

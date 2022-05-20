@@ -6,7 +6,7 @@ import { useState } from "react";
 import { Box } from "@mui/system";
 import api from "../../../../api/axios";
 import { useAuthContext } from "../../../../hooks/useAuthContext";
-import {useNavigate} from "react-router-dom"
+import { useNavigate } from "react-router-dom";
 
 export default function AddPatient() {
   // const [date, setaDate] = useState(new Date(Date.now()));
@@ -20,12 +20,21 @@ export default function AddPatient() {
   const { user } = useAuthContext();
   const navigate = useNavigate();
 
-  const handleSubmit = async e => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const data = { name,email,age,gender,address,phone,password, id: user.id };
+    const data = {
+      name,
+      email,
+      age,
+      gender,
+      address,
+      phone,
+      password,
+      id: user.id,
+    };
     try {
-       await api.post("/patient/register", data).then(userData => {
+      await api.post("/patient/register", data).then((userData) => {
         setPassword("");
         setName("");
         setEmail("");
@@ -52,87 +61,92 @@ export default function AddPatient() {
         }}
       >
         <h2 className="dashboard-title">New Patient</h2>
-        <Box component="form" onSubmit={handleSubmit}  sx={{
-        '& .MuiTextField-root': { m: 1, width: '40ch' },
-      }}>
-            <div>
-        <TextField
-            id="outlined-multiline-flexible"
-            label="Name"
-            fullWidth
-            multiline
-            value={name}
-            onChange={e => setName(e.target.value)}
-            helperText=" "
-            maxRows={5}
-            required
-          />
-           <TextField
-            id="outlined-multiline-flexible"
-            label="Email"
-            fullWidth
-            multiline
-            value={email}
-            onChange={e => setEmail(e.target.value)}
-            helperText=" "
-            maxRows={5}
-            required
-          />
-           <TextField
-            id="outlined-multiline-flexible"
-            label="Age"
-            fullWidth
-            multiline
-            value={age}
-            onChange={e => setAge(e.target.value)}
-            helperText=" "
-            maxRows={5}
-            required
-          />
-           <TextField
-            id="outlined-multiline-flexible"
-            label="Gender"
-            fullWidth
-            multiline
-            value={gender}
-            onChange={e => setGender(e.target.value)}
-            helperText=" "
-            maxRows={5}
-            required
-          />
-          <TextField
-            id="outlined-multiline-flexible"
-            label="Address"
-            fullWidth
-            multiline
-            value={address}
-            onChange={e => setAddress(e.target.value)}
-            helperText=" "
-            maxRows={5}
-            required
-          />
-              <TextField
-            id="outlined-multiline-flexible"
-            label="Phone"
-            fullWidth
-            multiline
-            value={phone}
-            onChange={e => setPhone(e.target.value)}
-            helperText=" "
-            maxRows={5}
-            required
-          />
-               <TextField
-            id="outlined-multiline-flexible"
-            label="Password"
-            fullWidth
-            multiline
-            value={password}
-            onChange={e => setPassword(e.target.value)}
-            helperText=" "
-            maxRows={5}
-            required
-          /></div>
+        <Box
+          component="form"
+          onSubmit={handleSubmit}
+          sx={{
+            "& .MuiTextField-root": { m: 1, width: "40ch" },
+          }}
+        >
+          <div>
+            <TextField
+              id="outlined-multiline-flexible"
+              label="Name"
+              fullWidth
+              multiline
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              helperText=" "
+              maxRows={5}
+              required
+            />
+            <TextField
+              id="outlined-multiline-flexible"
+              label="Email"
+              fullWidth
+              multiline
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              helperText=" "
+              maxRows={5}
+              required
+            />
+            <TextField
+              id="outlined-multiline-flexible"
+              label="Age"
+              fullWidth
+              multiline
+              value={age}
+              onChange={(e) => setAge(e.target.value)}
+              helperText=" "
+              maxRows={5}
+              required
+            />
+            <TextField
+              id="outlined-multiline-flexible"
+              label="Gender"
+              fullWidth
+              multiline
+              value={gender}
+              onChange={(e) => setGender(e.target.value)}
+              helperText=" "
+              maxRows={5}
+              required
+            />
+            <TextField
+              id="outlined-multiline-flexible"
+              label="Address"
+              fullWidth
+              multiline
+              value={address}
+              onChange={(e) => setAddress(e.target.value)}
+              helperText=" "
+              maxRows={5}
+              required
+            />
+            <TextField
+              id="outlined-multiline-flexible"
+              label="Phone"
+              fullWidth
+              multiline
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+              helperText=" "
+              maxRows={5}
+              required
+            />
+            <TextField
+              id="outlined-multiline-flexible"
+              label="Password"
+              fullWidth
+              multiline
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              helperText=" "
+              maxRows={5}
+              required
+            />
+          </div>
           <Button type="submit" variant="contained" sx={{ mt: 0, mb: 5 }}>
             Add Patient
           </Button>
