@@ -19,13 +19,12 @@ export default function Nurse() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const data = { patient, date, description, nurse };
+    const data = { patient, date, description, nurse: user.id };
     try {
       await api.post("/staff/nurse/examination", data).then((userData) => {
         setPatient("");
         setDate(new Date(Date.now()));
         setDescription("");
-        setNurse("");
       });
     } catch (err) {
       console.log(`Error : ${err.message}`);
@@ -83,17 +82,6 @@ export default function Nurse() {
               multiline
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              helperText=" "
-              maxRows={5}
-              required
-            />
-            <TextField
-              id="outlined-multiline-flexible"
-              label="Nurse"
-              fullWidth
-              multiline
-              value={nurse}
-              onChange={(e) => setNurse(e.target.value)}
               helperText=" "
               maxRows={5}
               required
