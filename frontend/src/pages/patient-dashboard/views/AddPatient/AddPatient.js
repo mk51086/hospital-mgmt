@@ -7,6 +7,10 @@ import { Box } from "@mui/system";
 import api from "../../../../api/axios";
 import { useAuthContext } from "../../../../hooks/useAuthContext";
 import {useNavigate} from "react-router-dom"
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select, { SelectChangeEvent } from '@mui/material/Select';
 
 export default function AddPatient() {
   // const [date, setaDate] = useState(new Date(Date.now()));
@@ -19,7 +23,9 @@ export default function AddPatient() {
   const [password, setPassword] = useState("");
   const { user } = useAuthContext();
   const navigate = useNavigate();
-
+  const handleChange = (event) => {
+    setGender(event.target.value);
+  };
   const handleSubmit = async e => {
     e.preventDefault();
 
@@ -57,7 +63,6 @@ export default function AddPatient() {
       }}>
             <div>
         <TextField
-            id="outlined-multiline-flexible"
             label="Name"
             fullWidth
             multiline
@@ -68,7 +73,6 @@ export default function AddPatient() {
             required
           />
            <TextField
-            id="outlined-multiline-flexible"
             label="Email"
             fullWidth
             multiline
@@ -79,18 +83,15 @@ export default function AddPatient() {
             required
           />
            <TextField
-            id="outlined-multiline-flexible"
             label="Age"
-            fullWidth
             multiline
             value={age}
             onChange={e => setAge(e.target.value)}
             helperText=" "
-            maxRows={5}
+            maxRows={2}
             required
           />
-           <TextField
-            id="outlined-multiline-flexible"
+           {/* <TextField
             label="Gender"
             fullWidth
             multiline
@@ -99,9 +100,23 @@ export default function AddPatient() {
             helperText=" "
             maxRows={5}
             required
-          />
+          /> */}
+
+         <FormControl  sx={{ m: 1, minWidth: 120 }}>
+         <InputLabel id="gender">Gender</InputLabel>
+         <Select
+          labelId="gender"
+          id="gender"
+          value={gender}
+          label="Gender"
+          required
+          onChange={handleChange}
+          >
+          <MenuItem value={'Male'}>Male</MenuItem>
+          <MenuItem value={'Female'}>Female</MenuItem>
+          </Select>
+          </FormControl>
           <TextField
-            id="outlined-multiline-flexible"
             label="Address"
             fullWidth
             multiline
@@ -112,7 +127,6 @@ export default function AddPatient() {
             required
           />
               <TextField
-            id="outlined-multiline-flexible"
             label="Phone"
             fullWidth
             multiline
@@ -122,17 +136,18 @@ export default function AddPatient() {
             maxRows={5}
             required
           />
-               <TextField
-            id="outlined-multiline-flexible"
-            label="Password"
-            fullWidth
-            multiline
-            value={password}
-            onChange={e => setPassword(e.target.value)}
-            helperText=" "
-            maxRows={5}
+          <TextField
             required
-          /></div>
+            fullWidth
+            name="password"
+            label="Password"
+            type="password"
+            id="password"
+            autoComplete="new-password"
+            onChange={e => setPassword(e.target.value)}
+            value={password}
+          />
+              </div>
           <Button type="submit" variant="contained" sx={{ mt: 0, mb: 5 }}>
             Add Patient
           </Button>
