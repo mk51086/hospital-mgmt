@@ -18,7 +18,8 @@ import StaffRoutes from "./routes/staff.route";
 // views
 import CreateBill from "./views/Cashier/CreateBill";
 import Doctor from "./views/Doctor/Doctor";
-import LabAssistant from "./views/LabAssistant/LabAssistant";
+import Tests from "./views/LabAssistant/tests";
+import AddTest from "./views/LabAssistant/add-test";
 import Nurse from "./views/Nurse/Nurse";
 import Profile from "./views/Profile/Profile";
 import CreateRoom from "./views/Receptionist/CreateRoom";
@@ -117,8 +118,8 @@ function DashboardContent(props) {
               {user.jobTitle === "receptionist" && option === "/createroom" && (
                 <CreateRoom />
               )}
-              {user.jobTitle === "labassistant" &&
-                option === "/labassistant" && <LabAssistant />}
+              {user.jobTitle === "labassistant" && option === "/add-test" && <AddTest />}
+              {user.jobTitle === "labassistant" && option === "/tests" && <Tests />}
               {user.jobTitle === "nurse" && option === "/createExamination" && (
                 <Nurse />
               )}

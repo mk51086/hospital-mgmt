@@ -25,3 +25,4 @@ app.use(bp.urlencoded({ extended: true }));
 
 app.use('/patient',require('./routes/patient/patient.route'));
 app.use("/staff", require("./routes/staff/staff.route"));
+app.use('/labassistant',require("./routes/staff/labassistant/labassistant.route"))

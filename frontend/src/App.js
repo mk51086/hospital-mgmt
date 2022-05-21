@@ -160,7 +160,21 @@ const App = () => {
               }
             />
             <Route
-              path="/staff/dashboard/labassistant"
+              path="/staff/dashboard/tests"
+              element={
+                !user ? (
+                  <Navigate to="/login" />
+                ) : !user.isStaff ? (
+                  <Navigate to="/patient/dashboard" />
+                ) : (
+                  user.jobTitle === "labassistant" && (
+                    <StaffDashboard option={"/labassistant"} />
+                  )
+                )
+              }
+            />
+            <Route
+              path="/staff/dashboard/add-test"
               element={
                 !user ? (
                   <Navigate to="/login" />

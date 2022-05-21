@@ -44,11 +44,19 @@ export default function MenuItems({ handleRouteChange }) {
         </ListItem>
       )}
       {user.jobTitle === "labassistant" && (
-        <ListItem button onClick={() => handleRouteChange("/labassistant")}>
+        <ListItem button onClick={() => handleRouteChange("/add-test")}>
           <ListItemIcon>
             <MedicationIcon />
           </ListItemIcon>
-          <ListItemText primary="Lab Assistant" />
+          <ListItemText primary="Add Test" />
+        </ListItem>
+      )}
+      {user.jobTitle === "labassistant" && (
+        <ListItem button onClick={() => handleRouteChange("/tests")}>
+          <ListItemIcon>
+            <MedicationIcon />
+          </ListItemIcon>
+          <ListItemText primary="Tests" />
         </ListItem>
       )}
       {user.jobTitle === "nurse" && (
