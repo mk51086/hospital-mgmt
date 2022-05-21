@@ -12,7 +12,6 @@ export default function Nurse() {
   const [patient, setPatient] = useState("");
   const [date, setDate] = useState(new Date(Date.now()));
   const [description, setDescription] = useState("");
-  const [nurse, setNurse] = useState("");
 
   const { user } = useAuthContext();
 
