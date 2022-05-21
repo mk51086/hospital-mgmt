@@ -29,8 +29,6 @@ export default function AddTest() {
         setDescription("");
         setResult("");
         setNormal("");
-        console.log(userData);
-        navigate("/staff/dashboard");
       });
     } catch (err) {
       console.log(`Error : ${err.message}`);

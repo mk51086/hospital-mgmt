@@ -168,7 +168,7 @@ const App = () => {
                   <Navigate to="/patient/dashboard" />
                 ) : (
                   user.jobTitle === "labassistant" && (
-                    <StaffDashboard option={"/labassistant"} />
+                    <StaffDashboard option={"/tests"} />
                   )
                 )
               }
@@ -182,7 +182,7 @@ const App = () => {
                   <Navigate to="/patient/dashboard" />
                 ) : (
                   user.jobTitle === "labassistant" && (
-                    <StaffDashboard option={"/labassistant"} />
+                    <StaffDashboard option={"/add-test"} />
                   )
                 )
               }
