@@ -18,13 +18,14 @@ import StaffRoutes from "./routes/staff.route";
 // views
 import CreateBill from "./views/Cashier/CreateBill";
 import Doctor from "./views/Doctor/Doctor";
-import LabAssistant from "./views/LabAssistant/LabAssistant";
 import Nurse from "./views/Nurse/Nurse";
 import ExaminationList from "./views/Nurse/ExaminationList";
 import Profile from "./views/Profile/Profile";
 import CreateRoom from "./views/Receptionist/CreateRoom";
 import Pharmacist from "./views/Pharmacist/Pharmacist";
 import { useAuthContext } from "./../../hooks/useAuthContext";
+import AddTest from "./views/LabAssistant/add-test"
+import Tests from "./views/LabAssistant/tests"
 
 const drawerWidth = 240;
 
@@ -118,8 +119,8 @@ function DashboardContent(props) {
               {user.jobTitle === "receptionist" && option === "/createroom" && (
                 <CreateRoom />
               )}
-              {user.jobTitle === "labassistant" &&
-                option === "/labassistant" && <LabAssistant />}
+               {user.jobTitle === "labassistant" && option === "/add-test" && <AddTest />}
+              {user.jobTitle === "labassistant" && option === "/tests" && <Tests />}
               {user.jobTitle === "nurse" && option === "/view-examinations" && (
                 <ExaminationList />
               )}

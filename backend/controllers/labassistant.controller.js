@@ -1,6 +1,5 @@
-const Test = require("../models/labassistant.model");
+const Test = require("../models/test.model");
 
-// Add a patient
 const add_test = (req, res) => {
   const { testName, patient, description, result, normal } = req.body;
   console.log(req.body);
@@ -55,7 +54,7 @@ const test_list = (req, res) => {
 const test_update = (req, res, next) => {
   const test = new Test({
     _id: req.params.id,
-    testName: req.body.name,
+    testName: req.body.testName,
     patient: req.body.patient,
     description: req.body.description,
     result: req.body.result,
@@ -75,7 +74,6 @@ const test_update = (req, res, next) => {
     });
 };
 
-// Exporting the Controllers
 module.exports = {
   add_test,
   test_delete,
