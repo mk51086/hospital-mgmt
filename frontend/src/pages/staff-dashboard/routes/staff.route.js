@@ -7,6 +7,7 @@ import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import MedicationIcon from "@mui/icons-material/Medication";
 import { useAuthContext } from "../../../hooks/useAuthContext";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
+import LibraryBooksIcon from "@mui/icons-material/LibraryBooks";
 
 export default function MenuItems({ handleRouteChange }) {
   const { user } = useAuthContext();
@@ -57,9 +58,9 @@ export default function MenuItems({ handleRouteChange }) {
           onClick={() => handleRouteChange("/view-examinations")}
         >
           <ListItemIcon>
-            <MedicationIcon />
+            <LibraryBooksIcon />
           </ListItemIcon>
-          <ListItemText primary="View Examination" />
+          <ListItemText primary="Your Examinations" />
         </ListItem>
       )}
       {user.jobTitle === "nurse" && (
