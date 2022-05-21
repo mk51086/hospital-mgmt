@@ -185,7 +185,7 @@ const appointment_update = (req, res, next) => {
 
 const appointment_list = (req, res) => {
   const id = req.params.id;
-  Appointment.find({'appointment' : id})
+  Appointment.find({'patient' : id})
     .then((appointment) => res.json(appointment));
 };
 

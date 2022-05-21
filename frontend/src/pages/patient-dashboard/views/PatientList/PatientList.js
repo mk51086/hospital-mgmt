@@ -22,6 +22,10 @@ import { TextField } from "@mui/material";
 import api from "../../../../api/axios";
 import { useState, useEffect } from "react";
 import Notifybar from "../../../../components/shared/Notifybar";
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select, { SelectChangeEvent } from '@mui/material/Select';
 
 // import { useAuthContext } from "../../../../hooks/useAuthContext";
 const Transition = React.forwardRef(function Transition(props, ref) {
@@ -43,6 +47,10 @@ export default function PatientList() {
 
   const [message,setMessage] = useState("");
   const [severity,setSeverity] = useState("");
+
+  const handleChange = (event) => {
+    setGender(event.target.value);
+  };
 
   const handleSubmit = async (e,id) => {
     e.preventDefault();
@@ -151,6 +159,7 @@ export default function PatientList() {
                 <TableCell align="center">Id</TableCell>
                 <TableCell align="center">Name</TableCell>
                 <TableCell align="center">Age</TableCell>
+                <TableCell align="center">Gender</TableCell>
                 <TableCell align="center">Registration Date</TableCell>
                 <TableCell align="center">Email</TableCell>
                 <TableCell align="center"> </TableCell>
@@ -163,6 +172,7 @@ export default function PatientList() {
                     <TableCell align="center">{record._id}</TableCell>
                     <TableCell align="center">{record.name}</TableCell>
                     <TableCell align="center">{record.age}</TableCell>
+                    <TableCell align="center">{record.gender}</TableCell>
                     <TableCell align="center">{new Date(record.register_date).toUTCString()}</TableCell>
                     <TableCell align="center">{record.email}</TableCell>
                     <TableCell  align="center">
@@ -204,7 +214,6 @@ export default function PatientList() {
                           }}>
                               <div>
                           <TextField
-                              id="outlined-multiline-flexible"
                               label="Name"
                               fullWidth
                               multiline
@@ -215,7 +224,6 @@ export default function PatientList() {
                               required
                             />
                             <TextField
-                              id="outlined-multiline-flexible"
                               label="Email"
                               fullWidth
                               multiline
@@ -226,7 +234,6 @@ export default function PatientList() {
                               required
                             />
                             <TextField
-                              id="outlined-multiline-flexible"
                               label="Age"
                               fullWidth
                               multiline
@@ -236,8 +243,7 @@ export default function PatientList() {
                               maxRows={5}
                               required
                             />
-                            <TextField
-                              id="outlined-multiline-flexible"
+                            {/* <TextField
                               label="Gender"
                               fullWidth
                               multiline
@@ -246,7 +252,21 @@ export default function PatientList() {
                               helperText=" "
                               maxRows={5}
                               required
-                            />
+                            /> */}
+                           <FormControl  sx={{ m: 1, minWidth: 120 }}>
+                            <InputLabel id="gender">Gender</InputLabel>
+                            <Select
+                              labelId="gender"
+                              id="gender"
+                              value={gender}
+                              label="Gender"
+                              required
+                              onChange={handleChange}
+                              >
+                            <MenuItem value={'Male'}>Male</MenuItem>
+                            <MenuItem value={'Female'}>Female</MenuItem>
+                            </Select>
+                            </FormControl>
                             <TextField
                               id="outlined-multiline-flexible"
                               label="Address"
