@@ -40,15 +40,20 @@ function test_delete(req, res) {
 const test_get = (req, res) => {
   const id = req.params.id;
   Test.findById(id)
+    .populate({path : 'patient' ,select :'name'})
     .then((test) => res.json(test));
 };
 
 // Get all tests
 const test_list = (req, res) => {
   Test.find()
+    .populate({path : 'patient' ,select :'name'})
     .select("-id")
-    .then((test) => res.json(test));
+    .then((test) => {
+      res.json(test)
+    });
 };
+
 
 // Update a test by ID
 const test_update = (req, res, next) => {

@@ -62,7 +62,7 @@ export default function TestsList() {
       await api.get(`/labassistant/${id}`).then(test => {
         setId(id);
         setTestName(test.data.testName);
-        setPatient(test.data.patient);
+        setPatient(test.data.patient.name);
         setDescription(test.data.description);
         setResult(test.data.result);
         setNormal(test.data.normal);
@@ -138,7 +138,7 @@ export default function TestsList() {
                 records.map((record, index) => (
                   <TableRow key={index} sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
                     <TableCell align="center">{record.testName}</TableCell>
-                    <TableCell align="center">{record.patient}</TableCell>
+                    <TableCell align="center">{record.patient.name}</TableCell>
                     <TableCell align="center">{record.description}</TableCell>
                     <TableCell align="center">{record.result}</TableCell>
                     <TableCell align="center">{record.normal}</TableCell>
@@ -192,15 +192,12 @@ export default function TestsList() {
                               required
                             />
                             <TextField
-                              id="outlined-multiline-flexible"
+                              disabled
+                              id="outlined-disabled"
                               label="Patient"
-                              fullWidth
-                              multiline
                               value={patient}
+                              InputLabelProps={{ shrink: true }}
                               onChange={e => setPatient(e.target.value)}
-                              helperText=" "
-                              maxRows={5}
-                              required
                             />
                             <TextField
                               id="outlined-multiline-flexible"
