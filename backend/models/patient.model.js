@@ -8,6 +8,8 @@ const patientSchema = new mongoose.Schema({
   age: { type: Number, required: true },
   gender: { type: String, required: true },
   address: { type: String, required: true },
+  town: { type: String },
+  country: { type: String },
   dob: { type: Date },
   phone: { type: String, maxlength: 11 },
   register_date: { type: Date, default: Date.now },

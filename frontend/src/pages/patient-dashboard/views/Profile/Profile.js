@@ -1,7 +1,5 @@
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
-
-// styles
 import "./Profile.css";
 import { useAuthContext } from "./../../../../hooks/useAuthContext";
 import Avatar from "@mui/material/Avatar";

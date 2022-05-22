@@ -17,7 +17,7 @@ export default function AddTest() {
   const [result, setResult] = useState("");
   const [normal, setNormal] = useState("");
   const { user } = useAuthContext();
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   const [records, setRecords] = useState([]);
   // const id = user.id;

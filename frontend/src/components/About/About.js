@@ -7,11 +7,8 @@ import { Image } from "../styles/Header.styled";
 import Button from "../Button/Button";
 import logo from "../../assets/images/2.gif";
 import { useAuthContext } from "../../hooks/useAuthContext";
-
-// components
 import content from '../../content';
 import Container from "@mui/material/Container";
-
 import Card from '../../components/Card';
 
 export default function About() {

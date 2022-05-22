@@ -1,5 +1,4 @@
 
-  // create medicines
 const pharmacist_medicine_post = (req, res) => {
 
 };

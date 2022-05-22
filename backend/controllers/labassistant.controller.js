@@ -26,7 +26,6 @@ const add_test = (req, res) => {
         });
     };
 
-// Delete test
 function test_delete(req, res) {
     const id = req.params.id;
     Test.deleteOne({ _id: req.params.id }).then((result) => {
@@ -36,7 +35,6 @@ function test_delete(req, res) {
     });
 }
 
-// Get test by ID
 const test_get = (req, res) => {
   const id = req.params.id;
   Test.findById(id)
@@ -44,7 +42,6 @@ const test_get = (req, res) => {
     .then((test) => res.json(test));
 };
 
-// Get all tests
 const test_list = (req, res) => {
   Test.find()
     .populate({path : 'patient' ,select :'name'})
@@ -55,7 +52,6 @@ const test_list = (req, res) => {
 };
 
 
-// Update a test by ID
 const test_update = (req, res, next) => {
   const test = new Test({
     _id: req.params.id,

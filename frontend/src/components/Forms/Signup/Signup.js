@@ -1,4 +1,3 @@
-// material ui
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -13,44 +12,109 @@ import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
 import { ThemeProvider } from "@mui/material/styles";
 import api from "../../../api/axios";
-// react
-import { useState } from "react";
+import { useState , useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-
-// custom theme
+import SearchIcon from '@mui/icons-material/Search';
+import InputAdornment from '@mui/material/InputAdornment';
 import theme from "../../../assets/js/theme";
-
-// components
 import Copyright from "../../Copyright/Copyright";
+import { cities } from "../../shared/xkcities";
 
-// hooks
+const apiKey = 'AIzaSyCmq_w4Yo_NR8ZzoUOAB3G7kaEexaUTEXE';
+const mapApiJs = 'https://maps.googleapis.com/maps/api/js';
 
 export default function Signup() {
-  // states
+
+  function loadAsyncScript(src) {
+    return new Promise(resolve => {
+      const script = document.createElement("script");
+      Object.assign(script, {
+        type: "text/javascript",
+        async: true,
+        src
+      })
+      script.addEventListener("load", () => resolve(script));
+      document.head.appendChild(script);
+    })
+  }
+  
+  const extractAddress = (place) => {
+    const address = {
+      city: "",
+      country: "",
+    }
+    place.address_components.forEach(component => {
+      const types = component.types;
+      const value = component.long_name;
+      if (types.includes("locality")) {
+        address.city = value;
+        setTown(value);
+        if(cities.includes(address.city)){
+          address.country = 'Kosovo';
+          setCountry('Kosovo');
+        }
+      }
+  
+      if (types.includes("country")) {
+        address.country = value;
+        setCountry(value);
+      }
+  
+    });
+  
+    return address;
+  }
+  
+  
+  const searchInput = useRef(null);
+
+  const initMapScript = () => {
+    if(window.google) {
+      return Promise.resolve();
+    }
+    const src = `${mapApiJs}?key=${apiKey}&libraries=places`;
+    return loadAsyncScript(src);
+  }
+
+  const onChangeAddress = (autocomplete) => {
+    const place = autocomplete.getPlace();
+    setAddress2(extractAddress(place));
+  }
+
+  const initAutocomplete = () => {
+    if (!searchInput.current) return;
+    const autocomplete = new window.google.maps.places.Autocomplete(searchInput.current);
+    autocomplete.setFields(["address_component", "geometry"]);
+    autocomplete.addListener("place_changed", () => onChangeAddress(autocomplete));
+
+  }
+
+  useEffect(() => {
+    initMapScript().then(() => initAutocomplete())
+  });
+
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [address, setAddress] = useState("");
   const [phone, setPhone] = useState("");
   const [age, setAge] = useState("");
   const [dob, setDOB] = useState("");
+  const [country, setCountry] = useState("");
   const [gender, setGender] = useState("Male");
+  const [address2, setAddress2] = useState({});
+  const [address,setAddress] = useState("");
+  const [town, setTown] = useState("");
 
-  // sign up hook
-
-  // navigate
   const navigate = useNavigate();
 
-  // form submit handler
   const handleSubmit = async e => {
     e.preventDefault();
-    console.log(name, email, password, age, dob, gender, address, phone);
+    console.log(name, email, password, age, dob, gender ,country, phone);
 
-    const data = { name, email, password, age, dob, gender, address, phone };
+    const data = { name, email, password, age, dob, gender, address ,town, country, phone };
     try {
          await api.post("/patient/register", data).then(userData => {
         console.log(userData.data);
-        //  loginUser(userData.data);
         navigate("/login");
       });
     } catch (err) {
@@ -59,10 +123,12 @@ export default function Signup() {
   };
 
   return (
+    
     <ThemeProvider theme={theme}>
       <Container component="main" maxWidth="xs">
         <CssBaseline />
         <Box
+        
           sx={{
             marginTop: 5,
             display: "flex",
@@ -105,7 +171,7 @@ export default function Signup() {
                 />
               </Grid>
               <Grid item xs={12}>
-                <TextField
+                <TextField 
                   required
                   fullWidth
                   name="password"
@@ -126,8 +192,44 @@ export default function Signup() {
                   label="Address"
                   name="address"
                   autoComplete="address"
+                  inputRef={searchInput} 
                   onChange={e => setAddress(e.target.value)}
                   value={address}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  required
+                  fullWidth
+                  type="text"
+                  id="town"
+                  placeholder="Enter a location...."
+                  label="Town"
+                  name="town"
+                  autoComplete="address.city"
+                  inputRef={searchInput} 
+                  onChange={e => setTown(e.target.value)}
+                  value={town}
+                  InputProps={{
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <SearchIcon />
+                      </InputAdornment>
+                    ),
+                  }}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  required
+                  fullWidth
+                  name="country"
+                  label="Country"
+                  type="text"
+                  id="country"
+                  autoComplete="country"
+                  onChange={e => setCountry(e.target.value)}
+                  value={country}
                 />
               </Grid>
               <Grid item xs={12}>

@@ -11,11 +11,9 @@ import Grid from "@mui/material/Grid";
 import MenuIcon from "@mui/icons-material/Menu";
 import Copyright from "../../components/Copyright/Copyright";
 import { useNavigate } from "react-router-dom";
-
-// routes
 import StaffRoutes from "./routes/staff.route";
 
-// views
+//views
 import CreateBill from "./views/Cashier/CreateBill";
 import Doctor from "./views/Doctor/Doctor";
 import Nurse from "./views/Nurse/Nurse";
@@ -24,8 +22,8 @@ import Profile from "./views/Profile/Profile";
 import CreateRoom from "./views/Receptionist/CreateRoom";
 import Pharmacist from "./views/Pharmacist/Pharmacist";
 import { useAuthContext } from "./../../hooks/useAuthContext";
-import AddTest from "./views/LabAssistant/add-test"
-import Tests from "./views/LabAssistant/tests"
+import AddTest from "./views/LabAssistant/AddTest";
+import Tests from "./views/LabAssistant/TestsList";
 
 const drawerWidth = 240;
 
@@ -64,10 +62,7 @@ function DashboardContent(props) {
   };
 
   const { user } = useAuthContext();
-
   const navigate = useNavigate();
-
-  // set views and change routes
   const [option, setOption] = React.useState(props.option);
 
   const handleRouteChange = (view) => {

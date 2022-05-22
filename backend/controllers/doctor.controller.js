@@ -1,6 +1,5 @@
 const Patient = require("../models/patient.model");
 
-  // get the patient and update their prescription
 const doctor_prescription_post = (req, res) => {
   const { email, index, doctor_comments, given_by, date } = req.body;
   const newPrescription = { doctor_comments, medicines: [], given_by, date };

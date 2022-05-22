@@ -1,6 +1,5 @@
  const Bill = require("../models/bill.model");
 
- // get  patient info and create the bill
  const bill_post = (req, res, next) => {
    const bill = new Bill({
     patient: req.body.patient,

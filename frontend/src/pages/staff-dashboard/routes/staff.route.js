@@ -1,8 +1,6 @@
 import ListItem from "@mui/material/ListItem";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
-
-// icons
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import MedicationIcon from "@mui/icons-material/Medication";
 import { useAuthContext } from "../../../hooks/useAuthContext";

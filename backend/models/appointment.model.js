@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
-// appointment model
+
 const appointmentSchema = new mongoose.Schema({
   patient: { type: Schema.Types.ObjectId, ref: 'Patient'},
   date: { type: Date, default: Date.now },

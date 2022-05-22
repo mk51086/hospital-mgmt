@@ -2,12 +2,11 @@ const Patient = require("../models/patient.model");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const Appointment = require ("../models/appointment.model");
-// Register a patient
+
 const patient_register = (req, res) => {
-  const { name, email, password, age, gender, address, dob, phone } = req.body;
+  const { name, email, password, age, gender, address,town,country, dob, phone } = req.body;
   console.log(req.body);
 
-  // check if the email is already registered
   Patient.findOne({ email }).then((patient) => {
     if (patient)
       return res.status(409).json({ msg: "Patient with this email already exists!" });
@@ -19,6 +18,8 @@ const patient_register = (req, res) => {
       age,
       gender,
       address,
+      town,
+      country,
       dob,
       phone,
     });
@@ -54,16 +55,13 @@ const patient_register = (req, res) => {
   });
 };
 
-// Patient Login
 const patient_login = (req, res) => {
   const { email, password } = req.body;
 
-  // check if the patient is registered
   Patient.findOne({ email }).then((patient) => {
     if (!patient)
       return res.status(409).json({ msg: "patient does not exist" });
 
-    // validate the password
     bcrypt.compare(password, patient.password).then((isMatch) => {
       if (!isMatch) return res.status(400).json({ msg: "Invalid credentials" });
 
@@ -89,7 +87,6 @@ const patient_login = (req, res) => {
   });
 };
 
-// Delete patient
 const patient_delete = (req, res) => {
   const id = req.params.id;
   Patient.deleteOne({ _id: req.params.id }).then((result) => {
@@ -99,7 +96,6 @@ const patient_delete = (req, res) => {
   });
 };
 
-// Get patient by ID
 const patient_get = (req, res) => {
   const id = req.params.id;
   Patient.findById(id)
@@ -107,14 +103,12 @@ const patient_get = (req, res) => {
     .then((patient) => res.json(patient));
 };
 
-// Get all patients
 const patient_list = (req, res) => {
   Patient.find()
     .select("-id,-password")
     .then((patient) => res.json(patient));
 };
 
-// Update a patient by ID
 const patient_update = (req, res, next) => {
   const patient = new Patient({
     _id: req.params.id,
@@ -198,7 +192,6 @@ const appointment_delete = (req, res) => {
   });
 };
 
-// Exporting the Controllers
 module.exports = {
   patient_register,
   patient_login,

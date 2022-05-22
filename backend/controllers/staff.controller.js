@@ -12,7 +12,6 @@ const staff_login = (req, res) => {
     bcrypt.compare(password, staff.password).then(isMatch => {
       if (!isMatch) return res.status(400).json({ msg: "Invalid credentials" });
 
-      // generate token and send payload with token as a response back
       jwt.sign({ id: staff.id }, process.env.JWT_SECRET, { expiresIn: 3600 }, (err, token) => {
         if (err) throw err;
 

@@ -1,4 +1,3 @@
-// get the patient id and create an examination
 const Examination = require("../models/examination.model");
 
 const nurse_examination_post = (req, res, next) => {

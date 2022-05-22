@@ -1,11 +1,6 @@
-// react
 import { Link, useNavigate } from "react-router-dom";
-
-// assets
 import "./Navbar.css";
 import logo from "../../assets/images/logo.png";
-
-// hooks
 import { useAuthContext } from "../../hooks/useAuthContext";
 
 export default function Navbar() {
