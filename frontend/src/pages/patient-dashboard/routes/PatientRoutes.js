@@ -15,18 +15,6 @@ export default function MenuItems({ handleRouteChange }) {
         </ListItemIcon>
         <ListItemText primary="Profile" />
       </ListItem>
-      <ListItem button onClick={() => handleRouteChange("/add-patient")}>
-        <ListItemIcon>
-          <AddCircleIcon />
-        </ListItemIcon>
-        <ListItemText primary="Add Patient" />
-      </ListItem>
-      <ListItem button onClick={() => handleRouteChange("/view-patients")}>
-        <ListItemIcon>
-          <LibraryBooksIcon />
-        </ListItemIcon>
-        <ListItemText primary="View Patients" />
-      </ListItem>
       <ListItem button onClick={() => handleRouteChange("/book-appointment")}>
         <ListItemIcon>
           <AddCircleIcon />

@@ -1,5 +1,4 @@
 const Staff = require("../models/staff.model");
-const Patient = require("../models/patient.model");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
@@ -22,6 +21,7 @@ const staff_login = (req, res) => {
             name: staff.name,
             email: staff.email,
             jobTitle: staff.job_title,
+            admin: staff.admin,
             isStaff: true,
           },
         });
@@ -31,7 +31,7 @@ const staff_login = (req, res) => {
 };
 
 const staff_register = (req, res) => {
-  const { name, email, password, age, gender, address, dob, phone, joining_date, education, department, job_title } =
+  const { name, email, password, age, gender, address, dob, phone, joining_date, education, department, job_title, admin } =
     req.body;
   Staff.findOne({ email }).then(staff => {
     if (staff) return res.status(409).json({ msg: "Email already registered" });
@@ -49,6 +49,7 @@ const staff_register = (req, res) => {
       education,
       department,
       job_title,
+      admin
     });
 
     bcrypt.genSalt(10, (err, salt) => {
@@ -78,6 +79,59 @@ const staff_register = (req, res) => {
   });
 };
 
+const staff_delete = (req, res) => {
+  const id = req.params.id;
+  Staff.deleteOne({ _id: req.params.id }).then((result) => {
+    res.status(200).json({
+      message: "staff deleted",
+    });
+  });
+};
+
+const staff_get = async (req, res) => {
+  const id = req.params.id;
+  try {
+    const data = await Staff.findById(id);
+        res.json(data)
+  }catch(error){
+    res.status(500).json({message: error.message})
+}
+};
 
 
-module.exports = { staff_login, staff_register };
+const staff_list = (req, res) => {
+  Staff.find()
+    .select("-password")
+    .then((staff) => res.json(staff));
+};
+
+const staff_update = (req, res, next) => {
+  const staff = new Staff({
+    _id: req.params.id,
+    name: req.body.name,
+    email: req.body.email,
+    age: req.body.age,
+    gender: req.body.gender,
+    address: req.body.address,
+    phone: req.body.phone,
+    department: req.body.department,
+    admin: req.body.admin,
+    job_title: req.body.job_title,
+    education:req.body.education
+  });
+  Staff.updateOne({ _id: req.params.id }, staff)
+    .then((savedPatient) => {
+      res.status(200).json({
+        staff,
+        message: "one staff member updated",
+      });
+    })
+    .catch((error) => {
+      res.status(404).json({
+        message: error.message,
+      });
+    });
+};
+
+
+module.exports = { staff_login, staff_register,staff_delete,staff_update,staff_list,staff_get };

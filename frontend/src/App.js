@@ -59,22 +59,63 @@ const App = () => {
               element={
                 !user ? (
                   <Navigate to="/login" />
-                ) : user.isStaff ? (
-                  <Navigate to="/staff/dashboard" />
+                ) : !user.isStaff ? (
+                  <Navigate to="/patient/dashboard" />
                 ) : (
-                  <PatientDashboard option={"/add-patient"} />
+                  user.jobTitle === "labassistant" && (
+                    <StaffDashboard option={"/add-patient"} />
+                  )
                 )
               }
             />
             <Route
-              path="/patient/dashboard/view-patients"
+              path="/staff/dashboard/view-patients"
               element={
                 !user ? (
                   <Navigate to="/login" />
-                ) : user.isStaff ? (
-                  <Navigate to="/staff/dashboard" />
+                ) : !user.isStaff ? (
+                  <Navigate to="/patient/dashboard" />
                 ) : (
-                  <PatientDashboard option={"/view-patients"} />
+                  <StaffDashboard option={"/view-patients"} />
+                )
+              }
+            />
+
+<Route
+              path="/staff/dashboard/view-staff"
+              element={
+                !user ? (
+                  <Navigate to="/login" />
+                ) : !user.isStaff ? (
+                  <Navigate to="/patient/dashboard" />
+                ) : (
+                  <StaffDashboard option={"/view-staff"} />
+                )
+              }
+            />
+
+            <Route
+              path="/staff/dashboard/add-patient"
+              element={
+                !user ? (
+                  <Navigate to="/login" />
+                ) : !user.isStaff ? (
+                  <Navigate to="/patient/dashboard" />
+                ) : (
+                  <StaffDashboard option={"/add-patient"} />
+                )
+              }
+            />
+
+            <Route
+              path="/staff/dashboard/add-staff"
+              element={
+                !user ? (
+                  <Navigate to="/login" />
+                ) : !user.isStaff ? (
+                  <Navigate to="/patient/dashboard" />
+                ) : (
+                  <StaffDashboard option={"/add-staff"} />
                 )
               }
             />

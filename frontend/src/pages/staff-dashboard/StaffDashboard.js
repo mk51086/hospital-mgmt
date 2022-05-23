@@ -24,6 +24,10 @@ import Pharmacist from "./views/Pharmacist/Pharmacist";
 import { useAuthContext } from "./../../hooks/useAuthContext";
 import AddTest from "./views/LabAssistant/AddTest";
 import Tests from "./views/LabAssistant/TestsList";
+import AddPatient from "./views/Admin/AddPatient/AddPatient";
+import PatientList from "./views/Admin/PatientList/PatientList";
+import AddStaff from "./views/Admin/AddStaff/AddStaff";
+import StaffList from "./views/Admin/StaffList/StaffList";
 
 const drawerWidth = 240;
 
@@ -107,6 +111,10 @@ function DashboardContent(props) {
           <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
             <Grid container spacing={3}>
               {option === "" && <Profile />}
+              {user.admin && option === "/add-patient" && <AddPatient />}
+              {user.admin && option === "/add-staff" && <AddStaff />}
+              {user.admin && option === "/view-patients" && <PatientList />}
+              {user.admin && option === "/view-staff" && <StaffList />}
               {user.jobTitle === "doctor" && option === "/doctor" && <Doctor />}
               {user.jobTitle === "cashier" && option === "/createbill" && (
                 <CreateBill />

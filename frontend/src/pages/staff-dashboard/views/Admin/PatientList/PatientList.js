@@ -19,9 +19,9 @@ import DialogTitle from '@mui/material/DialogTitle';
 import Slide from '@mui/material/Slide';
 import { Box } from "@mui/system";
 import { TextField } from "@mui/material";
-import api from "../../../../api/axios";
+import api from "../../../../../api/axios";
 import { useState, useEffect } from "react";
-import Notifybar from "../../../../components/shared/Notifybar";
+import Notifybar from "../../../../../components/shared/Notifybar";
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
@@ -58,7 +58,6 @@ export default function PatientList() {
     const data = {name,email,age,gender,address,phone};
     try {
       await api.put(`/patient/${id}`, data).then(userData => {
-        console.log('saved',userData);
         handleClose2();
         fetchData()
         .catch(console.error);
@@ -199,9 +198,18 @@ export default function PatientList() {
                           <Button onClick={(e) => {  deletePatient(e,record._id) }}>YES</Button>
                         </DialogActions>
                       </Dialog>
-
-
-                      <Dialog
+                  </TableRow>
+                ))}
+                
+            </TableBody>
+          </Table>
+        </TableContainer>
+              <Notifybar  open={bar} 
+              onClose={hideBar}
+              severity={severity} 
+              message={message}/>
+      </Paper>
+      <Dialog
                         open={open2}
                         TransitionComponent={Transition}
                         keepMounted
@@ -243,16 +251,6 @@ export default function PatientList() {
                               maxRows={5}
                               required
                             />
-                            {/* <TextField
-                              label="Gender"
-                              fullWidth
-                              multiline
-                              value={gender}
-                              onChange={e => setGender(e.target.value)}
-                              helperText=" "
-                              maxRows={5}
-                              required
-                            /> */}
                            <FormControl  sx={{ m: 1, minWidth: 120 }}>
                             <InputLabel id="gender">Gender</InputLabel>
                             <Select
@@ -297,18 +295,6 @@ export default function PatientList() {
                           <Button type="submit" variant="contained" onClick={(e) => {  handleSubmit(e,id)  }}>Save Changes</Button>
                         </DialogActions>
                       </Dialog>
-                  </TableRow>
-                ))}
-                
-            </TableBody>
-          </Table>
-        </TableContainer>
-              <Notifybar  open={bar} 
-              onClose={hideBar}
-              severity={severity} 
-              message={message}/>
-      </Paper>
-      
     </Grid>
     
   );
