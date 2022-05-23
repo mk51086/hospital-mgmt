@@ -14,9 +14,7 @@ import { useNavigate } from "react-router-dom";
 
 import PatientRoutes from "./routes/PatientRoutes";
 
-import PatientList from "./views/PatientList/PatientList";
 import Profile from "./views/Profile/Profile";
-import AddPatient from "./views/AddPatient/AddPatient";
 import BookAppointment from "./views/BookAppointment/BookAppointment";
 import AppointmentList from "./views/AppointmentList/AppointmentList";
 
@@ -97,8 +95,6 @@ function DashboardContent(props) {
           <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
             <Grid container spacing={3}>
               {option === "" && <Profile />}
-              {option === "/add-patient" && <AddPatient />}
-              {option === "/view-patients" && <PatientList />}
               {option === "/book-appointment" && <BookAppointment />}
               {option === "/view-appointments" && <AppointmentList />}
             </Grid>

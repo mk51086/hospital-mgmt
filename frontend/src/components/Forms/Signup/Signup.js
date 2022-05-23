@@ -19,7 +19,8 @@ import InputAdornment from '@mui/material/InputAdornment';
 import theme from "../../../assets/js/theme";
 import Copyright from "../../Copyright/Copyright";
 import { cities } from "../../shared/xkcities";
-
+import { Autocomplete } from "@mui/material";
+import { countries } from "../../shared/countries";
 const apiKey = 'AIzaSyCmq_w4Yo_NR8ZzoUOAB3G7kaEexaUTEXE';
 const mapApiJs = 'https://maps.googleapis.com/maps/api/js';
 
@@ -57,7 +58,10 @@ export default function Signup() {
   
       if (types.includes("country")) {
         address.country = value;
-        setCountry(value);
+        if(value === 'Serbia'){
+          address.country = ''
+        }
+        setCountry(address.country);
       }
   
     });
@@ -105,8 +109,9 @@ export default function Signup() {
   const [address,setAddress] = useState("");
   const [town, setTown] = useState("");
 
+  
   const navigate = useNavigate();
-
+ 
   const handleSubmit = async e => {
     e.preventDefault();
     console.log(name, email, password, age, dob, gender ,country, phone);
@@ -143,6 +148,7 @@ export default function Signup() {
             Sign up
           </Typography>
           <Box component="form" onSubmit={handleSubmit} sx={{ mt: 3 }}>
+      
             <Grid container spacing={2}>
               <Grid item xs={12}>
                 <TextField
@@ -206,7 +212,6 @@ export default function Signup() {
                   placeholder="Enter a location...."
                   label="Town"
                   name="town"
-                  autoComplete="address.city"
                   inputRef={searchInput} 
                   onChange={e => setTown(e.target.value)}
                   value={town}
@@ -220,17 +225,22 @@ export default function Signup() {
                 />
               </Grid>
               <Grid item xs={12}>
-                <TextField
-                  required
-                  fullWidth
-                  name="country"
-                  label="Country"
-                  type="text"
-                  id="country"
-                  autoComplete="country"
-                  onChange={e => setCountry(e.target.value)}
-                  value={country}
-                />
+                  <Autocomplete
+                disablePortal
+                options={countries}
+                value={country}
+                onChange={(event, newValue) => {
+                  setCountry(newValue);
+                }}
+                
+                renderInput={(params) => (
+                  <TextField
+                      {...params}
+                      label="Country"
+                      required
+                  />
+              )}
+              />
               </Grid>
               <Grid item xs={12}>
                 <TextField

@@ -13,6 +13,7 @@ const staffSchema = new mongoose.Schema({
   education: [{ type: String }],
   department: { type: String, required: true },
   job_title: { type: String, required: true },
+  admin: { type: Boolean, required: true, default: false },
   register_date: { type: Date, default: Date.now },
 });
 

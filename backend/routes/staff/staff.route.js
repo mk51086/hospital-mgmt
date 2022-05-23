@@ -5,12 +5,12 @@ const staffController = require("../../controllers/staff.controller");
 router.post("/login", staffController.staff_login);
 router.post("/register", staffController.staff_register);
 
-router.use("/doctor", require("./doctor/doctor.route"));
-router.use("/labassistant", require("./labassistant/labassistant.route"));
-router.use("/cashier", require("./cashier/cashier.route"));
-router.use("/pharmacist", require("./pharmacist/pharmacist.route"));
-router.use("/receptionist", require("./receptionist/recepsionist.route"));
-router.use("/nurse", require("./nurse/nurse.route"));
+router.get("/all", staffController.staff_list);
+router.get("/:id", staffController.staff_get);
+
+router.delete("/:id", staffController.staff_delete);
+
+router.put("/:id", staffController.staff_update);
 
 
 module.exports = router;
