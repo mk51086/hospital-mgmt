@@ -26,6 +26,34 @@ const mapApiJs = 'https://maps.googleapis.com/maps/api/js';
 
 export default function Signup() {
 
+
+  const today = new Date();
+
+  
+  function padTo2Digits(num) {
+    return num.toString().padStart(2, '0');
+  }
+  
+  function formatDate(date) {
+    return [
+      date.getFullYear(),
+      padTo2Digits(date.getMonth() + 1),
+      padTo2Digits(date.getDate()),
+    ].join('-');
+  }
+
+  const handleAge = async e => {
+    console.log(formatDate(today))
+    setDOB(e.target.value)
+    let dob1 = new Date(e.target.value);
+    let age1 = today.getFullYear() - dob1.getFullYear();
+    var m = today.getMonth() - dob1.getMonth();
+    if (m < 0 || (m === 0 && today.getDate() < dob1.getDate())) {
+        age1--;
+    }
+    setAge(age1);
+    }
+
   function loadAsyncScript(src) {
     return new Promise(resolve => {
       const script = document.createElement("script");
@@ -259,7 +287,8 @@ export default function Signup() {
                 <TextField
                   fullWidth
                   type="date"
-                  onChange={e => setDOB(e.target.value)}
+                  InputProps={{inputProps: { min: "1900-05-01", max: `${formatDate(today)}`} }}
+                  onChange={e => handleAge(e)}
                   value={dob}
                   InputLabelProps={{
                     shrink: true,
@@ -275,6 +304,7 @@ export default function Signup() {
                   id="age"
                   label="Age"
                   name="age"
+                  InputProps={{ inputProps: { min: 0, max: 125 } }}
                   onChange={e => setAge(e.target.value)}
                   value={age}
                 />

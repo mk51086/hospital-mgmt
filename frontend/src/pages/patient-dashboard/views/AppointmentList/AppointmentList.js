@@ -119,24 +119,6 @@ export default function AppointmentList() {
                     </IconButton>
                     }
                     </TableCell>
-                    <Dialog
-                        open={open}
-                        TransitionComponent={Transition}
-                        keepMounted
-                        onClose={handleClose}
-                        aria-describedby="alert-dialog-slide-description"
-                      >
-                        <DialogTitle>{"Cancel Appointment"}</DialogTitle>
-                        <DialogContent>
-                          <DialogContentText id="alert-dialog-slide-description">
-                            Are you sure you want to cancel this appointment?
-                          </DialogContentText>
-                        </DialogContent>
-                        <DialogActions>
-                          <Button onClick={handleClose}>NO</Button>
-                          <Button onClick={(e) => {  cancelAppointment(e,id) }}>YES</Button>
-                        </DialogActions>
-                      </Dialog>
                   </TableRow>
                 ))}
                 
@@ -144,7 +126,24 @@ export default function AppointmentList() {
           </Table>
         </TableContainer>
       </Paper>
-      
+      <Dialog
+        open={open}
+        TransitionComponent={Transition}
+        keepMounted
+        onClose={handleClose}
+        aria-describedby="alert-dialog-slide-description"
+      >
+        <DialogTitle>{"Cancel Appointment"}</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-slide-description">
+            Are you sure you want to cancel this appointment?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose}>NO</Button>
+          <Button onClick={(e) => {  cancelAppointment(e,id) }}>YES</Button>
+        </DialogActions>
+      </Dialog>
     </Grid>
     
   );
