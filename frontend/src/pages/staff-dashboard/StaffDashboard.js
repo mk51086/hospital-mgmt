@@ -28,6 +28,7 @@ import AddPatient from "./views/Admin/AddPatient/AddPatient";
 import PatientList from "./views/Admin/PatientList/PatientList";
 import AddStaff from "./views/Admin/AddStaff/AddStaff";
 import StaffList from "./views/Admin/StaffList/StaffList";
+import Bills from "./views/Cashier/Bills";
 
 const drawerWidth = 240;
 
@@ -118,6 +119,9 @@ function DashboardContent(props) {
               {user.jobTitle === "doctor" && option === "/doctor" && <Doctor />}
               {user.jobTitle === "cashier" && option === "/createbill" && (
                 <CreateBill />
+              )}
+                {user.jobTitle === "cashier" && option === "/bills" && (
+                <Bills />
               )}
               {user.jobTitle === "receptionist" && option === "/createroom" && (
                 <CreateRoom />

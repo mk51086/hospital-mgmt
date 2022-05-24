@@ -40,8 +40,7 @@ const { user } = useAuthContext();
           HMS<Bluedot>.</Bluedot>
         </h1>
         <p>
-        Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s
-        </p>
+        HMS was introduced to solve the complications coming from managing all the paper works of every patient associated with the various departments of hospitalization with confidentiality.        </p>
         <Flex jc="space-around">
         {!user && (
               <>

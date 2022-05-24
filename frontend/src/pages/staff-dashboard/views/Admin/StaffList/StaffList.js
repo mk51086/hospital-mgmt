@@ -32,7 +32,9 @@ import { educationList } from "../../../../../components/shared/educationList";
 
 
 // import { useAuthContext } from "../../../../hooks/useAuthContext";
-
+const Transition = React.forwardRef(function Transition(props, ref) {
+  return <Slide direction="up" ref={ref} {...props} />;
+});
 export default function StaffList() {
   const [open, setOpen] = React.useState(false);
   const [open2, setOpen2] = React.useState(false);
@@ -192,23 +194,6 @@ export default function StaffList() {
                     <IconButton onClick={(e) => {  handleClickOpen(e,record._id)  }} color="primary" variant="outlined" ><DeleteIcon />
                     </IconButton>
                     </TableCell>
-                    <Dialog
-                        open={open}
-                        keepMounted
-                        onClose={handleClose}
-                        aria-describedby="alert-dialog-slide-description"
-                      >
-                        <DialogTitle>{"Delete staff"}</DialogTitle>
-                        <DialogContent>
-                          <DialogContentText id="alert-dialog-slide-description">
-                            Are you sure you want to delete this staff?
-                          </DialogContentText>
-                        </DialogContent>
-                        <DialogActions>
-                          <Button onClick={handleClose}>NO</Button>
-                          <Button onClick={(e) => {  deletestaff(e,id) }}>YES</Button>
-                        </DialogActions>
-                      </Dialog>
                   </TableRow>
                 ))}
                 
@@ -220,18 +205,17 @@ export default function StaffList() {
               severity={severity} 
               message={message}/>
       </Paper>
-
-
-
                       <Dialog
                         open={open2}
                         keepMounted
+                        maxWidth='md'
+                        TransitionComponent={Transition}
                         aria-describedby="alert-dialog-slide-description"
                       >
                         <DialogTitle>{"Edit staff"}</DialogTitle>
                         <DialogContent>
                         <Box component="form" sx={{
-                            '& .MuiTextField-root': { m: 2, width: '20ch' },
+                            '& .MuiTextField-root': { m: 1, width: '40ch' },
                           }}>
                               <div>
                           <TextField
@@ -355,6 +339,25 @@ export default function StaffList() {
                         <DialogActions>
                           <Button type="submit" variant="contained" onClick={handleClose2}>Cancel</Button>
                           <Button type="submit" variant="contained" onClick={(e) => {  handleSubmit(e,id)  }}>Save Changes</Button>
+                        </DialogActions>
+                      </Dialog>
+
+                      <Dialog
+                        open={open}
+                        keepMounted
+                        TransitionComponent={Transition}
+                        onClose={handleClose}
+                        aria-describedby="alert-dialog-slide-description"
+                      >
+                        <DialogTitle>{"Delete staff"}</DialogTitle>
+                        <DialogContent>
+                          <DialogContentText id="alert-dialog-slide-description">
+                            Are you sure you want to delete this staff?
+                          </DialogContentText>
+                        </DialogContent>
+                        <DialogActions>
+                          <Button onClick={handleClose}>NO</Button>
+                          <Button onClick={(e) => {  deletestaff(e,id) }}>YES</Button>
                         </DialogActions>
                       </Dialog>
       

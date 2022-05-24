@@ -8,7 +8,8 @@ import AddCircleIcon from "@mui/icons-material/AddCircle";
 import LibraryBooksIcon from "@mui/icons-material/LibraryBooks";
 import PersonAdd from '@mui/icons-material/PersonAdd';
 import PermContactCalendar from '@mui/icons-material/PermContactCalendar';
-
+import AddCardIcon from '@mui/icons-material/AddCard';
+import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
 export default function MenuItems({ handleRouteChange }) {
   const { user } = useAuthContext();
 
@@ -63,11 +64,19 @@ export default function MenuItems({ handleRouteChange }) {
       {user.jobTitle === "cashier" && (
         <ListItem button onClick={() => handleRouteChange("/createbill")}>
           <ListItemIcon>
-            <MedicationIcon />
+            <AddCardIcon />
+          </ListItemIcon>
+          <ListItemText primary="Create Bill" />
+        </ListItem>
+      )}
+    {user.jobTitle === "cashier" && (
+        <ListItem button onClick={() => handleRouteChange("/bills")}>
+          <ListItemIcon>
+            <AccountBalanceWalletIcon />
           </ListItemIcon>
           <ListItemText primary="Bills" />
         </ListItem>
-      )}
+    )}
       {user.jobTitle === "receptionist" && (
         <ListItem button onClick={() => handleRouteChange("/createroom")}>
           <ListItemIcon>

@@ -6,6 +6,8 @@ import { useState } from "react";
 import { Box } from "@mui/system";
 import api from "../../../../api/axios";
 import { useAuthContext } from "../../../../hooks/useAuthContext";
+import { Autocomplete } from "@mui/material";
+import { useEffect } from "react";
 
 export default function CreateBill() {
  
@@ -15,6 +17,13 @@ export default function CreateBill() {
   const [debt, setDebt] = useState("");
   const { user } = useAuthContext();
  
+  const [records, setRecords] = useState([]);
+
+  useEffect(() => {
+    fetchData()
+      .catch(console.error);
+  }, [])
+
   const handleSubmit = async e => {
     e.preventDefault();
  
@@ -30,7 +39,17 @@ export default function CreateBill() {
       console.log(`Error : ${err.message}`);
     }
   };
- 
+  const fetchData = async () => {
+    await api.get(`/patient/all`).then(userData => {
+      setRecords(userData.data);
+    })
+  }
+
+  const handleDebt = async (e) => {
+    setPaid(e.target.value);
+    setDebt(total - e.target.value)
+  }
+
   return (
     <Grid item xs={12} md={12} lg={12}>
       <Paper
@@ -47,45 +66,52 @@ export default function CreateBill() {
         '& .MuiTextField-root': { m: 1, width: '40ch' },
       }}>
             <div>
-        <TextField
-            id="outlined-multiline-flexible"
-            label="Patient"
-            fullWidth
-            multiline
-            value={patient}
-            onChange={e => setPatient(e.target.value)}
-            helperText=" "
-            maxRows={5}
-            required
-          />
-           <TextField
-            id="outlined-multiline-flexible"
-            label="Paid"
-            fullWidth
-            multiline
-            value={paid}
-            onChange={e => setPaid(e.target.value)}
-            helperText=" "
-            maxRows={5}
-            required
-          />
-           <TextField
-            id="outlined-multiline-flexible"
+        <Autocomplete
+                disablePortal
+                options={records}
+                value={patient}
+                getOptionLabel={ records => (records.name) || ""}
+                onChange={(event, newValue) => {
+                  setPatient(newValue);
+                }}
+                
+                renderInput={(params) => (
+                  <TextField
+                      {...params}
+                      label="Patient"
+                      required
+                  />
+              )}
+              />
+         
+         <TextField
             label="Total"
             fullWidth
-            multiline
+            type="number"
             value={total}
             onChange={e => setTotal(e.target.value)}
+            InputProps={{ inputProps: { min: 0} }}
+            helperText=" "
+            maxRows={5}
+            required
+          />
+            <TextField
+            label="Paid"
+            fullWidth
+            type="number"
+            value={paid}
+            InputProps={{ inputProps: { min: 0} }}
+            onChange={e => handleDebt(e)}
             helperText=" "
             maxRows={5}
             required
           />
            <TextField
-            id="outlined-multiline-flexible"
             label="Debt"
             fullWidth
-            multiline
             value={debt}
+            type="number"
+            disabled
             onChange={e => setDebt(e.target.value)}
             helperText=" "
             maxRows={5}

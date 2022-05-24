@@ -186,6 +186,20 @@ const App = () => {
                 )
               }
             />
+             <Route
+              path="/staff/dashboard/bills"
+              element={
+                !user ? (
+                  <Navigate to="/login" />
+                ) : !user.isStaff ? (
+                  <Navigate to="/patient/dashboard" />
+                ) : (
+                  user.jobTitle === "cashier" && (
+                    <StaffDashboard option={"/bills"} />
+                  )
+                )
+              }
+            />
             <Route
               path="/staff/dashboard/createroom"
               element={
