@@ -16,5 +16,5 @@ const patientSchema = new mongoose.Schema({
   doctor: {type:Schema.Types.ObjectId, ref:'Staff'}
 });
 
-const Patient = new mongoose.model("patient", patientSchema);
+const Patient = new mongoose.model("Patient", patientSchema);
 module.exports = Patient;

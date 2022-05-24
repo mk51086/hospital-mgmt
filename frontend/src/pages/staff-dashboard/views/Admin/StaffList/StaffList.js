@@ -76,7 +76,8 @@ export default function StaffList() {
     }
   };
 
-  const handleClickOpen = () => {
+  const handleClickOpen = (e,id) => {
+    setId(id)
     setOpen(true);
   };
 
@@ -186,9 +187,9 @@ export default function StaffList() {
                     <TableCell align="center">{record.education}</TableCell>
                     <TableCell align="center">{record.email}</TableCell>
                     <TableCell  align="center">
-                    <IconButton onClick={(e) => {  handleClickOpen2(e,record._id)  }}color="primary" variant="outlined" ><EditIcon />
+                    <IconButton onClick={(e) => {  handleClickOpen2(e,record._id)  }} color="primary" variant="outlined" ><EditIcon />
                     </IconButton>
-                    <IconButton onClick={handleClickOpen} color="primary" variant="outlined" ><DeleteIcon />
+                    <IconButton onClick={(e) => {  handleClickOpen(e,record._id)  }} color="primary" variant="outlined" ><DeleteIcon />
                     </IconButton>
                     </TableCell>
                     <Dialog
@@ -205,7 +206,7 @@ export default function StaffList() {
                         </DialogContent>
                         <DialogActions>
                           <Button onClick={handleClose}>NO</Button>
-                          <Button onClick={(e) => {  deletestaff(e,record._id) }}>YES</Button>
+                          <Button onClick={(e) => {  deletestaff(e,id) }}>YES</Button>
                         </DialogActions>
                       </Dialog>
                   </TableRow>

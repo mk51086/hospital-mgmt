@@ -15,5 +15,6 @@ router.delete("/appointment/:id", patientController.appointment_delete);
 
 router.put("/:id", patientController.patient_update);
 router.put("/appointment/:id", patientController.appointment_update);
+router.put("/appointment/cancel/:id", patientController.appointment_cancel);
 
 module.exports = router;

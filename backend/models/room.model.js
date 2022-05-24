@@ -8,5 +8,5 @@ const roomSchema = new mongoose.Schema({
   creator: {type:Schema.Types.ObjectId, ref:'Staff'}
 });
 
-const Room = new mongoose.model("room", roomSchema);
+const Room = new mongoose.model("Room", roomSchema);
 module.exports = Room;

@@ -8,5 +8,5 @@ const examinationSchema = new mongoose.Schema({
   nurse: { type: Schema.Types.ObjectId, ref: "Staff" },
 });
 
-const Examination = new mongoose.model("examination", examinationSchema);
+const Examination = new mongoose.model("Examination", examinationSchema);
 module.exports = Examination;

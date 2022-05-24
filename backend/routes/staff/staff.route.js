@@ -12,5 +12,12 @@ router.delete("/:id", staffController.staff_delete);
 
 router.put("/:id", staffController.staff_update);
 
+router.use("/doctor", require("./doctor/doctor.route"));
+router.use("/labassistant", require("./labassistant/labassistant.route"));
+router.use("/cashier", require("./cashier/cashier.route"));
+router.use("/pharmacist", require("./pharmacist/pharmacist.route"));
+router.use("/receptionist", require("./receptionist/recepsionist.route"));
+router.use("/nurse", require("./nurse/nurse.route"));
+
 
 module.exports = router;
