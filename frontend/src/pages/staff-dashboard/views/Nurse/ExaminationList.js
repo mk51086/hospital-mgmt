@@ -32,21 +32,19 @@ export default function ExaminationList() {
 
   const [open, setOpen] = React.useState(false);
   const [open2, setOpen2] = React.useState(false);
-  // const [dateState, setDateState] = React.useState();
 
   const [id, setId] = useState("");
   const [patient, setPatient] = useState("");
-  const [date, setDate] = useState(new Date(Date.now()));
   const [description, setDescription] = useState("");
   const [nurse, setNurse] = useState("");
 
   const handleSubmit = async (e, id) => {
     e.preventDefault();
 
-    const data = { id, patient, date, description, nurse };
+    const data = { patient, description, nurse };
     try {
+      console.log(description);
       await api.put(`/staff/nurse/examination/${id}`, data).then((userData) => {
-        console.log("saved", userData);
         handleClose2();
         fetchData().catch(console.error);
       });
@@ -55,18 +53,18 @@ export default function ExaminationList() {
     }
   };
 
-  const handleClickOpen = () => {
+  const handleClickOpen = (e, id) => {
+    setId(id);
     setOpen(true);
   };
 
   const handleClickOpen2 = async (e, id) => {
     try {
-      await api.get(`/staff/nurse/examination/${id}`).then((user) => {
+      await api.get(`/staff/nurse/examinations/${id}`).then((userData) => {
         setId(id);
-        setPatient(user.data.patient);
-        setDescription(user.data.description);
-        setDate(user.data.date);
-        setNurse(user.data.nurse);
+        setPatient(userData.data.patient);
+        setDescription(userData.data.description);
+        setNurse(userData.data.nurse);
       });
     } catch (err) {
       console.log(`Error : ${err.message}`);
@@ -81,13 +79,6 @@ export default function ExaminationList() {
   const handleClose2 = () => {
     setOpen2(false);
   };
-
-  // const handleDateChange = (date) => {
-  //   setDateState({
-  //     ...dateState,
-  //     updatedState: date,
-  //   });
-  // };
 
   const [records, setRecords] = useState([]);
 
@@ -130,8 +121,9 @@ export default function ExaminationList() {
             <TableHead>
               <TableRow>
                 <TableCell align="center">Id</TableCell>
+                <TableCell align="center">Patient</TableCell>
                 <TableCell align="center">Description</TableCell>
-                <TableCell align="center">Date</TableCell>
+                <TableCell align="center">Nurse</TableCell>
                 <TableCell align="center"> </TableCell>
               </TableRow>
             </TableHead>
@@ -143,8 +135,9 @@ export default function ExaminationList() {
                     sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                   >
                     <TableCell align="center">{record._id}</TableCell>
+                    <TableCell align="center">{record.patient}</TableCell>
                     <TableCell align="center">{record.description}</TableCell>
-                    <TableCell align="center">{record.date}</TableCell>
+                    <TableCell align="center">{record.nurse}</TableCell>
                     <TableCell align="center">
                       <IconButton
                         onClick={(e) => {
@@ -156,7 +149,9 @@ export default function ExaminationList() {
                         <EditIcon />
                       </IconButton>
                       <IconButton
-                        onClick={handleClickOpen}
+                        onClick={(e) => {
+                          handleClickOpen(e, record._id);
+                        }}
                         color="primary"
                         variant="outlined"
                       >
@@ -180,80 +175,10 @@ export default function ExaminationList() {
                         <Button onClick={handleClose}>NO</Button>
                         <Button
                           onClick={(e) => {
-                            deleteExamination(e, record._id);
+                            deleteExamination(e, id);
                           }}
                         >
                           YES
-                        </Button>
-                      </DialogActions>
-                    </Dialog>
-                    <Dialog
-                      open={open2}
-                      TransitionComponent={Transition}
-                      keepMounted
-                      aria-describedby="alert-dialog-slide-description"
-                    >
-                      <DialogTitle>{"Edit Examination"}</DialogTitle>
-                      <DialogContent>
-                        <Box
-                          component="form"
-                          sx={{
-                            "& .MuiTextField-root": { m: 2, width: "20ch" },
-                          }}
-                        >
-                          <div>
-                            <TextField
-                              id="outlined-multiline-flexible"
-                              label="ID"
-                              fullWidth
-                              multiline
-                              value={id}
-                              onChange={(e) => setId(e.target.value)}
-                              helperText=" "
-                              maxRows={5}
-                              required
-                            />
-                            <TextField
-                              id="outlined-multiline-flexible"
-                              label="Description"
-                              fullWidth
-                              multiline
-                              value={description}
-                              onChange={(e) => setDescription(e.target.value)}
-                              helperText=" "
-                              maxRows={5}
-                              required
-                            />
-                            <TextField
-                              id="outlined-multilin-flexible"
-                              label="Date"
-                              fullWidth
-                              multiline
-                              value={date}
-                              // onChange={handleDateChange}
-                              helperText=" "
-                              maxRows={5}
-                              required
-                            />
-                          </div>
-                        </Box>
-                      </DialogContent>
-                      <DialogActions>
-                        <Button
-                          type="submit"
-                          variant="contained"
-                          onClick={handleClose2}
-                        >
-                          Cancel
-                        </Button>
-                        <Button
-                          type="submit"
-                          variant="contained"
-                          onClick={(e) => {
-                            handleSubmit(e, id);
-                          }}
-                        >
-                          Save Changes
                         </Button>
                       </DialogActions>
                     </Dialog>
@@ -263,6 +188,72 @@ export default function ExaminationList() {
           </Table>
         </TableContainer>
       </Paper>
+      <Dialog
+        open={open2}
+        TransitionComponent={Transition}
+        keepMounted
+        aria-describedby="alert-dialog-slide-description"
+      >
+        <DialogTitle>{"Edit Examination"}</DialogTitle>
+        <DialogContent>
+          <Box
+            component="form"
+            sx={{
+              "& .MuiTextField-root": { m: 2, width: "20ch" },
+            }}
+          >
+            <div>
+              <TextField
+                id="outlined-multiline-flexible"
+                label="Patient"
+                fullWidth
+                multiline
+                value={patient}
+                onChange={(e) => setPatient(e.target.value)}
+                helperText=" "
+                maxRows={5}
+                required
+              />
+              <TextField
+                id="outlined-multilin-flexible"
+                label="Description"
+                fullWidth
+                multiline
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                helperText=" "
+                maxRows={5}
+                required
+              />
+              <TextField
+                id="outlined-multilin-flexible"
+                label="Nurse"
+                fullWidth
+                multiline
+                value={nurse}
+                onChange={(e) => setNurse(e.target.value)}
+                helperText=" "
+                maxRows={5}
+                required
+              />
+            </div>
+          </Box>
+        </DialogContent>
+        <DialogActions>
+          <Button type="submit" variant="contained" onClick={handleClose2}>
+            Cancel
+          </Button>
+          <Button
+            type="submit"
+            variant="contained"
+            onClick={(e) => {
+              handleSubmit(e, id);
+            }}
+          >
+            Save Changes
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Grid>
   );
 }
