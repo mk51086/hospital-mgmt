@@ -19,5 +19,5 @@ const staffSchema = new mongoose.Schema({
 
 const collectionName = "staff";
 
-const Staff = new mongoose.model("staff", staffSchema, collectionName);
+const Staff = new mongoose.model("Staff", staffSchema, collectionName);
 module.exports = Staff;

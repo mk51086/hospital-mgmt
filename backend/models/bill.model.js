@@ -9,5 +9,5 @@ const billSchema = new mongoose.Schema({
   creator: {type:Schema.Types.ObjectId, ref:'Staff'}
 });
 
-const Bill = new mongoose.model("bill", billSchema);
+const Bill = new mongoose.model("Bill", billSchema);
 module.exports = Bill;

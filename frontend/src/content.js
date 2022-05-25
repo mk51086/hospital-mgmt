@@ -1,38 +1,36 @@
 const content = [
-	{
-		id: 1,
-		title: 'High quality service',
-		body: 'Vivamus arcu felis bibendum ut tristique et egestas quis. Ut morbi tincidunt augue interdum velit euismod. Eu lobortis elementum nibh tellus. Sit amet mattis vulputate enim nulla aliquet porttitor. Dolor sed viverra ipsum nunc.',
-		image: '55.png',
-		alt: '',
-		list: false,
-	},
-	{
-		id: 2,
-		title: 'Modern hospital and technology',
-		body: 'Non blandit massa enim nec dui nunc mattis. In mollis nunc sed id semper risus in hendrerit. Amet consectetur adipiscing elit ut aliquam. Euismod elementum nisi quis eleifend quam adipiscing vitae proin. Enim ut tellus elementum sagittis vitae et. Volutpat est velit egestas dui id.',
-		image: '5.png',
-		alt: '',
-		list: false,
-	},
-	{
-		id: 3,
-		title: 'Top Doctors',
-		body: 'Vestibulum lectus mauris ultrices eros in cursus turpis massa tincidunt. Mattis enim ut tellus elementum sagittis vitae et leo duis. Condimentum mattis pellentesque id nibh tortor. Mauris cursus mattis molestie a iaculis at erat pellentesque.',
-		image: '8.png',
-		alt: '',
-		list: false,
-	},
-	{
-		id: 4,
-		title: '24 Hours Service',
-		body: [
-			'Praesent tristique magna sit amet purus gravida quis blandit. Mauris augue neque gravida in fermentum et sollicitudin. Cursus risus at ultrices mi tempus imperdiet. Tristique risus nec feugiat in fermentum posuere urna.',
-		],
-		image: '4.gif',
-		alt: '',
-		list: false,
-	},
+  {
+    id: 1,
+    title: "High quality service",
+    body: "A tech saviour for labs and pharmacies, HMS has paved the way for a hassle-free management process. This medical software helps in generating patient bills and electronic test reports. Not just that, the doctors can also see the previous medical history and prescribe medicines accordingly.",
+    image: "55.png",
+    alt: "",
+    list: false,
+  },
+  {
+    id: 2,
+    title: "Modern hospital and technology",
+    body: "HMS provides the ability to manage all the paperwork in one place, reducing the work of staff in arranging and analyzing the paperwork of the patients.",
+    image: "5.png",
+    alt: "",
+    list: false,
+  },
+  {
+    id: 3,
+    title: "Easy Patient data retrieval",
+    body: "HMS makes it possible to access all the data related to a patient via a system by the means of a few simple clicks. Information like patient history, current illness, doctors involved, tests reports taken, billing information and many more can be made visible to the user. These data will help to connect the dots about the patient, like specific diagnosis, related treatment, and medication.",
+    image: "8.png",
+    alt: "",
+    list: false,
+    id: 4,
+    title: "24 Hours Service",
+    body: [
+      "HMS not only saves time in the hospital but also is cost-effective in decreasing the number of people working on the system of manual entry of data and paperwork. The implementation of His will decrease the human intervention into the system thereby avoiding human-caused errors.",
+    ],
+    image: "4.gif",
+    alt: "",
+    list: false,
+  },
 ];
 
 export default content;

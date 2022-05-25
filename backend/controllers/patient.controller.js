@@ -139,7 +139,9 @@ const appointment_book = (req, res, next) => {
     patient: req.body.patient,
     date: req.body.date,
     description: req.body.description,
-    doctor: req.body.doctor
+    doctor: req.body.doctor,
+    room: req.body.room,
+    status: req.body.status
   });
   appointment.save(appointment)
     .then(() => {
@@ -161,7 +163,9 @@ const appointment_update = (req, res, next) => {
     patient: req.body.name,
     date: req.body.email,
     description: req.body.age,
-    doctor: req.body.gender
+    doctor: req.body.doctor,
+    room: req.body.room,
+    status: req.body.status
   });
   Appointment.updateOne({ _id: req.params.id }, appointment)
     .then(() => {
@@ -177,9 +181,29 @@ const appointment_update = (req, res, next) => {
     });
 };
 
+
+const appointment_cancel = (req, res, next) => {
+  Appointment.updateOne({ _id: req.params.id }, { "$set" : { 
+    "status" : 'Canceled', } ,
+  })
+    .then(() => {
+      res.status(200).json({
+        message: "appointment canceled",
+      });
+    })
+    .catch((error) => {
+      res.status(404).json({
+        message: error.message,
+      });
+    });
+};
+
+
 const appointment_list = (req, res) => {
   const id = req.params.id;
   Appointment.find({'patient' : id})
+    .populate({ path: 'doctor', select: 'name' })
+    .populate({ path: 'room', select: 'number' })
     .then((appointment) => res.json(appointment));
 };
 
@@ -202,5 +226,6 @@ module.exports = {
   appointment_book,
   appointment_list,
   appointment_delete,
-  appointment_update
+  appointment_update,
+  appointment_cancel
 };
