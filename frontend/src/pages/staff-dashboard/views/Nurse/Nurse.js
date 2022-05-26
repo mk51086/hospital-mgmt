@@ -2,9 +2,10 @@ import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
 import { TextField } from "@mui/material";
 import Button from "@mui/material/Button";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Box } from "@mui/system";
 import api from "../../../../api/axios";
+import { Autocomplete } from "@mui/material";
 import { useAuthContext } from "../../../../hooks/useAuthContext";
 
 export default function Nurse() {
@@ -13,7 +14,18 @@ export default function Nurse() {
   const [date, setDate] = useState(new Date(Date.now()));
   const [description, setDescription] = useState("");
 
+  const [records, setRecords] = useState([]);
   const { user } = useAuthContext();
+
+  useEffect(() => {
+    fetchData().catch(console.error);
+  }, []);
+
+  const fetchData = async () => {
+    await api.get(`/patient/all`).then((userData) => {
+      setRecords(userData.data);
+    });
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -50,16 +62,17 @@ export default function Nurse() {
           }}
         >
           <div>
-            <TextField
-              id="outlined-multiline-flexible"
-              label="Patient"
-              fullWidth
-              multiline
+            <Autocomplete
+              disablePortal
+              options={records}
               value={patient}
-              onChange={(e) => setPatient(e.target.value)}
-              helperText=" "
-              maxRows={5}
-              required
+              getOptionLabel={(records) => records.name || ""}
+              onChange={(event, newValue) => {
+                setPatient(newValue);
+              }}
+              renderInput={(params) => (
+                <TextField {...params} label="Patient" required />
+              )}
             />
             <TextField
               sx={{ mb: 4 }}

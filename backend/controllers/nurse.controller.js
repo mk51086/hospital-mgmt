@@ -22,27 +22,28 @@ const nurse_examination_post = (req, res, next) => {
     });
 };
 
-const examination_get = (req, res) => {
-  const id = req.params.id;
-  Examination.findById(id).then((examination) => res.json(examination));
-};
-
 const examination_list = (req, res) => {
-  const id = req.params.id;
-  Examination.find({ examination: id }).then((examination) =>
-    res.json(examination)
-  );
+  Examination.find()
+    .populate({ path: "patient", select: "name" })
+    .then((examination) => res.json(examination));
 };
 
-const examination_delete = (req, res) => {
-  Examination.deleteOne({ _id: req.params.id }).then(() => {
+const examination_get = async (req, res) => {
+  const id = req.params.id;
+  await Examination.findById(id)
+    .populate({ path: "patient", select: "name" })
+    .then((patient) => res.json(patient));
+};
+
+const examination_delete = async (req, res) => {
+  await Examination.deleteOne({ _id: req.params.id }).then(() => {
     res.status(200).json({
       message: "examination deleted",
     });
   });
 };
 
-const examination_update = (req, res, next) => {
+const examination_update = async (req, res, next) => {
   const examination = new Examination({
     _id: req.params.id,
     patient: req.body.patient,
@@ -50,7 +51,7 @@ const examination_update = (req, res, next) => {
     description: req.body.description,
     nurse: req.body.nurse,
   });
-  Examination.updateOne({ _id: req.params.id }, examination)
+  await Examination.updateOne({ _id: req.params.id }, examination)
     .then(() => {
       res.status(200).json({
         examination,
