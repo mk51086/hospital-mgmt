@@ -79,9 +79,8 @@ export default function Nurse() {
               id="datetime-local"
               fullWidth
               type="datetime-local"
-              label="Select Timing"
+              label="Date and Time"
               onChange={(e) => setDate(e.target.value)}
-              helperText="Please select suitable timings"
               required
               InputLabelProps={{
                 shrink: true,

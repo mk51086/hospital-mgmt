@@ -25,6 +25,7 @@ const nurse_examination_post = (req, res, next) => {
 const examination_list = (req, res) => {
   Examination.find()
     .populate({ path: "patient", select: "name" })
+    .populate({ path: "nurse", select: "name" })
     .then((examination) => res.json(examination));
 };
 

@@ -18,7 +18,7 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import Slide from "@mui/material/Slide";
 import { Box } from "@mui/system";
-import { TextField } from "@mui/material";
+import { Tab, TextField } from "@mui/material";
 import api from "../../../../api/axios";
 import { useState, useEffect } from "react";
 import Notifybar from "../../../../components/shared/Notifybar";
@@ -47,7 +47,6 @@ export default function ExaminationList() {
 
     const data = { description };
     try {
-      console.log(description);
       await api.put(`/staff/nurse/examination/${id}`, data).then((userData) => {
         handleClose2();
         fetchData().catch(console.error);
@@ -68,8 +67,6 @@ export default function ExaminationList() {
         setId(id);
         setPatient(userData.data.patient?.name);
         setDescription(userData.data.description);
-        setNurse(userData.data.nurse);
-        console.log(userData.data.nurse);
       });
     } catch (err) {
       console.log(`Error : ${err.message}`);
@@ -151,7 +148,12 @@ export default function ExaminationList() {
                     <TableCell align="center">{record._id}</TableCell>
                     <TableCell align="center">{record.patient?.name}</TableCell>
                     <TableCell align="center">{record.description}</TableCell>
-                    <TableCell align="center">{record.nurse}</TableCell>
+                    {typeof record.nurse !== "undefined" && (
+                      <TableCell align="center">{record.nurse.name}</TableCell>
+                    )}
+                    {typeof record.nurse === "undefined" && (
+                      <TableCell align="center">TBD</TableCell>
+                    )}
                     <TableCell align="center">
                       <IconButton
                         onClick={(e) => {
@@ -248,7 +250,6 @@ export default function ExaminationList() {
                 disabled
                 value={nurse}
                 InputProps={{ inputProps: { min: 0 } }}
-                onChange={(e) => setNurse(e.target.value)}
                 helperText=" "
                 required
               />
