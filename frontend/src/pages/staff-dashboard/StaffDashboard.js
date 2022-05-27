@@ -24,6 +24,7 @@ import Pharmacist from "./views/Pharmacist/Pharmacist";
 import { useAuthContext } from "./../../hooks/useAuthContext";
 import AddTest from "./views/LabAssistant/AddTest";
 import Tests from "./views/LabAssistant/TestsList";
+import TestTypes from "./views/LabAssistant/TestTypes";
 import AddPatient from "./views/Admin/AddPatient/AddPatient";
 import PatientList from "./views/Admin/PatientList/PatientList";
 import AddStaff from "./views/Admin/AddStaff/AddStaff";
@@ -128,6 +129,7 @@ function DashboardContent(props) {
               )}
                {user.jobTitle === "labassistant" && option === "/add-test" && <AddTest />}
               {user.jobTitle === "labassistant" && option === "/tests" && <Tests />}
+              {user.jobTitle === "labassistant" && option === "/test-types" && <TestTypes />}
               {user.jobTitle === "nurse" && option === "/view-examinations" && (
                 <ExaminationList />
               )}

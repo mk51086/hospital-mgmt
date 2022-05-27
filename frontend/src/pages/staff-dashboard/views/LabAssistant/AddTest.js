@@ -6,12 +6,11 @@ import { useState, useEffect } from "react";
 import { Box } from "@mui/system";
 import api from "../../../../api/axios";
 import { useAuthContext } from "../../../../hooks/useAuthContext";
-import { useNavigate } from "react-router-dom";
 import Autocomplete from '@mui/material/Autocomplete';
 
 export default function AddTest() {
 
-  const [testName, setTestName] = useState("");
+  const [test, setTest] = useState("");
   const [patient, setPatient] = useState("");
   const [description, setDescription] = useState("");
   const [result, setResult] = useState("");
@@ -32,13 +31,25 @@ export default function AddTest() {
       .catch(console.error);
   }, [])
 
+  const [testRecords, setTestRecords] = useState([]);
+  const fetchTestData = async () => {
+    await api.get(`/labassistant/testtypes/all`).then(testTypeData => {
+      setTestRecords(testTypeData.data);
+    })
+  }
+
+  useEffect(() => {
+    fetchTestData()
+      .catch(console.error);
+  }, [])
+
 
   const handleSubmit = async e => {
     e.preventDefault();
-    const data = { testName, patient, description, result, normal, id: user.id };
+    const data = { test, patient, description, result, id: user.id };
     try {
-      await api.post("/labassistant/addtest", data).then(userData => {
-        setTestName("");
+      await api.post("/labassistant/addtest", data).then(testsData => {
+        setTest("");
         setPatient("");
         setDescription("");
         setResult("");
@@ -52,6 +63,14 @@ export default function AddTest() {
   const handleAutocomplete = (event, newValue) => {
     if (newValue != null) {
       setPatient(newValue);
+      }
+  }
+  const handleAutocomplete2 = (event, newValue) => {
+    if (newValue != null) {
+      setTest(newValue);
+      console.log(newValue);
+      setNormal(newValue.normalValues);
+      console.log(normal);
       }
   }
 
@@ -71,16 +90,17 @@ export default function AddTest() {
         }}>
           <div style={{ display: 'flex', flexDirection: 'column' }}>
             <div style={{ display: 'flex' }}>
-              <TextField
-                id="outlined-multiline-flexible"
-                label="Test Name"
-                fullWidth
-                multiline
-                value={testName}
-                onChange={e => setTestName(e.target.value)}
-                helperText=" "
-                maxRows={5}
-                required
+            <Autocomplete
+                disablePortal
+                id="combo-box-demo"
+                value={test}
+                options={testRecords}
+                getOptionLabel={ testRecords => (testRecords.testName) || ""}
+                onChange={handleAutocomplete2}
+                sx={{ width: '300' }}
+                renderInput={(params) => <TextField {...params} 
+                label="Test"
+                />}
               />
               <Autocomplete
                 disablePortal
@@ -99,7 +119,7 @@ export default function AddTest() {
               id="outlined-multiline-static"
               multiline
               rows={5}
-              label="Description"
+              label="Notes"
               style={{ width: "100.7vh" }}
               fullWidth
               value={description}
@@ -120,15 +140,11 @@ export default function AddTest() {
                 required
               />
               <TextField
-                id="outlined-multiline-flexible"
+                disabled
+                id="outlined-disabled"
                 label="Normal"
-                fullWidth
-                multiline
+                InputLabelProps={{ shrink: true }}
                 value={normal}
-                onChange={e => setNormal(e.target.value)}
-                helperText=" "
-                maxRows={5}
-                required
               />
             </div>
           </div>
