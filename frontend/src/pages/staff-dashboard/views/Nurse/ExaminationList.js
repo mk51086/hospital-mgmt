@@ -18,9 +18,10 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import Slide from "@mui/material/Slide";
 import { Box } from "@mui/system";
-import { TextField } from "@mui/material";
+import { Tab, TextField } from "@mui/material";
 import api from "../../../../api/axios";
 import { useState, useEffect } from "react";
+import Notifybar from "../../../../components/shared/Notifybar";
 // import { useAuthContext } from "../../../../hooks/useAuthContext";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
@@ -32,6 +33,9 @@ export default function ExaminationList() {
 
   const [open, setOpen] = React.useState(false);
   const [open2, setOpen2] = React.useState(false);
+  const [bar, setBar] = React.useState(false);
+  const [message, setMessage] = useState("");
+  const [severity, setSeverity] = useState("");
 
   const [id, setId] = useState("");
   const [patient, setPatient] = useState("");
@@ -41,9 +45,8 @@ export default function ExaminationList() {
   const handleSubmit = async (e, id) => {
     e.preventDefault();
 
-    const data = { patient, description, nurse };
+    const data = { description };
     try {
-      console.log(description);
       await api.put(`/staff/nurse/examination/${id}`, data).then((userData) => {
         handleClose2();
         fetchData().catch(console.error);
@@ -60,11 +63,10 @@ export default function ExaminationList() {
 
   const handleClickOpen2 = async (e, id) => {
     try {
-      await api.get(`/staff/nurse/examinations/${id}`).then((userData) => {
+      await api.get(`/staff/nurse/examination/${id}`).then((userData) => {
         setId(id);
-        setPatient(userData.data.patient);
+        setPatient(userData.data.patient?.name);
         setDescription(userData.data.description);
-        setNurse(userData.data.nurse);
       });
     } catch (err) {
       console.log(`Error : ${err.message}`);
@@ -80,17 +82,26 @@ export default function ExaminationList() {
     setOpen2(false);
   };
 
-  const [records, setRecords] = useState([]);
-
-  const fetchData = async () => {
-    await api.get(`/staff/nurse/examination/all`).then((userData) => {
-      setRecords(userData.data);
-    });
+  const showBar = () => {
+    setBar(true);
   };
+
+  const hideBar = () => {
+    setBar(false);
+  };
+
+  const [records, setRecords] = useState([]);
 
   useEffect(() => {
     fetchData().catch(console.error);
   }, []);
+
+  const fetchData = async () => {
+    await api.get(`/staff/nurse/examinations`).then((userData) => {
+      console.log(userData);
+      setRecords(userData.data);
+    });
+  };
 
   const deleteExamination = async (e, id) => {
     e.preventDefault();
@@ -135,9 +146,14 @@ export default function ExaminationList() {
                     sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                   >
                     <TableCell align="center">{record._id}</TableCell>
-                    <TableCell align="center">{record.patient}</TableCell>
+                    <TableCell align="center">{record.patient?.name}</TableCell>
                     <TableCell align="center">{record.description}</TableCell>
-                    <TableCell align="center">{record.nurse}</TableCell>
+                    {typeof record.nurse !== "undefined" && (
+                      <TableCell align="center">{record.nurse.name}</TableCell>
+                    )}
+                    {typeof record.nurse === "undefined" && (
+                      <TableCell align="center">TBD</TableCell>
+                    )}
                     <TableCell align="center">
                       <IconButton
                         onClick={(e) => {
@@ -187,11 +203,18 @@ export default function ExaminationList() {
             </TableBody>
           </Table>
         </TableContainer>
+        <Notifybar
+          open={bar}
+          onClose={hideBar}
+          severity={severity}
+          message={message}
+        />
       </Paper>
       <Dialog
         open={open2}
-        TransitionComponent={Transition}
         keepMounted
+        maxWidth="md"
+        TransitionComponent={Transition}
         aria-describedby="alert-dialog-slide-description"
       >
         <DialogTitle>{"Edit Examination"}</DialogTitle>
@@ -204,36 +227,30 @@ export default function ExaminationList() {
           >
             <div>
               <TextField
-                id="outlined-multiline-flexible"
                 label="Patient"
                 fullWidth
-                multiline
+                disabled
+                InputProps={{ inputProps: { min: 0 } }}
                 value={patient}
-                onChange={(e) => setPatient(e.target.value)}
                 helperText=" "
-                maxRows={5}
                 required
               />
               <TextField
-                id="outlined-multilin-flexible"
                 label="Description"
                 fullWidth
-                multiline
                 value={description}
+                InputProps={{ inputProps: { min: 0 } }}
                 onChange={(e) => setDescription(e.target.value)}
                 helperText=" "
-                maxRows={5}
                 required
               />
               <TextField
-                id="outlined-multilin-flexible"
                 label="Nurse"
                 fullWidth
-                multiline
+                disabled
                 value={nurse}
-                onChange={(e) => setNurse(e.target.value)}
+                InputProps={{ inputProps: { min: 0 } }}
                 helperText=" "
-                maxRows={5}
                 required
               />
             </div>

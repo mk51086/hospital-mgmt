@@ -9,7 +9,6 @@ router.get("/bill/:id", cashierController.bill_get);
 
 router.put("/bill/:id", cashierController.bill_update);
 
-router.delete('/bill/:id', cashierController.bill_delete);
-
+router.delete("/bill/:id", cashierController.bill_delete);
 
 module.exports = router;

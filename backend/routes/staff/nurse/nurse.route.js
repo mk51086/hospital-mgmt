@@ -4,8 +4,8 @@ const nurseController = require("../../../controllers/nurse.controller");
 
 router.post("/examination", nurseController.nurse_examination_post);
 
-router.get("/examination/:id", nurseController.examination_list);
-router.get("/examinations/:id", nurseController.examination_get);
+router.get("/examinations", nurseController.examination_list);
+router.get("/examination/:id", nurseController.examination_get);
 
 router.delete("/examination/:id", nurseController.examination_delete);
 
