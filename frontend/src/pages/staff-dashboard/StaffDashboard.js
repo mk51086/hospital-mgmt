@@ -28,7 +28,9 @@ import TestTypes from "./views/LabAssistant/TestTypes";
 import AddPatient from "./views/Admin/AddPatient/AddPatient";
 import PatientList from "./views/Admin/PatientList/PatientList";
 import AddStaff from "./views/Admin/AddStaff/AddStaff";
+import AddDepartment from "./views/Admin/AddDepartment/AddDepartment";
 import StaffList from "./views/Admin/StaffList/StaffList";
+import DepartmentList from "./views/Admin/DepartmentList/DepartmentList";
 import Bills from "./views/Cashier/Bills";
 
 const drawerWidth = 240;
@@ -115,21 +117,29 @@ function DashboardContent(props) {
               {option === "" && <Profile />}
               {user.admin && option === "/add-patient" && <AddPatient />}
               {user.admin && option === "/add-staff" && <AddStaff />}
+              {user.admin && option === "/add-department" && <AddDepartment />}
               {user.admin && option === "/view-patients" && <PatientList />}
               {user.admin && option === "/view-staff" && <StaffList />}
+              {user.admin && option === "/view-departments" && (
+                <DepartmentList />
+              )}
               {user.jobTitle === "doctor" && option === "/doctor" && <Doctor />}
               {user.jobTitle === "cashier" && option === "/createbill" && (
                 <CreateBill />
               )}
-                {user.jobTitle === "cashier" && option === "/bills" && (
-                <Bills />
-              )}
+              {user.jobTitle === "cashier" && option === "/bills" && <Bills />}
               {user.jobTitle === "receptionist" && option === "/createroom" && (
                 <CreateRoom />
               )}
-               {user.jobTitle === "labassistant" && option === "/add-test" && <AddTest />}
-              {user.jobTitle === "labassistant" && option === "/tests" && <Tests />}
-              {user.jobTitle === "labassistant" && option === "/test-types" && <TestTypes />}
+              {user.jobTitle === "labassistant" && option === "/add-test" && (
+                <AddTest />
+              )}
+              {user.jobTitle === "labassistant" && option === "/tests" && (
+                <Tests />
+              )}
+              {user.jobTitle === "labassistant" && option === "/test-types" && (
+                <TestTypes />
+              )}
               {user.jobTitle === "nurse" && option === "/view-examinations" && (
                 <ExaminationList />
               )}
