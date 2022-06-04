@@ -124,7 +124,7 @@ export default function Messages() {
                 </Typography>
               </AccordionDetails>
               <AccordionActions sx={{ borderBottom: "1px solid #A9A9A9" }}>
-                <Button size="small" color="primary" onClick={(e) => { archived(e, record._id) }}>Archive</Button>
+                <Button size="small" color="primary" onClick={(e) => { archived(e, record._id) }} sx={{display: record.archive ? "none" : "block"}}>Archive</Button>
               </AccordionActions>
             </Accordion>
             <Snackbar open={archivedAlert} autoHideDuration={4000} onClose={handleArchivedAlertClose}>
