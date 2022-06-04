@@ -159,6 +159,18 @@ const App = () => {
               }
             />
 
+            <Route path='/patient'>
+              <Route path='/patient/dashboard/view-appointments' element={
+                !user ? (
+                  <Navigate to="/login" />
+                ) : user.isStaff ? (
+                  <Navigate to="/staff/dashboard" />
+                ) : (
+                  <PatientDashboard option={"/view-appointments"} />
+                )
+              } />
+            </Route>
+{/* 
             <Route
               path="/patient/dashboard/view-appointments"
               element={
@@ -170,7 +182,7 @@ const App = () => {
                   <PatientDashboard option={"/view-appointments"} />
                 )
               }
-            />
+            /> */}
 
             <Route
               path="/staff/dashboard"
