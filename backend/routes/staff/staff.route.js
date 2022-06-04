@@ -18,6 +18,7 @@ router.use("/cashier", require("./cashier/cashier.route"));
 router.use("/pharmacist", require("./pharmacist/pharmacist.route"));
 router.use("/receptionist", require("./receptionist/recepsionist.route"));
 router.use("/nurse", require("./nurse/nurse.route"));
+router.use("/contactus", require("./contactUs/contactUs.route"));
 
 
 module.exports = router;

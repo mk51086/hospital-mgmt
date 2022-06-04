@@ -81,7 +81,7 @@ const App = () => {
               }
             />
 
-<Route
+            <Route
               path="/staff/dashboard/view-staff"
               element={
                 !user ? (
@@ -116,6 +116,19 @@ const App = () => {
                   <Navigate to="/patient/dashboard" />
                 ) : (
                   <StaffDashboard option={"/add-staff"} />
+                )
+              }
+            />
+
+            <Route
+              path="/staff/dashboard/messages"
+              element={
+                !user ? (
+                  <Navigate to="/login" />
+                ) : !user.isStaff ? (
+                  <Navigate to="/patient/dashboard" />
+                ) : (
+                  <StaffDashboard option={"/messages"} />
                 )
               }
             />
@@ -186,7 +199,7 @@ const App = () => {
                 )
               }
             />
-             <Route
+            <Route
               path="/staff/dashboard/bills"
               element={
                 !user ? (

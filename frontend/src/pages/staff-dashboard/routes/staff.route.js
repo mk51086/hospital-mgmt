@@ -10,8 +10,34 @@ import PersonAdd from '@mui/icons-material/PersonAdd';
 import PermContactCalendar from '@mui/icons-material/PermContactCalendar';
 import AddCardIcon from '@mui/icons-material/AddCard';
 import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
+import MailOutlineIcon from '@mui/icons-material/MailOutline';
+import Badge from '@mui/material/Badge';
+import api from "../../../api/axios";
+import { useState, useEffect } from "react";
+
 export default function MenuItems({ handleRouteChange }) {
   const { user } = useAuthContext();
+
+  const [messagesNum,setMessagesNum] = useState();
+
+  const getNumberMessages = async() => {
+    try {
+      await api.get(`staff/contactus/nom`).then(number => {
+        setMessagesNum(number.data);
+      });
+    } catch (err) {
+      console.log(`Error : ${err.message}`);
+    }
+  };
+  useEffect(() => {
+    getNumberMessages()
+      .catch(console.error);
+  }, [])
+
+  const handleNumMsgChange = () => {
+    handleRouteChange("/messages");
+    setMessagesNum(0);
+  }
 
   return (
     <div>
@@ -53,6 +79,16 @@ export default function MenuItems({ handleRouteChange }) {
         <ListItemText primary="View Staff" />
       </ListItem>
        )}
+       {user.admin && (
+        <ListItem button onClick={() => handleNumMsgChange()}>
+          <ListItemIcon>
+            <Badge badgeContent={messagesNum} color="primary">
+              <MailOutlineIcon />
+            </Badge>
+          </ListItemIcon>
+          <ListItemText primary="Messages" />
+        </ListItem>
+      )}
       {user.jobTitle === "doctor" && (
         <ListItem button onClick={() => handleRouteChange("/doctor")}>
           <ListItemIcon>
