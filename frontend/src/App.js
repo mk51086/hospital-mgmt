@@ -254,6 +254,34 @@ const App = () => {
               }
             />
             <Route
+              path="/staff/dashboard/createappointment"
+              element={
+                !user ? (
+                  <Navigate to="/login" />
+                ) : !user.isStaff ? (
+                  <Navigate to="/patient/dashboard" />
+                ) : (
+                  user.jobTitle === "receptionist" && (
+                    <StaffDashboard option={"/createappointment"} />
+                  )
+                )
+              }
+            />
+              <Route
+              path="/staff/dashboard/appointments"
+              element={
+                !user ? (
+                  <Navigate to="/login" />
+                ) : !user.isStaff ? (
+                  <Navigate to="/patient/dashboard" />
+                ) : (
+                  user.jobTitle === "receptionist" && (
+                    <StaffDashboard option={"/appointments"} />
+                  )
+                )
+              }
+            />
+            <Route
               path="/staff/dashboard/createroom"
               element={
                 !user ? (
@@ -267,6 +295,7 @@ const App = () => {
                 )
               }
             />
+            
             <Route
               path="/staff/dashboard/tests"
               element={

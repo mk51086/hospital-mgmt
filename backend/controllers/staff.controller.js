@@ -123,6 +123,15 @@ const staff_get = async (req, res) => {
   }
 };
 
+const doctor_list = async (req, res) => {
+  try {
+    const data = await Staff.find({job_title: 'doctor'});
+    res.json(data);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 const staff_list = (req, res) => {
   Staff.find()
     .select("-password")
@@ -231,4 +240,5 @@ module.exports = {
   department_list,
   department_update,
   department_post,
+  doctor_list
 };

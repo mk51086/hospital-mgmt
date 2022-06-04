@@ -10,6 +10,7 @@ import PersonAdd from "@mui/icons-material/PersonAdd";
 import PermContactCalendar from "@mui/icons-material/PermContactCalendar";
 import AddCardIcon from "@mui/icons-material/AddCard";
 import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet";
+import Ballot from '@mui/icons-material/Ballot';
 export default function MenuItems({ handleRouteChange }) {
   const { user } = useAuthContext();
 
@@ -107,6 +108,22 @@ export default function MenuItems({ handleRouteChange }) {
             <AddCircleIcon />
           </ListItemIcon>
           <ListItemText primary="Create Room" />
+        </ListItem>
+      )}
+       {user.jobTitle === "receptionist" && (
+        <ListItem button onClick={() => handleRouteChange("/createappointment")}>
+          <ListItemIcon>
+            <AddCircleIcon />
+          </ListItemIcon>
+          <ListItemText primary="Create Appointment" />
+        </ListItem>
+      )}
+          {user.jobTitle === "receptionist" && (
+        <ListItem button onClick={() => handleRouteChange("/appointments")}>
+          <ListItemIcon>
+            <Ballot />
+          </ListItemIcon>
+          <ListItemText primary="View Appointments" />
         </ListItem>
       )}
       {user.jobTitle === "labassistant" && (
