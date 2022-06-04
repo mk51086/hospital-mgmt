@@ -159,7 +159,7 @@ const App = () => {
               }
             />
             <Route
-              path="/staff/dashboard/doctor"
+              path="/staff/dashboard/prescriptions"
               element={
                 !user ? (
                   <Navigate to="/login" />
@@ -167,7 +167,22 @@ const App = () => {
                   <Navigate to="/patient/dashboard" />
                 ) : (
                   user.jobTitle === "doctor" && (
-                    <StaffDashboard option={"/doctor"} />
+                    <StaffDashboard option={"/prescriptions"} />
+                  )
+                )
+              }
+            />
+
+          <Route
+              path="/staff/dashboard/addprescription"
+              element={
+                !user ? (
+                  <Navigate to="/login" />
+                ) : !user.isStaff ? (
+                  <Navigate to="/patient/dashboard" />
+                ) : (
+                  user.jobTitle === "doctor" && (
+                    <StaffDashboard option={"/addprescription"} />
                   )
                 )
               }

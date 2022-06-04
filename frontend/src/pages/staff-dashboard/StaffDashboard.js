@@ -15,7 +15,8 @@ import StaffRoutes from "./routes/staff.route";
 
 //views
 import CreateBill from "./views/Cashier/CreateBill";
-import Doctor from "./views/Doctor/Doctor";
+import PrescriptionList from "./views/Doctor/PrescriptionList";
+import CreatePrescription from "./views/Doctor/CreatePrescription";
 import Nurse from "./views/Nurse/Nurse";
 import ExaminationList from "./views/Nurse/ExaminationList";
 import Profile from "./views/Profile/Profile";
@@ -117,7 +118,8 @@ function DashboardContent(props) {
               {user.admin && option === "/add-staff" && <AddStaff />}
               {user.admin && option === "/view-patients" && <PatientList />}
               {user.admin && option === "/view-staff" && <StaffList />}
-              {user.jobTitle === "doctor" && option === "/doctor" && <Doctor />}
+              {user.jobTitle === "doctor" && option === "/prescriptions" && <PrescriptionList />}
+              {user.jobTitle === "doctor" && option === "/addprescription" && <CreatePrescription />}
               {user.jobTitle === "cashier" && option === "/createbill" && (
                 <CreateBill />
               )}
