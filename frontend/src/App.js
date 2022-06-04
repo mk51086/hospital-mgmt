@@ -81,7 +81,20 @@ const App = () => {
               }
             />
 
-<Route
+            <Route
+              path="/staff/dashboard/add-department"
+              element={
+                !user ? (
+                  <Navigate to="/login" />
+                ) : !user.isStaff ? (
+                  <Navigate to="/patient/dashboard" />
+                ) : (
+                  <StaffDashboard option={"/add-department"} />
+                )
+              }
+            />
+
+            <Route
               path="/staff/dashboard/view-staff"
               element={
                 !user ? (
@@ -90,6 +103,19 @@ const App = () => {
                   <Navigate to="/patient/dashboard" />
                 ) : (
                   <StaffDashboard option={"/view-staff"} />
+                )
+              }
+            />
+
+            <Route
+              path="/staff/dashboard/view-departments"
+              element={
+                !user ? (
+                  <Navigate to="/login" />
+                ) : !user.isStaff ? (
+                  <Navigate to="/patient/dashboard" />
+                ) : (
+                  <StaffDashboard option={"/view-departments"} />
                 )
               }
             />
@@ -133,6 +159,18 @@ const App = () => {
               }
             />
 
+            <Route path='/patient'>
+              <Route path='/patient/dashboard/view-appointments' element={
+                !user ? (
+                  <Navigate to="/login" />
+                ) : user.isStaff ? (
+                  <Navigate to="/staff/dashboard" />
+                ) : (
+                  <PatientDashboard option={"/view-appointments"} />
+                )
+              } />
+            </Route>
+{/* 
             <Route
               path="/patient/dashboard/view-appointments"
               element={
@@ -144,7 +182,7 @@ const App = () => {
                   <PatientDashboard option={"/view-appointments"} />
                 )
               }
-            />
+            /> */}
 
             <Route
               path="/staff/dashboard"
@@ -201,7 +239,7 @@ const App = () => {
                 )
               }
             />
-             <Route
+            <Route
               path="/staff/dashboard/bills"
               element={
                 !user ? (
