@@ -71,7 +71,7 @@ export default function ContactUsModal() {
 
     const handleSubmit = async e => {
         e.preventDefault();
-        const data = { name, email, message, read, archive, id: user.id };
+        const data = { name, email, message, read, archive};
         try {
             await api.post("/staff/contactus/sendmessage", data).then(contactData => {
                 setName("");
