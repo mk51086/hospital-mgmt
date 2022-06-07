@@ -14,12 +14,12 @@ export default function BookAppointment() {
   const { user } = useAuthContext();
   // const navigate = useNavigate();
 
-  const handleSubmit = async e => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     console.log(date, description);
     const data = { date, description, patient: user.id };
     try {
-        await api.post("/patient/appointment", data).then(userData => {
+      await api.post("/patient/appointment", data).then((userData) => {
         setDate(new Date(Date.now()));
         setDescription("");
         console.log(userData);
@@ -48,7 +48,7 @@ export default function BookAppointment() {
             fullWidth
             type="datetime-local"
             label="Select Timing"
-            onChange={e => setDate(e.target.value)}
+            onChange={(e) => setDate(e.target.value)}
             helperText="Please select suitable timings"
             required
             InputLabelProps={{
@@ -62,7 +62,7 @@ export default function BookAppointment() {
             fullWidth
             multiline
             value={description}
-            onChange={e => setDescription(e.target.value)}
+            onChange={(e) => setDescription(e.target.value)}
             helperText="What's the appointment regarding"
             maxRows={5}
             required

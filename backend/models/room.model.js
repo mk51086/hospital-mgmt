@@ -5,7 +5,7 @@ const roomSchema = new mongoose.Schema({
   number: { type: String, required: true },
   cost: { type: Number },
   status: { type: String, required: true },
-  creator: {type:Schema.Types.ObjectId, ref:'Staff'}
+  creator: { type: Schema.Types.ObjectId, ref: "Staff" },
 });
 
 const Room = new mongoose.model("Room", roomSchema);

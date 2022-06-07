@@ -5,9 +5,10 @@ const room_create = (req, res, next) => {
     number: req.body.number,
     cost: req.body.cost,
     status: req.body.status,
-    creator: req.body.creator
+    creator: req.body.creator,
   });
-  room.save(room)
+  room
+    .save(room)
     .then(() => {
       res.status(200).json({
         room,
@@ -22,5 +23,5 @@ const room_create = (req, res, next) => {
 };
 
 module.exports = {
-  room_create
-}
+  room_create,
+};

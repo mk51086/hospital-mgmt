@@ -1,31 +1,32 @@
- const Bill = require("../models/bill.model");
+const Bill = require("../models/bill.model");
 
- const bill_post = (req, res, next) => {
-   const bill = new Bill({
+const bill_post = (req, res, next) => {
+  const bill = new Bill({
     patient: req.body.patient,
     paid: req.body.paid,
     total: req.body.total,
     debt: req.body.debt,
-    creator: req.body.creator
-   });
-   bill.save(bill)
-     .then(() => {
-       res.status(200).json({
-         bill,
-         message: "bill created",
-       });
-     })
-     .catch((error) => {
-       res.status(404).json({
-         message: error.message,
-       });
-     });
- };
- 
- const bill_list = (req, res) => {
+    creator: req.body.creator,
+  });
+  bill
+    .save(bill)
+    .then(() => {
+      res.status(200).json({
+        bill,
+        message: "bill created",
+      });
+    })
+    .catch((error) => {
+      res.status(404).json({
+        message: error.message,
+      });
+    });
+};
+
+const bill_list = (req, res) => {
   Bill.find()
-    .populate({ path: 'patient', select: 'name' })
-    .populate({ path: 'creator', select: 'name' })
+    .populate({ path: "patient", select: "name" })
+    .populate({ path: "creator", select: "name" })
     .then((bill) => res.json(bill));
 };
 
@@ -40,7 +41,7 @@ const bill_delete = async (req, res) => {
 const bill_get = async (req, res) => {
   const id = req.params.id;
   await Bill.findById(id)
-    .populate({ path: 'patient', select: 'name' })
+    .populate({ path: "patient", select: "name" })
     .then((patient) => res.json(patient));
 };
 
@@ -49,10 +50,10 @@ const bill_update = async (req, res, next) => {
     _id: req.params.id,
     paid: req.body.paid,
     total: req.body.total,
-    debt: req.body.debt
+    debt: req.body.debt,
   });
   await Bill.updateOne({ _id: req.params.id }, bill)
-    .then( () => {
+    .then(() => {
       res.status(200).json({
         bill,
         message: `bill with id ${bill._id} updated`,
@@ -65,11 +66,10 @@ const bill_update = async (req, res, next) => {
     });
 };
 
- 
- module.exports = {
+module.exports = {
   bill_post,
   bill_list,
   bill_delete,
   bill_get,
-  bill_update
- }
+  bill_update,
+};

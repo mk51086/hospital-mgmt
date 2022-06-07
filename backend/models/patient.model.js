@@ -13,7 +13,7 @@ const patientSchema = new mongoose.Schema({
   dob: { type: Date },
   phone: { type: String, maxlength: 11 },
   register_date: { type: Date, default: Date.now },
-  doctor: {type:Schema.Types.ObjectId, ref:'Staff'}
+  doctor: { type: Schema.Types.ObjectId, ref: "Staff" },
 });
 
 const Patient = new mongoose.model("Patient", patientSchema);

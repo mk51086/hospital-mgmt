@@ -1,6 +1,6 @@
 import Grid from "@mui/material/Grid";
-import * as React from 'react';
-import Button from '@mui/material/Button';
+import * as React from "react";
+import Button from "@mui/material/Button";
 import Paper from "@mui/material/Paper";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -8,23 +8,23 @@ import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
-import IconButton from '@mui/material/IconButton';
-import DeleteIcon from '@mui/icons-material/Delete';
-import EditIcon from '@mui/icons-material/Edit';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
-import Slide from '@mui/material/Slide';
+import IconButton from "@mui/material/IconButton";
+import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogTitle from "@mui/material/DialogTitle";
+import Slide from "@mui/material/Slide";
 import { Box } from "@mui/system";
 import { TextField } from "@mui/material";
 import api from "../../../../api/axios";
 import { useState, useEffect } from "react";
 import { useAuthContext } from "../../../../hooks/useAuthContext";
-import FormGroup from '@mui/material/FormGroup';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
+import FormGroup from "@mui/material/FormGroup";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Checkbox from "@mui/material/Checkbox";
 
 // import { useAuthContext } from "../../../../hooks/useAuthContext";
 const Transition = React.forwardRef(function Transition(props, ref) {
@@ -46,33 +46,39 @@ export default function TestsTypes() {
     e.preventDefault();
     const data = { testName, description, normalValues, available };
     try {
-      await api.put(`/labassistant/testtypes/${id}`, data).then(testTypeData => {
-        console.log('saved', testTypeData);
-        handleClose2();
-        fetchData()
-          .catch(console.error);
-      });
+      await api
+        .put(`/labassistant/testtypes/${id}`, data)
+        .then((testTypeData) => {
+          console.log("saved", testTypeData);
+          handleClose2();
+          fetchData().catch(console.error);
+        });
     } catch (err) {
       console.log(`Error : ${err.message}`);
     }
   };
 
-  const handleAdd = async e => {
+  const handleAdd = async (e) => {
     e.preventDefault();
-    const data = { testName, description, normalValues, available, id: user.id };
+    const data = {
+      testName,
+      description,
+      normalValues,
+      available,
+      id: user.id,
+    };
     try {
-      await api.post("/labassistant/testtypes/addtestType", data).then(userData => {
-        reset();
-        handleClose2();
-        fetchData()
-          .catch(console.error);
-      });
-
+      await api
+        .post("/labassistant/testtypes/addtestType", data)
+        .then((userData) => {
+          reset();
+          handleClose2();
+          fetchData().catch(console.error);
+        });
     } catch (err) {
       console.log(`Error : ${err.message}`);
     }
   };
-
 
   const reset = () => {
     setTestName("");
@@ -88,7 +94,7 @@ export default function TestsTypes() {
 
   const handleClickOpen2 = async (e, id) => {
     try {
-      await api.get(`/labassistant/testtypes/${id}`).then(testtype => {
+      await api.get(`/labassistant/testtypes/${id}`).then((testtype) => {
         setId(id);
         setTestName(testtype.data.testName);
         setDescription(testtype.data.description);
@@ -116,27 +122,24 @@ export default function TestsTypes() {
     reset();
   };
 
-
   const [records, setRecords] = useState([]);
   const fetchData = async () => {
-    await api.get(`/labassistant/testtypes/all`).then(testTypeData => {
+    await api.get(`/labassistant/testtypes/all`).then((testTypeData) => {
       setRecords(testTypeData.data);
-    })
-  }
+    });
+  };
 
   useEffect(() => {
-    fetchData()
-      .catch(console.error);
-  }, [])
+    fetchData().catch(console.error);
+  }, []);
 
   const deleteTestType = async (e, id) => {
     e.preventDefault();
     try {
-      await api.delete(`/labassistant/testtypes/${id}`).then(testTypeData => {
-        console.log('deleted');
+      await api.delete(`/labassistant/testtypes/${id}`).then((testTypeData) => {
+        console.log("deleted");
         handleClose();
-        fetchData()
-          .catch(console.error);
+        fetchData().catch(console.error);
       });
     } catch (err) {
       console.log(`Error : ${err.message}`);
@@ -153,9 +156,13 @@ export default function TestsTypes() {
           height: "auto",
         }}
       >
-        <div style={{ display: 'flex', justifyContent: "space-between" }}>
+        <div style={{ display: "flex", justifyContent: "space-between" }}>
           <h2 className="dashboard-title">Test Types</h2>
-          <Button onClick={handleClickOpen3} variant="contained" sx={{ mt: 0, mb: 5 }}>
+          <Button
+            onClick={handleClickOpen3}
+            variant="contained"
+            sx={{ mt: 0, mb: 5 }}
+          >
             Add Type
           </Button>
         </div>
@@ -173,15 +180,34 @@ export default function TestsTypes() {
             <TableBody>
               {records &&
                 records.map((record, index) => (
-                  <TableRow key={index} sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
+                  <TableRow
+                    key={index}
+                    sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                  >
                     <TableCell align="center">{record.testName}</TableCell>
                     <TableCell align="center">{record.description}</TableCell>
                     <TableCell align="center">{record.normalValues}</TableCell>
-                    <TableCell align="center">{record.available ? "Yes" : "No"}</TableCell>
                     <TableCell align="center">
-                      <IconButton onClick={(e) => { handleClickOpen2(e, record._id) }} color="primary" variant="outlined" ><EditIcon />
+                      {record.available ? "Yes" : "No"}
+                    </TableCell>
+                    <TableCell align="center">
+                      <IconButton
+                        onClick={(e) => {
+                          handleClickOpen2(e, record._id);
+                        }}
+                        color="primary"
+                        variant="outlined"
+                      >
+                        <EditIcon />
                       </IconButton>
-                      <IconButton onClick={(e) => { handleClickOpen(e, record._id) }} color="primary" variant="outlined" ><DeleteIcon />
+                      <IconButton
+                        onClick={(e) => {
+                          handleClickOpen(e, record._id);
+                        }}
+                        color="primary"
+                        variant="outlined"
+                      >
+                        <DeleteIcon />
                       </IconButton>
                     </TableCell>
                     <Dialog
@@ -199,7 +225,13 @@ export default function TestsTypes() {
                       </DialogContent>
                       <DialogActions>
                         <Button onClick={handleClose}>NO</Button>
-                        <Button onClick={(e) => { deleteTestType(e, id) }}>YES</Button>
+                        <Button
+                          onClick={(e) => {
+                            deleteTestType(e, id);
+                          }}
+                        >
+                          YES
+                        </Button>
                       </DialogActions>
                     </Dialog>
 
@@ -209,11 +241,16 @@ export default function TestsTypes() {
                       keepMounted
                       aria-describedby="alert-dialog-slide-description"
                     >
-                      <DialogTitle>{state ? "Add Test" : "Edit Test"}</DialogTitle>
+                      <DialogTitle>
+                        {state ? "Add Test" : "Edit Test"}
+                      </DialogTitle>
                       <DialogContent>
-                        <Box component="form" sx={{
-                          '& .MuiTextField-root': { m: 2, width: '20ch' },
-                        }}>
+                        <Box
+                          component="form"
+                          sx={{
+                            "& .MuiTextField-root": { m: 2, width: "20ch" },
+                          }}
+                        >
                           <div>
                             <TextField
                               id="outlined-multiline-flexible"
@@ -221,7 +258,7 @@ export default function TestsTypes() {
                               fullWidth
                               multiline
                               value={testName}
-                              onChange={e => setTestName(e.target.value)}
+                              onChange={(e) => setTestName(e.target.value)}
                               helperText=" "
                               maxRows={5}
                               required
@@ -232,7 +269,7 @@ export default function TestsTypes() {
                               fullWidth
                               multiline
                               value={normalValues}
-                              onChange={e => setNormalValues(e.target.value)}
+                              onChange={(e) => setNormalValues(e.target.value)}
                               helperText=" "
                               maxRows={5}
                               required
@@ -244,39 +281,60 @@ export default function TestsTypes() {
                               style={{ width: "54vh" }}
                               multiline
                               value={description}
-                              onChange={e => setDescription(e.target.value)}
+                              onChange={(e) => setDescription(e.target.value)}
                               helperText=" "
                               maxRows={10}
                               required
                             />
-                            <div style={{ display: 'flex', justifyContent: 'center', width:'54vh' }}>
-                            <FormGroup>
-                              <FormControlLabel
-                                control={
-                                  <Checkbox
-                                    checked={available}
-                                    onChange={e => setAvailable(e.target.checked)} />}
-                                label="Available"
-                              />
-                            </FormGroup>
+                            <div
+                              style={{
+                                display: "flex",
+                                justifyContent: "center",
+                                width: "54vh",
+                              }}
+                            >
+                              <FormGroup>
+                                <FormControlLabel
+                                  control={
+                                    <Checkbox
+                                      checked={available}
+                                      onChange={(e) =>
+                                        setAvailable(e.target.checked)
+                                      }
+                                    />
+                                  }
+                                  label="Available"
+                                />
+                              </FormGroup>
                             </div>
                           </div>
                         </Box>
                       </DialogContent>
                       <DialogActions>
-                        <Button type="submit" variant="contained" onClick={handleClose2}>Cancel</Button>
-                        <Button type="submit" variant="contained" onClick={(e) => { state ? handleAdd(e) : handleSubmit(e, id) }}>Save</Button>
+                        <Button
+                          type="submit"
+                          variant="contained"
+                          onClick={handleClose2}
+                        >
+                          Cancel
+                        </Button>
+                        <Button
+                          type="submit"
+                          variant="contained"
+                          onClick={(e) => {
+                            state ? handleAdd(e) : handleSubmit(e, id);
+                          }}
+                        >
+                          Save
+                        </Button>
                       </DialogActions>
                     </Dialog>
                   </TableRow>
                 ))}
-
             </TableBody>
           </Table>
         </TableContainer>
       </Paper>
-
     </Grid>
-
   );
 }

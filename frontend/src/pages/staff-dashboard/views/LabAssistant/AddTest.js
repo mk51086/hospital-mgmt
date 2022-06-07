@@ -6,10 +6,9 @@ import { useState, useEffect } from "react";
 import { Box } from "@mui/system";
 import api from "../../../../api/axios";
 import { useAuthContext } from "../../../../hooks/useAuthContext";
-import Autocomplete from '@mui/material/Autocomplete';
+import Autocomplete from "@mui/material/Autocomplete";
 
 export default function AddTest() {
-
   const [test, setTest] = useState("");
   const [patient, setPatient] = useState("");
   const [description, setDescription] = useState("");
@@ -21,34 +20,31 @@ export default function AddTest() {
   const [records, setRecords] = useState([]);
   // const id = user.id;
   const fetchData = async () => {
-    await api.get(`/patient/all`).then(userData => {
+    await api.get(`/patient/all`).then((userData) => {
       setRecords(userData.data);
-    })
-  }
+    });
+  };
 
   useEffect(() => {
-    fetchData()
-      .catch(console.error);
-  }, [])
+    fetchData().catch(console.error);
+  }, []);
 
   const [testRecords, setTestRecords] = useState([]);
   const fetchTestData = async () => {
-    await api.get(`/labassistant/testtypes/all`).then(testTypeData => {
+    await api.get(`/labassistant/testtypes/all`).then((testTypeData) => {
       setTestRecords(testTypeData.data);
-    })
-  }
+    });
+  };
 
   useEffect(() => {
-    fetchTestData()
-      .catch(console.error);
-  }, [])
+    fetchTestData().catch(console.error);
+  }, []);
 
-
-  const handleSubmit = async e => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const data = { test, patient, description, result, id: user.id };
     try {
-      await api.post("/labassistant/addtest", data).then(testsData => {
+      await api.post("/labassistant/addtest", data).then((testsData) => {
         setTest("");
         setPatient("");
         setDescription("");
@@ -63,16 +59,16 @@ export default function AddTest() {
   const handleAutocomplete = (event, newValue) => {
     if (newValue != null) {
       setPatient(newValue);
-      }
-  }
+    }
+  };
   const handleAutocomplete2 = (event, newValue) => {
     if (newValue != null) {
       setTest(newValue);
       console.log(newValue);
       setNormal(newValue.normalValues);
       console.log(normal);
-      }
-  }
+    }
+  };
 
   return (
     <Grid item xs={12} md={12} lg={12}>
@@ -85,34 +81,36 @@ export default function AddTest() {
         }}
       >
         <h2 className="dashboard-title">Add Test</h2>
-        <Box component="form" onSubmit={handleSubmit} sx={{
-          '& .MuiTextField-root': { m: 1, width: '40ch' },
-        }}>
-          <div style={{ display: 'flex', flexDirection: 'column' }}>
-            <div style={{ display: 'flex' }}>
-            <Autocomplete
+        <Box
+          component="form"
+          onSubmit={handleSubmit}
+          sx={{
+            "& .MuiTextField-root": { m: 1, width: "40ch" },
+          }}
+        >
+          <div style={{ display: "flex", flexDirection: "column" }}>
+            <div style={{ display: "flex" }}>
+              <Autocomplete
                 disablePortal
                 id="combo-box-demo"
                 value={test}
                 options={testRecords}
-                getOptionLabel={ testRecords => (testRecords.testName) || ""}
+                getOptionLabel={(testRecords) => testRecords.testName || ""}
                 onChange={handleAutocomplete2}
-                sx={{ width: '300' }}
-                renderInput={(params) => <TextField {...params} 
-                label="Test"
-                />}
+                sx={{ width: "300" }}
+                renderInput={(params) => <TextField {...params} label="Test" />}
               />
               <Autocomplete
                 disablePortal
                 id="combo-box-demo"
                 value={patient}
                 options={records}
-                getOptionLabel={ records => (records.name) || ""}
+                getOptionLabel={(records) => records.name || ""}
                 onChange={handleAutocomplete}
                 sx={{ width: 300 }}
-                renderInput={(params) => <TextField {...params} 
-                label="Patient"
-                />}
+                renderInput={(params) => (
+                  <TextField {...params} label="Patient" />
+                )}
               />
             </div>
             <TextField
@@ -123,7 +121,7 @@ export default function AddTest() {
               style={{ width: "100.7vh" }}
               fullWidth
               value={description}
-              onChange={e => setDescription(e.target.value)}
+              onChange={(e) => setDescription(e.target.value)}
               helperText=" "
               required
             />
@@ -134,7 +132,7 @@ export default function AddTest() {
                 fullWidth
                 multiline
                 value={result}
-                onChange={e => setResult(e.target.value)}
+                onChange={(e) => setResult(e.target.value)}
                 helperText=" "
                 maxRows={5}
                 required

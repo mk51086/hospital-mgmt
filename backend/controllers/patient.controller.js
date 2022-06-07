@@ -1,15 +1,28 @@
 const Patient = require("../models/patient.model");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const Appointment = require ("../models/appointment.model");
+const Appointment = require("../models/appointment.model");
 
 const patient_register = (req, res) => {
-  const { name, email, password, age, gender, address,town,country, dob, phone } = req.body;
+  const {
+    name,
+    email,
+    password,
+    age,
+    gender,
+    address,
+    town,
+    country,
+    dob,
+    phone,
+  } = req.body;
   console.log(req.body);
 
   Patient.findOne({ email }).then((patient) => {
     if (patient)
-      return res.status(409).json({ msg: "Patient with this email already exists!" });
+      return res
+        .status(409)
+        .json({ msg: "Patient with this email already exists!" });
 
     const newPatient = new Patient({
       name,
@@ -133,7 +146,6 @@ const patient_update = (req, res, next) => {
     });
 };
 
-
 const appointment_book = (req, res, next) => {
   const appointment = new Appointment({
     patient: req.body.patient,
@@ -141,9 +153,10 @@ const appointment_book = (req, res, next) => {
     description: req.body.description,
     doctor: req.body.doctor,
     room: req.body.room,
-    status: req.body.status
+    status: req.body.status,
   });
-  appointment.save(appointment)
+  appointment
+    .save(appointment)
     .then(() => {
       res.status(200).json({
         patient: appointment.patient,
@@ -165,7 +178,7 @@ const appointment_update = (req, res, next) => {
     description: req.body.age,
     doctor: req.body.doctor,
     room: req.body.room,
-    status: req.body.status
+    status: req.body.status,
   });
   Appointment.updateOne({ _id: req.params.id }, appointment)
     .then(() => {
@@ -181,11 +194,15 @@ const appointment_update = (req, res, next) => {
     });
 };
 
-
 const appointment_cancel = (req, res, next) => {
-  Appointment.updateOne({ _id: req.params.id }, { "$set" : { 
-    "status" : 'Canceled', } ,
-  })
+  Appointment.updateOne(
+    { _id: req.params.id },
+    {
+      $set: {
+        status: "Canceled",
+      },
+    }
+  )
     .then(() => {
       res.status(200).json({
         message: "appointment canceled",
@@ -198,15 +215,13 @@ const appointment_cancel = (req, res, next) => {
     });
 };
 
-
 const appointment_list = (req, res) => {
   const id = req.params.id;
-  Appointment.find({'patient' : id})
-    .populate({ path: 'doctor', select: 'name' })
-    .populate({ path: 'room', select: 'number' })
+  Appointment.find({ patient: id })
+    .populate({ path: "doctor", select: "name" })
+    .populate({ path: "room", select: "number" })
     .then((appointment) => res.json(appointment));
 };
-
 
 const appointment_delete = (req, res) => {
   Appointment.deleteOne({ _id: req.params.id }).then(() => {
@@ -227,5 +242,5 @@ module.exports = {
   appointment_list,
   appointment_delete,
   appointment_update,
-  appointment_cancel
+  appointment_cancel,
 };
