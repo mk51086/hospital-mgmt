@@ -93,7 +93,7 @@ export default function AppointmentList() {
                     sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                   >
                     <TableCell align="center">{record._id}</TableCell>
-                    <TableCell align="center">{record.description}</TableCell>
+                    <TableCell align="center">{record.description.length > 20 ? record.description.slice(0,30) + `...`: record.description}</TableCell>
                     <TableCell align="center">{record.date}</TableCell>
                     {typeof record.doctor !== "undefined" && (
                       <TableCell align="center">{record.doctor.name}</TableCell>

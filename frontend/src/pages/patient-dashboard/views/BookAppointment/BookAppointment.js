@@ -2,27 +2,45 @@ import { TextField } from "@mui/material";
 import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
-import { useState } from "react";
 import { Box } from "@mui/system";
 import api from "../../../../api/axios";
 import { useAuthContext } from "../../../../hooks/useAuthContext";
-// import {useNavigate} from "react-router-dom"
+import React from "react";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as Yup from "yup";
 
 export default function BookAppointment() {
-  const [date, setDate] = useState(new Date(Date.now()));
-  const [description, setDescription] = useState("");
   const { user } = useAuthContext();
-  // const navigate = useNavigate();
+  const validationSchema = Yup.object().shape({
+    date: Yup.date()
+      .required("Date is required")
+      .nullable()
+      .min(new Date(), "Please choose future date")
+      .nullable().transform((curr, orig) => orig === '' ? null : curr)
+      .default(undefined),
+    description: Yup.string()
+      .required("Description is required")
+      .min(6, "Description must be at least 6 characters")
+      .max(260, "Description must not exceed 260 characters"),
+    patient: Yup.string().default(user.id),
+  });
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    console.log(date, description);
-    const data = { date, description, patient: user.id };
+  const {
+    register,
+    control,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm({
+    resolver: yupResolver(validationSchema),
+  });
+
+  const onSubmit = (data) => {
+    console.log(JSON.stringify(data, null, 2));
     try {
-      await api.post("/patient/appointment", data).then((userData) => {
-        setDate(new Date(Date.now()));
-        setDescription("");
-        console.log(userData);
+      api.post("/patient/appointment", data).then((userData) => {
+        reset();
       });
     } catch (err) {
       console.log(`Error : ${err.message}`);
@@ -48,26 +66,40 @@ export default function BookAppointment() {
             fullWidth
             type="datetime-local"
             label="Select Timing"
-            onChange={(e) => setDate(e.target.value)}
-            helperText="Please select suitable timings"
+            maxRows={5}
+            helperText={
+              errors.date?.message
+                ? errors.date?.message
+                : "Please select suitable timings"
+            }
             required
             InputLabelProps={{
               shrink: true,
             }}
+            {...register("date")}
+            error={errors.date ? true : false}
           />
-
           <TextField
             id="outlined-multiline-flexible"
             label="Description"
             fullWidth
             multiline
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            helperText="What's the appointment regarding"
-            maxRows={5}
             required
+            maxRows={5}
+            minRows={4}
+            helperText={
+              errors.description?.message
+                ? errors.description?.message
+                : "What is the appointment regarding..."
+            }
+            {...register("description")}
+            error={errors.description ? true : false}
           />
-          <Button type="submit" variant="contained" sx={{ mt: 3, mb: 2 }}>
+          <Button
+            onClick={handleSubmit(onSubmit)}
+            variant="contained"
+            sx={{ mt: 3, mb: 2 }}
+          >
             Book
           </Button>
         </Box>

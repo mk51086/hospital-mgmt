@@ -1,14 +1,13 @@
-const Prescription = require("../models/prescription.model");
+const Prescription = require("../models/prescription.model")
 
-const prescription_post = (req, res, next) => {
+ const prescription_post = (req, res, next) => {
   const prescription = new Prescription({
     patient: req.body.patient,
     dose: req.body.dose,
-    medicine: req.body.medicine,
-    creator: req.body.creator,
+   medicine: req.body.medicine,
+    creator: req.body.creator
   });
-  prescription
-    .save(prescription)
+  prescription.save(prescription)
     .then(() => {
       res.status(200).json({
         patient: prescription.patient,
@@ -27,10 +26,10 @@ const prescription_update = (req, res, next) => {
     _id: req.params.id,
     patient: req.body.patient,
     dose: req.body.dose,
-    medicine: req.body.medicine,
-    creator: req.body.creator,
+   medicine: req.body.medicine,
+    creator: req.body.creator
   });
-  console.log("update");
+  console.log('update')
   Prescription.updateOne({ _id: req.params.id }, prescription)
     .then(() => {
       res.status(200).json({
@@ -47,17 +46,18 @@ const prescription_update = (req, res, next) => {
 
 const prescription_list = (req, res) => {
   Prescription.find()
-    .populate({ path: "patient", select: "name" })
-    .populate({ path: "creator", select: "name" })
-    .then((prescription) => res.json(prescription));
+  .populate({ path: 'patient', select: 'name' })
+  .populate({ path: 'creator', select: 'name' })
+  .then((prescription) => res.json(prescription));
 };
 
 const prescription_get = (req, res) => {
-  Prescription.findOne({ _id: req.params.id })
-    .populate({ path: "patient", select: "name" })
-    .populate({ path: "creator", select: "name" })
-    .then((prescription) => res.json(prescription));
+  Prescription.findOne({_id : req.params.id})
+  .populate({ path: 'patient', select: 'name' })
+  .populate({ path: 'creator', select: 'name' })
+  .then((prescription) => res.json(prescription));
 };
+
 
 const prescription_delete = (req, res) => {
   Prescription.deleteOne({ _id: req.params.id }).then(() => {
@@ -67,10 +67,12 @@ const prescription_delete = (req, res) => {
   });
 };
 
-module.exports = {
+
+
+module.exports = { 
   prescription_post,
-  prescription_delete,
-  prescription_list,
-  prescription_update,
-  prescription_get,
+ prescription_delete,
+ prescription_list,
+ prescription_update,
+ prescription_get
 };
