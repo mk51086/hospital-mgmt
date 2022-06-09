@@ -170,11 +170,7 @@ export default function AddStaff() {
             fullWidth
             multiline
             maxRows={5}
-            helperText={
-              errors.name?.message
-                ? errors.name?.message
-                : ""
-            }
+            helperText={errors.name?.message}
             required
             InputLabelProps={{
               shrink: true,
@@ -187,11 +183,7 @@ export default function AddStaff() {
             fullWidth
             multiline
             maxRows={5}
-            helperText={
-              errors.email?.message
-                ? errors.email?.message
-                : ""
-            }
+            helperText={errors.email?.message}
             required
             InputLabelProps={{
               shrink: true,
@@ -220,11 +212,7 @@ export default function AddStaff() {
             fullWidth
             multiline
             maxRows={5}
-            helperText={
-              errors.address?.message
-                ? errors.address?.message
-                : ""
-            }
+            helperText={errors.address?.message}
             required
             InputLabelProps={{
               shrink: true,
@@ -238,11 +226,7 @@ export default function AddStaff() {
             fullWidth
             multiline
             maxRows={5}
-            helperText={
-              errors.phone?.message
-                ? errors.phone?.message
-                : ""
-            }
+            helperText={errors.phone?.message}
             required
             InputLabelProps={{
               shrink: true,
@@ -258,11 +242,7 @@ export default function AddStaff() {
             type="password"
             id="password"
             autoComplete="new-password"
-            helperText={
-              errors.password?.message
-                ? errors.password?.message
-                : ""
-            }
+            helperText={errors.password?.message}
             InputLabelProps={{
               shrink: true,
             }}
@@ -412,11 +392,7 @@ export default function AddStaff() {
           >
           <MenuItem value={'Male'}>Male</MenuItem>
           <MenuItem value={'Female'}>Female</MenuItem>
-          <FormHelperText>{
-              errors.gender?.message
-                ? errors.gender?.message
-                : ""
-            }</FormHelperText>
+          <FormHelperText>{errors.gender?.message}</FormHelperText>
           </Select>
           </FormControl>
           <FormControl  sx={{ m: 1, minWidth: 140 }}>
