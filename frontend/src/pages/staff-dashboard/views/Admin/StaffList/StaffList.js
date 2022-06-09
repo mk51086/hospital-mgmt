@@ -183,7 +183,7 @@ export default function StaffList() {
                     <TableCell align="center">{record.name}</TableCell>
                     <TableCell align="center">{record.age}</TableCell>
                     <TableCell align="center">{record.gender}</TableCell>
-                    <TableCell align="center">{record.department}</TableCell>
+                    <TableCell align="center">{record.department?.departmentName}</TableCell>
                     <TableCell align="center">{record.job_title}</TableCell>
                     <TableCell align="center">{record.admin ? 'True':'False'}</TableCell>
                     <TableCell align="center">{record.education}</TableCell>

@@ -135,6 +135,7 @@ const doctor_list = async (req, res) => {
 const staff_list = (req, res) => {
   Staff.find()
     .select("-password")
+    .populate({path: 'department',select: 'departmentName'})
     .then((staff) => res.json(staff));
 };
 
