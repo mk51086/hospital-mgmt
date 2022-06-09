@@ -2,15 +2,11 @@ import Grid from "@mui/material/Grid";
 import * as React from 'react';
 import Button from '@mui/material/Button';
 import Paper from "@mui/material/Paper";
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
-import TableContainer from "@mui/material/TableContainer";
-import TableHead from "@mui/material/TableHead";
-import TableRow from "@mui/material/TableRow";
 import IconButton from '@mui/material/IconButton';
-import DeleteIcon from '@mui/icons-material/Delete';
-import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/DeleteOutline';
+import AddIcon from '@mui/icons-material/AddCircleOutline';
+import CloseIcon from '@mui/icons-material/Close';
+import EditIcon from '@mui/icons-material/ModeEditOutline';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
@@ -28,18 +24,84 @@ import FormControl from '@mui/material/FormControl';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import Autocomplete from '@mui/material/Autocomplete';
 import { educationList } from "../../../../../components/shared/educationList";
-
-
+import { DataGrid,GridToolbar  } from '@mui/x-data-grid';
+import {
+  GridToolbarContainer,
+  GridToolbarColumnsButton,
+  GridToolbarFilterButton,
+  GridToolbarExport,
+  GridToolbarDensitySelector,
+} from '@mui/x-data-grid';
+import { useNavigate } from "react-router-dom";
 
 // import { useAuthContext } from "../../../../hooks/useAuthContext";
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 export default function StaffList() {
+  const navigate = useNavigate();
+  const renderEditButton = (a) => {
+    return (
+        <strong>
+        <IconButton onClick={(e) => {  handleClickOpen2(e,a.id)  }} 
+        color="primary" variant="outlined" >
+          <EditIcon />
+        </IconButton>
+        </strong>
+    )
+  }
+
+  function CustomToolbar() {
+    return (
+      <GridToolbarContainer >
+        <GridToolbarColumnsButton />
+        <GridToolbarFilterButton />
+        <GridToolbarDensitySelector />
+        <GridToolbarExport />
+        <Button onClick={handleClickOpen} startIcon={<DeleteIcon  />}>
+        Delete
+      </Button>
+      <Button onClick={handleClickOpen2} startIcon={<EditIcon />}>
+        Edit
+      </Button>
+      <Button onClick={newClicked} startIcon={<AddIcon />}>
+        New
+      </Button>
+     
+      </GridToolbarContainer>
+
+    );
+  }
+
+  const renderDeleteButton = (a) => {
+    return (
+        <strong>
+            <IconButton onClick={(e) => {  handleClickOpen(e,a.id)  }} 
+            color="primary" variant="outlined" ><DeleteIcon />
+            </IconButton>
+        </strong>
+    )
+  }
+  const columns = [
+    { field: "id", headerName: "ID", minWidth: 210, flex:1 },
+    { field: "name", headerName: "Name", width: 120 },
+    { field: "age", headerName: "Age", width: 50 },
+    { field: "gender", headerName: "Gender", width: 70 },
+    { field: "department", headerName: "Department", width: 120 },
+    { field: "job_title", headerName: "Job Title", minWidth: 100, flex:1 },
+    { field: "admin", headerName: "Admin", type: "boolean", width: 60 },
+    { field: "education", headerName: "Education", minWidth: 120, flex:1 },
+    { field: "address", headerName: "Address", minWidth: 120, flex:1},
+    { field: "email", headerName: "Email", minWidth: 180, flex:1 },
+    // {field: "update",headerName: "",width: 60, renderCell: renderEditButton, disableClickEventBubbling: true, sortable: false, disableExport: true, filterable: false},
+    // {field: "delete", headerName: "", width: 60,  renderCell: renderDeleteButton, disableClickEventBubbling: true, disableExport: true, filterable: false, sortable: false},
+  ];
+
   const [open, setOpen] = React.useState(false);
   const [open2, setOpen2] = React.useState(false);
+  const [open3, setOpen3] = React.useState(false);
   const [bar,setBar] = React.useState(false);
-
+  const [pageSize, setPageSize] = useState(25);
   const [id,setId] = useState("");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -55,6 +117,8 @@ export default function StaffList() {
   const [message,setMessage] = useState("");
   const [severity,setSeverity] = useState("");
 
+  const [selectionModel, setSelectionModel] = useState([]);
+
   const handleChange = (event) => {
     setGender(event.target.value);
   };
@@ -63,12 +127,12 @@ export default function StaffList() {
     setAdmin(event.target.value);
   };
 
-  const handleSubmit = async (e,id) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     const data = {name,email,age,gender,address,phone,department,education,job_title,admin};
     try {
-      await api.put(`/staff/${id}`, data).then(userData => {
+      await api.put(`/staff/${selectionModel[0]}`, data).then(userData => {
         handleClose2();
         fetchData()
         .catch(console.error);
@@ -78,15 +142,29 @@ export default function StaffList() {
     }
   };
 
-  const handleClickOpen = (e,id) => {
-    setId(id)
-    setOpen(true);
+  const handleClickOpen = (e) => {
+    console.log(selectionModel[0])
+    if(selectionModel[0] === undefined || selectionModel === null){
+      handleClickOpen3();
+    }else{
+      setId(selectionModel[0])
+      setOpen(true);
+    }
   };
 
-  const handleClickOpen2 = async (e,id) => {
-    console.log(id)
-    try {
-      await api.get(`/staff/${id}`).then(staff => {
+  const newClicked = (e) =>{
+    navigate('/staff/dashboard/add-staff');
+  }
+
+  const handleClickOpen3 = (e) => {
+    setOpen3(true);
+  };
+
+  const handleClickOpen2 = async (e) => {
+    if(selectionModel[0] === undefined || selectionModel === null){
+      handleClickOpen3();
+    }else{ try {
+      await api.get(`/staff/${selectionModel[0]}`).then(staff => {
         setId(id);
         setName(staff.data.name);
         setEmail(staff.data.email);
@@ -102,17 +180,27 @@ export default function StaffList() {
     } catch (err) {
       console.log(`Error : ${err.message}`);
     }
-    setOpen2(true);
+    setOpen2(true);}
   };
 
   const handleClose = () => {
-    setOpen(false);
-  
+    if(open){
+      setOpen(false);
+    }else if(open2){
+      setOpen2(false);
+    }else if(open3){
+      setOpen3(false);
+    }
+    if(selectionModel[0] != undefined || selectionModel != null){
+      setSelectionModel([]);
+    }
   };
 
   const handleClose2 = () => {
     setOpen2(false);
-  
+    if(selectionModel[0] != undefined || selectionModel != null){
+      setSelectionModel([]);
+    }
   };
 
   const showBar = () => {
@@ -129,6 +217,7 @@ export default function StaffList() {
   const fetchData = async () => {
     await api.get(`/staff/all`).then(userData => {
     setRecords(userData.data);
+    console.log(userData.data)
 })}
 
   useEffect(() => {
@@ -136,10 +225,10 @@ export default function StaffList() {
       .catch(console.error);
   }, [])
 
-  const deletestaff = async (e,id) => {
+  const deletestaff = async (e) => {
     e.preventDefault();
     try {
-      await api.delete(`/staff/${id}`).then(userData => {
+      await api.delete(`/staff/${selectionModel[0]}`).then(userData => {
         handleClose();
         fetchData()
         .catch(console.error);
@@ -153,58 +242,71 @@ export default function StaffList() {
     <Grid item xs={12} md={12} lg={12}>
       <Paper
         sx={{
-          p: 2,
+          p: 5,
           display: "flex",
           flexDirection: "column",
           height: "auto",
         }}
       >
         <h2 className="dashboard-title">View Staff</h2>
-        <TableContainer>
-          <Table sx={{ minWidth: 650 }} aria-label="simple table">
-            <TableHead>
-              <TableRow>
-                <TableCell align="center">Name</TableCell>
-                <TableCell align="center">Age</TableCell>
-                <TableCell align="center">Gender</TableCell>
-                <TableCell align="center">Department</TableCell>
-                <TableCell align="center">Job Title</TableCell>
-                <TableCell align="center">Admin</TableCell>
-                <TableCell align="center">Education</TableCell>
-                <TableCell align="center">Email</TableCell>
-                <TableCell align="center"> </TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {records &&
-                records.map((record, index) => (
-                  
-                  <TableRow key={index} sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
-                    <TableCell align="center">{record.name}</TableCell>
-                    <TableCell align="center">{record.age}</TableCell>
-                    <TableCell align="center">{record.gender}</TableCell>
-                    <TableCell align="center">{record.department?.departmentName}</TableCell>
-                    <TableCell align="center">{record.job_title}</TableCell>
-                    <TableCell align="center">{record.admin ? 'True':'False'}</TableCell>
-                    <TableCell align="center">{record.education}</TableCell>
-                    <TableCell align="center">{record.email}</TableCell>
-                    <TableCell  align="center">
-                    <IconButton onClick={(e) => {  handleClickOpen2(e,record._id)  }} color="primary" variant="outlined" ><EditIcon />
-                    </IconButton>
-                    <IconButton onClick={(e) => {  handleClickOpen(e,record._id)  }} color="primary" variant="outlined" ><DeleteIcon />
-                    </IconButton>
-                    </TableCell>
-                  </TableRow>
-                ))}
-                
-            </TableBody>
-          </Table>
-        </TableContainer>
+        <div style={{ height: 600, width: '100%' }}>
+              <DataGrid
+                components={{ Toolbar: CustomToolbar }}
+                componentsProps={{
+                  toolbar: {
+                    showQuickFilter: true,
+                    quickFilterProps: { debounceMs: 500 },
+                  },
+                }}
+                onCellDoubleClick={(params, event) => {
+                  handleClickOpen2();
+                }}
+                rows={records.map((record) => {
+                  return {
+                    id: record._id,
+                    name: record.name,
+                    age: record.age,
+                    gender: record.gender,
+                    department: record.department?.departmentName,
+                    job_title: record.job_title,
+                    admin: record.admin,
+                    address: record.address,
+                    education: record.education,
+                    email: record.email
+                  }})}
+                columns={columns}
+                getRowId={(row) => row.id}
+                pageSize={pageSize}
+                onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
+                rowsPerPageOptions={[25, 50, 100]}
+                pagination
+                checkboxSelection
+                selectionModel={selectionModel}
+                hideFooterSelectedRowCount
+                onSelectionModelChange={(selection) => {
+                  if (selection.length > 1) {
+                    const selectionSet = new Set(selectionModel);
+                    const result = selection.filter((s) => !selectionSet.has(s));
+
+                    setSelectionModel(result);
+                    console.log(result)
+                  } else {
+                    setSelectionModel(selection);
+                  }
+                }}
+          />
+           <Button
+        color="primary"
+        variant="contained"
+        
+      >Delete
+      </Button>
+            </div>
               <Notifybar  open={bar} 
               onClose={hideBar}
               severity={severity} 
               message={message}/>
-      </Paper>
+              </Paper>
                       <Dialog
                         open={open2}
                         keepMounted
@@ -360,7 +462,31 @@ export default function StaffList() {
                           <Button onClick={(e) => {  deletestaff(e,id) }}>YES</Button>
                         </DialogActions>
                       </Dialog>
-      
+
+
+                      <Dialog
+        open={open3}
+        TransitionComponent={Transition}
+        keepMounted
+        onClose={handleClose}
+        aria-describedby="alert-dialog-slide-description"
+      >
+        
+          <DialogTitle>
+            <Grid container direction="row" justify="space-between" alignItems="center">
+              You must select an item
+
+            </Grid>
+          </DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-slide-description">
+          To proceed with this action you must select an item.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose}>Close</Button>
+        </DialogActions>
+      </Dialog>
     </Grid>
     
   );

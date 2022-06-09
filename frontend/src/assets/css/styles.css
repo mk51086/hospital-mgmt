@@ -35,3 +35,7 @@ header {
   width: 90%;
   margin: auto;
 }
+
+.MuiDataGrid-root .MuiDataGrid-columnHeaderCheckbox .MuiDataGrid-columnHeaderTitleContainer {
+  display: none;
+}

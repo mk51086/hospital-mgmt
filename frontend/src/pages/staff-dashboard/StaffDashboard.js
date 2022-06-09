@@ -36,7 +36,7 @@ import AddDepartment from "./views/Admin/AddDepartment/AddDepartment";
 import DepartmentList from "./views/Admin/DepartmentList/DepartmentList";
 import AppointemntList from "./views/Receptionist/AppointmentList";
 
-const drawerWidth = 240;
+const drawerWidth = 220;
 
 const Drawer = styled(MuiDrawer, {
   shouldForwardProp: (prop) => prop !== "open",
@@ -114,7 +114,6 @@ function DashboardContent(props) {
             overflow: "auto",
           }}
         >
-          <Toolbar />
           <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
             <Grid container spacing={3}>
               {option === "" && <Profile />}

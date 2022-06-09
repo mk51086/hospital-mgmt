@@ -133,9 +133,8 @@ const App = () => {
               }
             />
 
-            <Route
-              path="/staff/dashboard/add-staff"
-              element={
+            <Route path='/staff'>
+              <Route path='/staff/dashboard/add-staff' element={
                 !user ? (
                   <Navigate to="/login" />
                 ) : !user.isStaff ? (
@@ -143,8 +142,8 @@ const App = () => {
                 ) : (
                   <StaffDashboard option={"/add-staff"} />
                 )
-              }
-            />
+              } />
+            </Route>
 
             <Route
               path="/patient/dashboard/book-appointment"
