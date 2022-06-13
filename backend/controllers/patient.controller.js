@@ -4,8 +4,8 @@ const jwt = require("jsonwebtoken");
 const Appointment = require ("../models/appointment.model");
 
 const patient_register = (req, res) => {
-  const { } = req.body;
-  console.log(req.body); name, email, password, age, gender, address,town,country, dob, phone
+  const { name, email, password, age, gender, address,town,country, dob, phone } = req.body;
+  console.log(req.body);
 
   Patient.findOne({ email }).then((patient) => {
     if (patient)
