@@ -11,36 +11,69 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
+import { useForm,Controller } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as Yup from "yup";
+import FormHelperText from '@mui/material/FormHelperText';
 
 export default function AddPatient() {
-  // const [date, setaDate] = useState(new Date(Date.now()));
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [age, setAge] = useState("");
   const [gender, setGender] = useState("");
-  const [address, setAddress] = useState("");
-  const [phone, setPhone] = useState("");
-  const [password, setPassword] = useState("");
   const { user } = useAuthContext();
   const navigate = useNavigate();
-  const handleChange = (event) => {
-    setGender(event.target.value);
-  };
-  const handleSubmit = async e => {
-    e.preventDefault();
 
-    const data = { name,email,age,gender,address,phone,password, id: user.id };
+  const validationSchema = Yup.object().shape({
+    name: Yup.string()
+      .required("Name is required")
+      .min(3, "Name must be at least 3 characters")
+      .max(50, "Name must not exceed 50 characters"),
+    email: Yup.string()
+      .required("Email is required")
+      .email("Invalid Email."),
+    age: Yup.number()
+      .required("Age is required")
+      .min(0, "Age must be a positive number")
+      .max(120, "Age must not exceed 120")
+      .typeError('You must specify a number'),
+    gender: Yup.string()
+      .required("Gender is required"),
+    address: Yup.string()
+      .required("Address is required")
+      .min(6, "Address must be at least 6 characters")
+      .max(77, "Address must not exceed 77 characters"),
+    phone: Yup.string()
+      .required("Phone is required")
+      .min(6, "Phone must be at least 6 characters")
+      .max(30, "Phone must not exceed 30 characters"),
+    password: Yup.string()
+      .required("Password is required")
+      .min(8, "Password must be at least 8 characters")
+      .max(260, "Password must not exceed 260 characters"),
+   
+  });
+
+  const handleChange = async (event) => {
+    setGender(event.target.value);
+    await trigger(['gender']);
+  };
+  const {
+    register,
+    control,
+    handleSubmit,
+    reset,
+    trigger,
+    formState: { errors },
+  } = useForm({
+    resolver: yupResolver(validationSchema),
+  });
+
+
+  const onSubmit = (data) => {
+    console.log(data)
     try {
-       await api.post("/patient/register", data).then(userData => {
-        setPassword("");
-        setName("");
-        setEmail("");
-        setAge("");
-        setGender("");
-        setAddress("");
-        setPhone("");
-        console.log(userData);
+      api.post("/patient/register", data).then((userData) => {
+        reset();
       });
+      
     } catch (err) {
       console.log(`Error : ${err.message}`);
     }
@@ -62,70 +95,94 @@ export default function AddPatient() {
         '& .MuiTextField-root': { m: 1, width: '40ch' },
       }}>
             <div>
-        <TextField
+            <TextField
             label="Name"
             fullWidth
             multiline
-            value={name}
-            onChange={e => setName(e.target.value)}
-            helperText=" "
             maxRows={5}
+            helperText={errors.name?.message}
             required
+            InputLabelProps={{
+              shrink: true,
+            }}
+            {...register("name")}
+            error={errors.name ? true : false}
           />
+
            <TextField
             label="Email"
             fullWidth
             multiline
-            value={email}
-            onChange={e => setEmail(e.target.value)}
-            helperText=" "
             maxRows={5}
+            helperText={errors.email?.message}
             required
+            InputLabelProps={{
+              shrink: true,
+            }}
+            {...register("email")}
+            error={errors.email ? true : false}
           />
-           <TextField
-            label="Address"
-            fullWidth
-            multiline
-            value={address}
-            onChange={e => setAddress(e.target.value)}
-            helperText=" "
-            maxRows={5}
-            required
-          />
-           <TextField
+        <FormControl  sx={{ m: 0, minWidth: 140 }}>
+       <TextField
             label="Age"
             multiline
-            value={age}
-            onChange={e => setAge(e.target.value)}
-            helperText=" "
-            maxRows={2}
+            helperText={
+              errors.age?.message
+                ? errors.age?.message
+                : ""
+            }
             required
+            InputLabelProps={{
+              shrink: true,
+            }}
+            {...register("age")}
+            error={errors.age ? true : false}
           />
+          </FormControl>
           
-         <FormControl  sx={{ m: 1, minWidth: 160 }}>
+                      <FormControl  sx={{ m: 1, minWidth: 140 }}>
          <InputLabel id="gender">Gender</InputLabel>
          <Select
           labelId="gender"
           id="gender"
-          value={gender}
           label="Gender"
           required
+          defaultValue={'Male'}
           onChange={handleChange}
+          {...register("gender")}
+          error={errors.gender ? true : false}
           >
           <MenuItem value={'Male'}>Male</MenuItem>
           <MenuItem value={'Female'}>Female</MenuItem>
+          <FormHelperText>{errors.gender?.message}</FormHelperText>
           </Select>
           </FormControl>
-         
+             <TextField
+            label="Address"
+            fullWidth
+            multiline
+            style = {{width: 205}} 
+            helperText={errors.address?.message}
+            required
+            InputLabelProps={{
+              shrink: true,
+            }}
+            {...register("address")}
+            error={errors.address ? true : false}
+          />
+      
               <TextField
             label="Phone"
             fullWidth
             multiline
-            value={phone}
-            onChange={e => setPhone(e.target.value)}
-            helperText=" "
             maxRows={5}
+            helperText={errors.phone?.message}
             required
+            InputLabelProps={{
+              shrink: true,
+            }}
+            {...register("phone")}
+            error={errors.phone ? true : false}
           />
           <TextField
             required
@@ -135,11 +192,16 @@ export default function AddPatient() {
             type="password"
             id="password"
             autoComplete="new-password"
-            onChange={e => setPassword(e.target.value)}
-            value={password}
+            helperText={errors.password?.message}
+            InputLabelProps={{
+              shrink: true,
+            }}
+            {...register("password")}
+            error={errors.password ? true : false}
           />
+        
               </div>
-          <Button type="submit" variant="contained" sx={{ mt: 0, mb: 5 }}>
+          <Button onClick={handleSubmit(onSubmit)} variant="contained" sx={{ mt: 0, mb: 5 }}>
             Add Patient
           </Button>
         </Box>
