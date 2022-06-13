@@ -92,7 +92,7 @@ function DashboardContent(props) {
           }}
         >
           <Toolbar />
-          <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
+          <Container maxWidth="lg" sx={{ mx: 0,mt: 0, mb: 0 }}>
             <Grid container spacing={3}>
               {option === "" && <Profile />}
               {option === "/book-appointment" && <BookAppointment />}
