@@ -106,6 +106,19 @@ const App = () => {
                 )
               }
             />
+            
+            <Route
+              path="/staff/dashboard/messages"
+              element={
+                !user ? (
+                  <Navigate to="/login" />
+                ) : !user.isStaff ? (
+                  <Navigate to="/patient/dashboard" />
+                ) : (
+                  <StaffDashboard option={"/messages"} />
+                )
+              }
+            />
 
             <Route
               path="/staff/dashboard/view-departments"
