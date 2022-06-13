@@ -114,7 +114,7 @@ function DashboardContent(props) {
             overflow: "auto",
           }}
         >
-          <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
+          <Container maxWidth="1400" sx={{ mx: 0,mt: 2, mb: 0 }}>
             <Grid container spacing={3}>
               {option === "" && <Profile />}
               {user.admin && option === "/add-patient" && <AddPatient />}

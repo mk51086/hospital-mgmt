@@ -2,10 +2,8 @@ import Grid from "@mui/material/Grid";
 import * as React from 'react';
 import Button from '@mui/material/Button';
 import Paper from "@mui/material/Paper";
-import IconButton from '@mui/material/IconButton';
 import DeleteIcon from '@mui/icons-material/DeleteOutline';
 import AddIcon from '@mui/icons-material/AddCircleOutline';
-import CloseIcon from '@mui/icons-material/Close';
 import EditIcon from '@mui/icons-material/ModeEditOutline';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
@@ -18,13 +16,22 @@ import { TextField } from "@mui/material";
 import api from "../../../../../api/axios";
 import { useState, useEffect } from "react";
 import Notifybar from "../../../../../components/shared/Notifybar";
-import InputLabel from '@mui/material/InputLabel';
-import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
-import Select, { SelectChangeEvent } from '@mui/material/Select';
 import Autocomplete from '@mui/material/Autocomplete';
 import { educationList } from "../../../../../components/shared/educationList";
-import { DataGrid,GridToolbar  } from '@mui/x-data-grid';
+import { DataGrid,GridToolbarQuickFilter,gridClasses   } from '@mui/x-data-grid';
+import {AppBar} from "@mui/material";
+import {Toolbar} from "@mui/material";
+import { alpha, styled } from '@mui/material/styles';
+import { useForm,Controller } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as Yup from "yup";
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Checkbox from '@mui/material/Checkbox';
+import Link from "@mui/material/Link";
+import Radio from '@mui/material/Radio';
+import RadioGroup from '@mui/material/RadioGroup';
+import FormLabel from '@mui/material/FormLabel';
 import {
   GridToolbarContainer,
   GridToolbarColumnsButton,
@@ -33,68 +40,122 @@ import {
   GridToolbarDensitySelector,
 } from '@mui/x-data-grid';
 import { useNavigate } from "react-router-dom";
+const ODD_OPACITY = 0.2;
 
-// import { useAuthContext } from "../../../../hooks/useAuthContext";
+const StripedDataGrid = styled(DataGrid)(({ theme }) => ({
+  [`& .${gridClasses.row}.even`]: {
+    backgroundColor: theme.palette.grey[200],
+    '&:hover, &.Mui-hovered': {
+      backgroundColor: alpha(theme.palette.primary.main, ODD_OPACITY),
+      '@media (hover: none)': {
+        backgroundColor: 'transparent',
+      },
+    },
+    '&.Mui-selected': {
+      backgroundColor: alpha(
+        theme.palette.primary.main,
+        ODD_OPACITY + theme.palette.action.selectedOpacity,
+      ),
+      '&:hover, &.Mui-hovered': {
+        backgroundColor: alpha(
+          theme.palette.primary.main,
+          ODD_OPACITY +
+            theme.palette.action.selectedOpacity +
+            theme.palette.action.hoverOpacity,
+        ),
+        '@media (hover: none)': {
+          backgroundColor: alpha(
+            theme.palette.primary.main,
+            ODD_OPACITY + theme.palette.action.selectedOpacity,
+          ),
+        },
+      },
+    },
+  },
+}));
+
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 export default function StaffList() {
+
+  const validationSchema = Yup.object().shape({
+    name: Yup.string()
+      .required("Name is required")
+      .min(3, "Name must be at least 3 characters")
+      .max(50, "Name must not exceed 50 characters"),
+    email: Yup.string()
+      .required("Email is required")
+      .email("Invalid Email."),
+    age: Yup.number()
+      .required("Age is required")
+      .min(0, "Age must be a positive number")
+      .max(120, "Age must not exceed 120")
+      .typeError('You must specify a number'),
+    address: Yup.string()
+      .required("Address is required")
+      .min(6, "Address must be at least 6 characters")
+      .max(77, "Address must not exceed 77 characters"),
+    phone: Yup.string()
+      .required("Phone is required")
+      .min(6, "Phone must be at least 6 characters")
+      .max(30, "Phone must not exceed 30 characters"),
+    department: Yup.string()
+    .required("Department is required").typeError("You must specify a department"),
+    job_title: Yup.string()
+      .required("Job title is required")
+      .min(3, "Job title must be at least 3 characters")
+      .max(30, "Job title must not exceed 30 characters"),
+    // admin: Yup.boolean().oneOf([true],''),
+    education: Yup.array()
+    .min(1, "Education is required")
+  });
+
+
   const navigate = useNavigate();
-  const renderEditButton = (a) => {
-    return (
-        <strong>
-        <IconButton onClick={(e) => {  handleClickOpen2(e,a.id)  }} 
-        color="primary" variant="outlined" >
-          <EditIcon />
-        </IconButton>
-        </strong>
-    )
-  }
 
   function CustomToolbar() {
     return (
       <GridToolbarContainer >
+        
+        <AppBar position="static" style={{ background: 'transparent' }} variant="dense">
+          <Toolbar  style={{display:"flex", justifyContent:"space-between"}}>
+              <div>
+        <GridToolbarQuickFilter />
         <GridToolbarColumnsButton />
         <GridToolbarFilterButton />
         <GridToolbarDensitySelector />
         <GridToolbarExport />
-        <Button onClick={handleClickOpen} startIcon={<DeleteIcon  />}>
+      <Button onClick={handleClickOpen} startIcon={<DeleteIcon  />}>
         Delete
-      </Button>
-      <Button onClick={handleClickOpen2} startIcon={<EditIcon />}>
-        Edit
-      </Button>
-      <Button onClick={newClicked} startIcon={<AddIcon />}>
-        New
-      </Button>
-     
+        </Button>
+        <Button onClick={handleClickOpen2} startIcon={<EditIcon />}>
+          Edit
+        </Button>
+            </div>
+            <div>
+              <Link to={"/"} style={{ textDecoration: 'none' }}>
+                <Button type="button" variant="contained" color="primary" float="right" onClick={newClicked} startIcon={<AddIcon />}>New</Button>
+              </Link>
+            </div>
+          </Toolbar>
+        </AppBar>
       </GridToolbarContainer>
 
     );
   }
 
-  const renderDeleteButton = (a) => {
-    return (
-        <strong>
-            <IconButton onClick={(e) => {  handleClickOpen(e,a.id)  }} 
-            color="primary" variant="outlined" ><DeleteIcon />
-            </IconButton>
-        </strong>
-    )
-  }
   const columns = [
     { field: "id", headerName: "ID", minWidth: 210, flex:1 },
     { field: "name", headerName: "Name", width: 120 },
     { field: "age", headerName: "Age", width: 50 },
     { field: "gender", headerName: "Gender", width: 70 },
-    { field: "department", headerName: "Department", width: 120 },
-    { field: "job_title", headerName: "Job Title", minWidth: 100, flex:1 },
+    { field: "department", headerName: "Department", width: 120  },
+    { field: "job_title", headerName: "Job Title", width: 90 },
     { field: "admin", headerName: "Admin", type: "boolean", width: 60 },
     { field: "education", headerName: "Education", minWidth: 120, flex:1 },
     { field: "address", headerName: "Address", minWidth: 120, flex:1},
     { field: "email", headerName: "Email", minWidth: 180, flex:1 },
-    // {field: "update",headerName: "",width: 60, renderCell: renderEditButton, disableClickEventBubbling: true, sortable: false, disableExport: true, filterable: false},
-    // {field: "delete", headerName: "", width: 60,  renderCell: renderDeleteButton, disableClickEventBubbling: true, disableExport: true, filterable: false, sortable: false},
   ];
 
   const [open, setOpen] = React.useState(false);
@@ -103,44 +164,15 @@ export default function StaffList() {
   const [bar,setBar] = React.useState(false);
   const [pageSize, setPageSize] = useState(25);
   const [id,setId] = useState("");
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [age, setAge] = useState("");
   const [gender, setGender] = useState("");
-  const [address, setAddress] = useState("");
-  const [phone, setPhone] = useState("");
   const [department,setDepartment] = useState('');
   const [education,setEducation] = useState([]);
-  const [job_title,setjob_title] = useState('');
   const [admin,setAdmin] = useState(false);
 
   const [message,setMessage] = useState("");
   const [severity,setSeverity] = useState("");
 
   const [selectionModel, setSelectionModel] = useState([]);
-
-  const handleChange = (event) => {
-    setGender(event.target.value);
-  };
-
-  const handleAdminChange = (event) => {
-    setAdmin(event.target.value);
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    const data = {name,email,age,gender,address,phone,department,education,job_title,admin};
-    try {
-      await api.put(`/staff/${selectionModel[0]}`, data).then(userData => {
-        handleClose2();
-        fetchData()
-        .catch(console.error);
-      });
-    } catch (err) {
-      console.log(`Error : ${err.message}`);
-    }
-  };
 
   const handleClickOpen = (e) => {
     console.log(selectionModel[0])
@@ -165,17 +197,19 @@ export default function StaffList() {
       handleClickOpen3();
     }else{ try {
       await api.get(`/staff/${selectionModel[0]}`).then(staff => {
-        setId(id);
-        setName(staff.data.name);
-        setEmail(staff.data.email);
-        setAge(staff.data.age);
-        setGender(staff.data.gender);
-        setAddress(staff.data.address);
-        setPhone(staff.data.phone);
-        setDepartment(staff.data.department);
-        setAdmin(staff.data.admin);
-        setjob_title(staff.data.job_title);
-        setEducation(staff.data.education);
+      console.log(staff.data)
+      setEducation(staff.data.education)
+      setValue('name',staff.data.name)
+      setGender(staff.data.gender)
+      setValue('age',staff.data.age)
+      setValue('email',staff.data.email)
+      setValue('phone',staff.data.phone)
+      setValue('address',staff.data.address)
+      setValue('job_title',staff.data.job_title)
+      setValue('education',staff.data.education)
+      setValue('department',staff.data.department.departmentName)
+      setAdmin(staff.data.admin)
+      setDepartment(staff.data.department.departmentName)
       });
     } catch (err) {
       console.log(`Error : ${err.message}`);
@@ -191,14 +225,14 @@ export default function StaffList() {
     }else if(open3){
       setOpen3(false);
     }
-    if(selectionModel[0] != undefined || selectionModel != null){
+    if(selectionModel[0] !== undefined || selectionModel !== null){
       setSelectionModel([]);
     }
   };
 
   const handleClose2 = () => {
     setOpen2(false);
-    if(selectionModel[0] != undefined || selectionModel != null){
+    if(selectionModel[0] !== undefined || selectionModel !== null){
       setSelectionModel([]);
     }
   };
@@ -216,42 +250,87 @@ export default function StaffList() {
   // const id = user.id;
   const fetchData = async () => {
     await api.get(`/staff/all`).then(userData => {
-    setRecords(userData.data);
-    console.log(userData.data)
+     console.log(userData.data)
+     setRecords(userData.data)
 })}
 
   useEffect(() => {
-    fetchData()
-      .catch(console.error);
+    fetchData().catch(console.error);
+    fetchDepartments().catch(console.error);
   }, [])
 
   const deletestaff = async (e) => {
     e.preventDefault();
     try {
       await api.delete(`/staff/${selectionModel[0]}`).then(userData => {
+        setMessage("Deleted Successfully!");
+        setSeverity("success");
+        showBar();
         handleClose();
         fetchData()
         .catch(console.error);
       });
     } catch (err) {
+      setMessage("Delete Failed!");
+      setSeverity("error");
+      showBar();
       console.log(`Error : ${err.message}`);
     }
   };
+
+  const onSubmit = async (data) => {
+    console.log('submit')
+    data.admin = admin;
+    data.gender = gender;
+    try {
+      await api.put(`/staff/${selectionModel[0]}`, data).then(userData => {
+              handleClose2();
+              fetchData()
+              .catch(console.error);
+            });
+            setMessage("Updated Successfully!");
+            setSeverity("success");
+            showBar();
+    } catch (err) {
+      setMessage("Updated Failed!");
+      setSeverity("error");
+      showBar();
+      console.log(`Error : ${err.message}`);
+    }
+  };
+
+  const {
+    register,
+    control,
+    handleSubmit,
+    setValue,
+    formState: { errors },
+  } = useForm({
+    resolver: yupResolver(validationSchema),
+  });
+
+
+
+  const [departments,setDepartments] = useState([]);
+  const fetchDepartments = async () =>{
+    api.get('/staff/department/all').then(data =>{
+      setDepartments(data.data);
+    })
+  }
 
   return (
     <Grid item xs={12} md={12} lg={12}>
       <Paper
         sx={{
-          p: 5,
+          p: 0,
           display: "flex",
           flexDirection: "column",
           height: "auto",
         }}
       >
-        <h2 className="dashboard-title">View Staff</h2>
         <div style={{ height: 600, width: '100%' }}>
-              <DataGrid
-                components={{ Toolbar: CustomToolbar }}
+              <StripedDataGrid
+                components={{ Toolbar: CustomToolbar} }
                 componentsProps={{
                   toolbar: {
                     showQuickFilter: true,
@@ -281,6 +360,9 @@ export default function StaffList() {
                 rowsPerPageOptions={[25, 50, 100]}
                 pagination
                 checkboxSelection
+                getRowClassName={(params) =>
+                  params.indexRelativeToCurrentPage % 2 === 0 ? 'even' : 'odd'
+                }
                 selectionModel={selectionModel}
                 hideFooterSelectedRowCount
                 onSelectionModelChange={(selection) => {
@@ -295,18 +377,12 @@ export default function StaffList() {
                   }
                 }}
           />
-           <Button
-        color="primary"
-        variant="contained"
-        
-      >Delete
-      </Button>
             </div>
-              <Notifybar  open={bar} 
-              onClose={hideBar}
-              severity={severity} 
-              message={message}/>
-              </Paper>
+                    <Notifybar  open={bar} 
+                    onClose={hideBar}
+                    severity={severity} 
+                    message={message}/>
+                   </Paper>
                       <Dialog
                         open={open2}
                         keepMounted
@@ -316,134 +392,184 @@ export default function StaffList() {
                       >
                         <DialogTitle>{"Edit staff"}</DialogTitle>
                         <DialogContent>
-                        <Box component="form" sx={{
-                            '& .MuiTextField-root': { m: 1, width: '40ch' },
-                          }}>
+                        <Grid item xs={12} md={12} lg={12}>
+                          <Box component="form" onSubmit={handleSubmit}  sx={{
+                          '& .MuiTextField-root': { m: 1, width: '40ch' },
+                        }}>
                               <div>
                           <TextField
                               label="Name"
                               fullWidth
                               multiline
-                              value={name}
-                              onChange={e => setName(e.target.value)}
-                              helperText=" "
                               maxRows={5}
+                              helperText={errors.name?.message}
                               required
+                              InputLabelProps={{
+                                shrink: true,
+                              }}
+                              {...register("name")}
+                              error={errors.name ? true : false}
                             />
-                            <TextField
+                          <TextField
                               label="Email"
                               fullWidth
                               multiline
-                              value={email}
-                              onChange={e => setEmail(e.target.value)}
-                              helperText=" "
                               maxRows={5}
+                              helperText={errors.email?.message}
                               required
+                              InputLabelProps={{
+                                shrink: true,
+                              }}
+                              {...register("email")}
+                              error={errors.email ? true : false}
                             />
+
                             <TextField
                               label="Age"
                               multiline
-                              value={age}
-                              onChange={e => setAge(e.target.value)}
-                              helperText=" "
                               maxRows={2}
+                              helperText={
+                                errors.age?.message
+                                  ? errors.age?.message
+                                  : ""
+                              }
                               required
+                              InputLabelProps={{
+                                shrink: true,
+                              }}
+                              {...register("age")}
+                              error={errors.age ? true : false}
                             />
+
                               <TextField
                               label="Address"
                               fullWidth
                               multiline
-                              value={address}
-                              onChange={e => setAddress(e.target.value)}
-                              helperText=" "
                               maxRows={5}
+                              helperText={errors.address?.message}
                               required
+                              InputLabelProps={{
+                                shrink: true,
+                              }}
+                              {...register("address")}
+                              error={errors.address ? true : false}
                             />
-                        
                                 <TextField
                               label="Phone"
                               fullWidth
                               multiline
-                              value={phone}
-                              onChange={e => setPhone(e.target.value)}
-                              helperText=" "
                               maxRows={5}
+                              helperText={errors.phone?.message}
                               required
-                            />
-                            <TextField
-                              required
-                              fullWidth
-                              name="department"
-                              label="Department"
-                              id="department"
-                              onChange={e => setDepartment(e.target.value)}
-                              value={department}
-                            />
-                            <FormControl  sx={{ m: 0, minWidth: 80 }}>
-                          <Autocomplete
-                              multiple
-                              onChange={(event, newValue) => {
-                                setEducation(newValue);
+                              InputLabelProps={{
+                                shrink: true,
                               }}
-                              options={educationList.map((option) => option.label)}
-                              value={education}
-                              filterSelectedOptions
+                              {...register("phone")}
+                              error={errors.phone ? true : false}
+                            />
+
+                        <FormControl  sx={{ m: 1, minWidth: 140 }}>
+                        <FormLabel>Gender</FormLabel>
+                          <RadioGroup row
+                            value={gender || 'Female'}
+                            onChange={(event) => {
+                              setGender(event.target.value);
+                            }}
+                          >
+                            <FormControlLabel value="Female" control={<Radio />} label="Female" />
+                            <FormControlLabel value="Male" control={<Radio />} label="Male" />
+                            </RadioGroup>
+                          </FormControl>  
+                            <TextField
+                              label="Job title"
+                              fullWidth
+                              multiline
+                              maxRows={5}
+                              helperText={errors.job_title?.message}
+                              required
+                              InputLabelProps={{
+                                shrink: true,
+                              }}
+                              {...register("job_title")}
+                              error={errors.job_title ? true : false}
+                            />
+                       <FormControl  sx={{ ml: 0, minWidth: 80 }}>
+                            <Controller
+                          name="department"
+                          control={control}
+                          render={({ field: { ref, ...field }, fieldState: { error } }) => (
+                        <Autocomplete
+                              sx={{ mb: 4 }}
+                                disablePortal
+                                options={departments.map((option) => option.departmentName)}
+                                value={department || ""}
+                                onChange={(event, value) => {
+                                  setDepartment(value);
+                                  field.onChange(value);
+                                }}
                               renderInput={(params) => (
                                 <TextField
-                                  {...params}
-                                  label="Education"
-                                  placeholder=""
-                                />
+                                required
+                                error={!!error}
+                                helperText={error?.message}
+                                label="Department"
+                                inputRef={ref}
+                                {...params}
+                              />
+                                )}
+                              />
                               )}
-                            />
-                            </FormControl>
-                            <TextField
-                              required
-                              fullWidth
-                              name="job_title"
-                              label="Job title"
-                              type="job_title"
-                              id="job_title"
-                              onChange={e => setjob_title(e.target.value)}
-                              value={job_title}
-                            />
-                              <FormControl  sx={{ m: 1, minWidth: 140 }}>
-                          <InputLabel id="gender">Gender</InputLabel>
-                          <Select
-                            labelId="gender"
-                            id="gender"
-                            value={gender}
-                            label="Gender"
-                            required
-                            onChange={handleChange}
-                            >
-                            <MenuItem value={'Male'}>Male</MenuItem>
-                            <MenuItem value={'Female'}>Female</MenuItem>
-                            </Select>
-                            </FormControl>
-                            <FormControl  sx={{ m: 1, minWidth: 140 }}>
-                          <InputLabel id="gender">Is Admin?</InputLabel>
-                          <Select
-                            labelId="admin"
-                            id="admin"
-                            value={admin}
-                            label="Is Admin?"
-                            required
-                            onChange={handleAdminChange}
-                            >
-                            <MenuItem value={'true'}>True</MenuItem>
-                            <MenuItem value={'false'}>False</MenuItem>
-                            </Select>
-                            </FormControl>
-                                </div>
-                          </Box>
+                            />  
+                        </FormControl>  
+                        <FormControl  sx={{ m: 0, minWidth: 80 }}>
+                          <Controller
+                            name="education"
+                            control={control}
+                            render={({ field: { ref, ...field }, fieldState: { error } }) => (
+                              <Autocomplete
+                                disableClearable
+                                disablePortal
+                                filterSelectedOptions
+                                multiple
+                                options={educationList.map((option) => option.label)}
+                                value={education || []}
+                                onChange={(event, newValue) => {
+                                  setEducation(newValue);
+                                  field.onChange(newValue);
+                                }}
+                                renderInput={(params) => (
+                                  <TextField
+                                    required
+                                    error={!!error}
+                                    helperText={error?.message}
+                                    label="Education"
+                                    inputRef={ref}
+                                    {...params}
+                                  />
+                                )}
+                              />
+                            )}
+                          /> 
+                          </FormControl> 
+                          <FormControl  sx={{ m: 1, minWidth: 140 }}>
+                              <FormControlLabel
+                              control={<Checkbox checked={!!admin}/>} 
+                              onChange={(event, value) => {
+                                    setAdmin(value);
+                                    console.log(value)
+                                  }}
+                                  label="This employee is an Administrator" />
+
+                              </FormControl>
+                                  </div>
+                            </Box>
+                      </Grid>
                         </DialogContent>
                         <DialogActions>
                           <Button type="submit" variant="contained" onClick={handleClose2}>Cancel</Button>
-                          <Button type="submit" variant="contained" onClick={(e) => {  handleSubmit(e,id)  }}>Save Changes</Button>
+                          <Button type="submit" variant="contained" onClick={handleSubmit(onSubmit)}>Save Changes</Button>
                         </DialogActions>
                       </Dialog>
-
                       <Dialog
                         open={open}
                         keepMounted
@@ -462,32 +588,27 @@ export default function StaffList() {
                           <Button onClick={(e) => {  deletestaff(e,id) }}>YES</Button>
                         </DialogActions>
                       </Dialog>
-
-
-                      <Dialog
-        open={open3}
-        TransitionComponent={Transition}
-        keepMounted
-        onClose={handleClose}
-        aria-describedby="alert-dialog-slide-description"
-      >
-        
-          <DialogTitle>
-            <Grid container direction="row" justify="space-between" alignItems="center">
-              You must select an item
-
-            </Grid>
-          </DialogTitle>
-        <DialogContent>
-          <DialogContentText id="alert-dialog-slide-description">
-          To proceed with this action you must select an item.
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose}>Close</Button>
-        </DialogActions>
-      </Dialog>
-    </Grid>
+                    <Dialog
+                      open={open3}
+                      TransitionComponent={Transition}
+                      keepMounted
+                      onClose={handleClose}
+                       >
+                      <DialogTitle>
+                        <Grid container direction="row" justify="space-between" alignItems="center">
+                          You must select an item
+                        </Grid>
+                      </DialogTitle>
+                      <DialogContent>
+                        <DialogContentText id="alert-dialog-slide-description">
+                        To proceed with this action you must select an item.
+                        </DialogContentText>
+                      </DialogContent>
+                      <DialogActions>
+                        <Button onClick={handleClose}>Close</Button>
+                      </DialogActions>
+                   </Dialog>
+     </Grid>
     
   );
 }
