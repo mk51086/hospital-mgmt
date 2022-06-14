@@ -2,13 +2,6 @@ import Grid from "@mui/material/Grid";
 import * as React from "react";
 import Button from "@mui/material/Button";
 import Paper from "@mui/material/Paper";
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
-import TableContainer from "@mui/material/TableContainer";
-import TableHead from "@mui/material/TableHead";
-import TableRow from "@mui/material/TableRow";
-import IconButton from "@mui/material/IconButton";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import Dialog from "@mui/material/Dialog";
@@ -22,79 +15,144 @@ import { TextField } from "@mui/material";
 import api from "../../../../api/axios";
 import { useState, useEffect } from "react";
 import Notifybar from "../../../../components/shared/Notifybar";
-import InputLabel from "@mui/material/InputLabel";
-import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
-import Select, { SelectChangeEvent } from "@mui/material/Select";
-import Autocomplete from "@mui/material/Autocomplete";
-import { educationList } from "../../../../components/shared/educationList";
-import { useAuthContext } from "../../../../hooks/useAuthContext";
+import {
+  GridToolbarContainer,
+  GridToolbarColumnsButton,
+  GridToolbarFilterButton,
+  GridToolbarExport,
+  GridToolbarDensitySelector,
+} from '@mui/x-data-grid';
+import { GridToolbarQuickFilter   } from '@mui/x-data-grid';
+import Link from "@mui/material/Link";
+import { StripedDataGrid } from "../../../../components/shared/StrippedDataGrid";
+import {AppBar} from "@mui/material";
+import {Toolbar} from "@mui/material";
+import AddIcon from '@mui/icons-material/AddCircleOutline';
+import { useForm,Controller } from "react-hook-form";
+import { Autocomplete } from "@mui/material";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as Yup from "yup";
+import {useNavigate} from "react-router-dom";
 
-// import { useAuthContext } from "../../../../hooks/useAuthContext";
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 export default function Bills() {
-  const [open, setOpen] = React.useState(false);
-  const [open2, setOpen2] = React.useState(false);
-  const [bar, setBar] = React.useState(false);
+  const navigate = useNavigate();
 
+  const [del, setDel] = useState(false);
+  const [edit, setEdit] = useState(false);
+  const [bar, setBar] = useState(false);
+  const [selectionModel, setSelectionModel] = useState([]);
+  const [pageSize, setPageSize] = useState(25);
+  const [isSelected, setIsSelected] = useState(false);
   const [id, setId] = useState("");
   const [patient, setPatient] = useState("");
   const [paid, setPaid] = useState("");
   const [total, setTotal] = useState("");
   const [debt, setDebt] = useState("");
-  const { user } = useAuthContext();
+  const [patients,setPatients] = useState([]);
+  const [records, setRecords] = useState([]);
 
   const [message, setMessage] = useState("");
   const [severity, setSeverity] = useState("");
 
-  const handleSubmit = async (e, id) => {
-    e.preventDefault();
+  const validationSchema = Yup.object().shape({
+    patient: Yup.string()
+    .required("Patient is required").typeError("You must specify a patient"),
+    total: Yup.number()
+      .required("Total is required")
+      .min(0, "Total must be a positive number")
+      .typeError('Total is required'),
+    paid: Yup.number()
+    .required("Paid is required")
+    .min(0, "Paid must be a positive number")
+    .typeError('Paid is required')
+  });
+  const columns = [
+    { field: "id", headerName: "ID", minWidth: 120, flex:1 },
+    { field: "patient", headerName: "Patient", width: 140 },
+    { field: "total", headerName: "Total", width: 120 },
+    { field: "paid", headerName: "Paid", width: 120 },
+    { field: "debt", headerName: "Debt", width: 120},
+    { field: "creator", headerName: "Created by", minWidth: 120, flex:1},
+  ];
 
-    const data = { paid, total, debt };
-    try {
-      await api.put(`/staff/cashier/bill/${id}`, data).then((userData) => {
-        handleClose2();
-        fetchData().catch(console.error);
-      });
-    } catch (err) {
-      console.log(`Error : ${err.message}`);
+const {
+    register,
+    control,
+    handleSubmit,
+    setValue,
+    getValues,
+    reset,
+    formState: { errors },
+  } = useForm({
+    resolver: yupResolver(validationSchema),
+  });
+
+const newClicked = ()=>{
+  navigate('/staff/dashboard/createbill')
+}
+
+  const handleClickDelete = () => {
+    if(selectionModel[0] === undefined || selectionModel === null){
+      handleClickSelected();
+    } else {
+      try {
+        setDel(true);
+      } catch (err) {
+        console.log(`Error : ${err.message}`);
+      }
     }
   };
 
-  const handleClickOpen = (e, id) => {
-    setId(id);
-    setOpen(true);
+  const handleClickSelected = () => {
+    setIsSelected(true);
   };
 
   const handleDebt = async (e) => {
     setPaid(e.target.value);
-    setDebt(total - e.target.value);
-  };
+    setDebt(total - e.target.value)
+  }
 
-  const handleClickOpen2 = async (e, id) => {
-    console.log(id);
+  const handleTotal = (e)=>{
+      setTotal(e.target.value);
+      setDebt(e.target.value-getValues().paid);
+    }
+
+
+  const handleClickEdit = async (e) => {
+    if(selectionModel[0] === undefined || selectionModel === null){
+      handleClickSelected();
+    }else{ 
     try {
-      await api.get(`/staff/cashier/bill/${id}`).then((bill) => {
-        setId(id);
-        setPatient(bill.data.patient.name);
-        setPaid(bill.data.paid);
-        setTotal(bill.data.total);
+      await api.get(`/staff/cashier/bill/${selectionModel[0]}`).then((bill) => {
+        console.log(bill.data)
+        setValue('paid',bill.data.paid);
+        setValue('total', bill.data.total);
+        setValue('patient',bill.data.patient.name)
+        setPatient(bill.data.patient.name)
         setDebt(bill.data.debt);
       });
     } catch (err) {
       console.log(`Error : ${err.message}`);
     }
-    setOpen2(true);
+    setEdit(true);
+  }
   };
 
   const handleClose = () => {
-    setOpen(false);
-  };
-
-  const handleClose2 = () => {
-    setOpen2(false);
+    if(del){
+      setDel(false);
+    }else if(edit){
+      setEdit(false);
+    }else if(isSelected){
+      setIsSelected(false);
+    }
+    if(selectionModel[0] !== undefined || selectionModel !== null){
+      setSelectionModel([]);
+    }
   };
 
   const showBar = () => {
@@ -105,91 +163,154 @@ export default function Bills() {
     setBar(false);
   };
 
-  // const { user } = useAuthContext();
-  const [records, setRecords] = useState([]);
-  // const id = user.id;
   const fetchData = async () => {
     await api.get(`/staff/cashier/bills`).then((userData) => {
       setRecords(userData.data);
+      console.log(userData.data)
     });
   };
+  const fetchPatients = async () => {
+    await api.get(`/patient/all`).then(userData => {
+      setPatients(userData.data);
+    })
+  }
 
   useEffect(() => {
     fetchData().catch(console.error);
+    fetchPatients().catch(console.error);
   }, []);
 
-  const deleteBill = async (e, id) => {
+  const deleteBill = async (e) => {
     e.preventDefault();
     try {
-      await api.delete(`/staff/cashier/bill/${id}`).then((userData) => {
+      await api.delete(`/staff/cashier/bill/${selectionModel[0]}`).then((userData) => {
         handleClose();
         fetchData().catch(console.error);
+        setMessage("Updated Successfully!");
+        setSeverity("success");
+        showBar();
       });
     } catch (err) {
       console.log(`Error : ${err.message}`);
+      setMessage("Delete Failed!");
+      setSeverity("error");
+      showBar();
     }
   };
+
+  const onSubmit = async (data) => {
+    console.log('submit')
+    console.log(data);
+    data.patient = patient;
+    data.debt = debt;
+    try {
+      await api.put(`/staff/cashier/bill/${selectionModel[0]}`, data).then((userData) => {
+              handleClose();
+              fetchData().catch(console.error);
+            });
+            setMessage("Updated Successfully!");
+            setSeverity("success");
+            showBar();
+    } catch (err) {
+      setMessage("Updated Failed!");
+      setSeverity("error");
+      showBar();
+      console.log(`Error : ${err.message}`);
+    }
+  };
+
+  function CustomToolbar() {
+    return (
+      <GridToolbarContainer >
+        
+        <AppBar position="static" style={{ background: 'transparent' }} variant="dense">
+          <Toolbar  style={{display:"flex", justifyContent:"space-between"}}>
+              <div>
+        <GridToolbarQuickFilter />
+        <GridToolbarColumnsButton />
+        <GridToolbarFilterButton />
+        <GridToolbarDensitySelector />
+        <GridToolbarExport />
+      <Button onClick={handleClickDelete} startIcon={<DeleteIcon  />}>
+        Delete
+        </Button>
+        <Button onClick={handleClickEdit} startIcon={<EditIcon />}>
+          Edit
+        </Button>
+            </div>
+            <div>
+              <Link to={"/"} style={{ textDecoration: 'none' }}>
+                <Button type="button" variant="contained" color="primary" float="right" onClick={newClicked} startIcon={<AddIcon />}>New</Button>
+              </Link>
+            </div>
+          </Toolbar>
+        </AppBar>
+      </GridToolbarContainer>
+
+    );
+  }
 
   return (
     <Grid item xs={12} md={12} lg={12}>
       <Paper
         sx={{
-          p: 2,
+          p: 0,
           display: "flex",
           flexDirection: "column",
           height: "auto",
         }}
-      >
-        <h2 className="dashboard-title">View Staff</h2>
-        <TableContainer>
-          <Table sx={{ minWidth: 650 }} aria-label="simple table">
-            <TableHead>
-              <TableRow>
-                <TableCell align="center">Patient</TableCell>
-                <TableCell align="center">Total</TableCell>
-                <TableCell align="center">Paid</TableCell>
-                <TableCell align="center">Debt</TableCell>
-                <TableCell align="center">Created by</TableCell>
-                <TableCell align="center"> </TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {records &&
-                records.map((record, index) => (
-                  <TableRow
-                    key={index}
-                    sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-                  >
-                    <TableCell align="center">{record.patient.name}</TableCell>
-                    <TableCell align="center">{record.total}</TableCell>
-                    <TableCell align="center">{record.paid}</TableCell>
-                    <TableCell align="center">{record.debt}</TableCell>
-                    <TableCell align="center">{record.creator.name}</TableCell>
-                    <TableCell align="center">
-                      <IconButton
-                        onClick={(e) => {
-                          handleClickOpen2(e, record._id);
-                        }}
-                        color="primary"
-                        variant="outlined"
-                      >
-                        <EditIcon />
-                      </IconButton>
-                      <IconButton
-                        onClick={(e) => {
-                          handleClickOpen(e, record._id);
-                        }}
-                        color="primary"
-                        variant="outlined"
-                      >
-                        <DeleteIcon />
-                      </IconButton>
-                    </TableCell>
-                  </TableRow>
-                ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
+        >
+        <div style={{ height: 600, width: '100%' }}>
+         <StripedDataGrid
+                components={{ Toolbar: CustomToolbar} }
+                componentsProps={{
+                  toolbar: {
+                    showQuickFilter: true,
+                    quickFilterProps: { debounceMs: 500 },
+                  },
+                }}
+                onCellDoubleClick={(params, event) => {
+                  handleClickDelete();
+                }}
+                rows={records.map((record) => {
+                  return {
+                    id: record._id,
+                    patient: record?.patient?.name,
+                    total: `${record.total}€`,
+                    paid: `${record.paid}€`,
+                    debt: `${record.debt}€`,
+                    creator: record.creator.name,
+                  }})}
+                columns={columns}
+                getRowId={(row) => row.id}
+                pageSize={pageSize}
+                onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
+                rowsPerPageOptions={[25, 50, 100]}
+                pagination
+                checkboxSelection
+                getRowClassName={(params) =>
+                  params.indexRelativeToCurrentPage % 2 === 0 ? 'even' : 'odd'
+                }
+                selectionModel={selectionModel}
+                hideFooterSelectedRowCount
+                onSelectionModelChange={(selection) => {
+                  if (selection.length > 1) {
+                    const selectionSet = new Set(selectionModel);
+                    const result = selection.filter((s) => !selectionSet.has(s));
+                    const selectedRowData = records.filter((row) =>
+                    selectionSet.has(row._id.toString())
+                    );
+                    console.log(selectedRowData)
+                    setSelectionModel(result);
+                    console.log(result)
+                  } else {
+                    setSelectionModel(selection);
+                  }
+                }} 
+                />
+            </div>
+
+        
         <Notifybar
           open={bar}
           onClose={hideBar}
@@ -198,83 +319,115 @@ export default function Bills() {
         />
       </Paper>
       <Dialog
-        open={open2}
+        open={edit}
         keepMounted
         maxWidth="md"
         TransitionComponent={Transition}
-        aria-describedby="alert-dialog-slide-description"
-      >
-        <DialogTitle>{"Edit staff"}</DialogTitle>
+        aria-describedby="alert-dialog-slide-description">
+        <DialogTitle>{"Edit Bills"}</DialogTitle>
         <DialogContent>
           <Box
             component="form"
             sx={{
               "& .MuiTextField-root": { m: 1, width: "40ch" },
             }}
-          >
-            <div>
+            >
+             <div>
+            <FormControl  sx={{ m: 0, minWidth: 80 }}>
+           <Controller
+        name="patient"
+        control={control}
+        defaultValue={[]}
+        render={({ field: { ref, ...field }, fieldState: { error } }) => (
+       <Autocomplete
+             sx={{ mb: 4 }}
+              disablePortal
+              options={patients.map((option) => option.name)}
+              value={patient || ""}
+              disabled
+              onChange={(event, value) => {
+                setPatient(value);
+                field.onChange(value);
+              }}
+             renderInput={(params) => (
               <TextField
-                label="Patient"
-                fullWidth
-                disabled
-                InputProps={{ inputProps: { min: 0 } }}
-                value={patient}
-                helperText=" "
-                required
-              />
-              <TextField
-                label="Total"
-                fullWidth
-                type="number"
-                InputProps={{ inputProps: { min: 0 } }}
-                value={total}
-                onChange={(e) => setTotal(e.target.value)}
-                helperText=" "
-                required
-              />
-              <TextField
-                label="Paid"
-                fullWidth
-                type="number"
-                value={paid}
-                InputProps={{ inputProps: { min: 0 } }}
-                onChange={(e) => handleDebt(e)}
-                helperText=" "
-                maxRows={5}
-                required
-              />
-              <TextField
-                label="Debt"
-                fullWidth
-                type="number"
-                disabled
-                value={debt}
-                onChange={(e) => setDebt(e.target.value)}
-                helperText=" "
-                maxRows={5}
-                required
-              />
-            </div>
+              required
+              error={!!error}
+              helperText={error?.message}
+              label="Patient"
+              inputRef={ref}
+              {...params}
+            />
+              )}
+            />
+            )}
+          />  
+    </FormControl>
+    
+         <TextField
+            label="Total"
+            fullWidth
+            type="number"
+            InputProps={{
+              endAdornment:
+              '€'
+              , inputProps: { min: 0} }}
+            maxRows={5}
+            required
+            InputLabelProps={{ shrink: true }}  
+            helperText={
+              errors.total?.message
+            }
+            {...register("total")}
+            onChange={e => handleTotal(e)}
+            error={errors.total ? true : false}
+          />
+
+            <TextField
+            label="Paid"
+            fullWidth
+            type="number"
+            maxRows={5}
+            required
+            InputProps={{
+              endAdornment:
+              '€'
+              , inputProps: { min: 0} }}
+            helperText={
+              errors.paid?.message
+            }
+            InputLabelProps={{ shrink: true }}  
+            {...register("paid")}
+            onChange={e => handleDebt(e)}
+            error={errors.paid ? true : false}
+          />
+           <TextField
+            label="Debt"
+            fullWidth
+            value={debt}
+            type="number"
+            disabled
+            helperText=" "
+            InputProps={{
+              endAdornment:
+              '€'
+              }}
+            maxRows={5}
+            required
+          />
+         </div>
           </Box>
         </DialogContent>
         <DialogActions>
-          <Button type="submit" variant="contained" onClick={handleClose2}>
+          <Button type="submit" variant="contained" onClick={handleClose}>
             Cancel
           </Button>
-          <Button
-            type="submit"
-            variant="contained"
-            onClick={(e) => {
-              handleSubmit(e, id);
-            }}
-          >
-            Save Changes
-          </Button>
+          <Button type="submit"variant="contained"onClick={handleSubmit(onSubmit)}>Save Changes</Button>
         </DialogActions>
       </Dialog>
 
       <Dialog
-        open={open}
+        open={del}
         keepMounted
         TransitionComponent={Transition}
         onClose={handleClose}
@@ -297,6 +450,27 @@ export default function Bills() {
           </Button>
         </DialogActions>
       </Dialog>
+
+      <Dialog
+        open={isSelected}
+        TransitionComponent={Transition}
+        keepMounted
+        onClose={handleClose}
+        >
+        <DialogTitle>
+          <Grid container direction="row" justify="space-between" alignItems="center">
+            You must select an item
+          </Grid>
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-slide-description">
+          To proceed with this action you must select an item.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose}>Close</Button>
+        </DialogActions>
+    </Dialog>
     </Grid>
   );
 }

@@ -182,19 +182,7 @@ const App = () => {
                 )
               } />
             </Route>
-{/* 
-            <Route
-              path="/patient/dashboard/view-appointments"
-              element={
-                !user ? (
-                  <Navigate to="/login" />
-                ) : user.isStaff ? (
-                  <Navigate to="/staff/dashboard" />
-                ) : (
-                  <PatientDashboard option={"/view-appointments"} />
-                )
-              }
-            /> */}
+
 
             <Route
               path="/staff/dashboard"
@@ -237,20 +225,19 @@ const App = () => {
                 )
               }
             />
-            <Route
-              path="/staff/dashboard/createbill"
-              element={
+
+            <Route path='/staff'>
+              <Route path='/staff/dashboard/createbill' element={
                 !user ? (
                   <Navigate to="/login" />
                 ) : !user.isStaff ? (
                   <Navigate to="/patient/dashboard" />
                 ) : (
-                  user.jobTitle === "cashier" && (
-                    <StaffDashboard option={"/createbill"} />
-                  )
+                  <StaffDashboard option={"/createbill"} />
                 )
-              }
-            />
+              } />
+            </Route>
+
             <Route
               path="/staff/dashboard/bills"
               element={
