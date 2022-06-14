@@ -120,8 +120,6 @@ const columns = [
   const cancelAppointment = async (e) => {
     const selectedRowData = records.filter((row) =>
     selectionModel[0]===row._id.toString());
-    console.log(selectionModel)
-    console.log(selectedRowData[0])
     e.preventDefault();
     if(selectedRowData[0].status==='Canceled'){
       setOpen(false);
@@ -222,9 +220,7 @@ const columns = [
                     selectionSet.has(row._id.toString())
                     );
                     setAppointment(selectedRowData)
-                    console.log(selectedRowData)
                     setSelectionModel(result);
-                    console.log(result)
                   } else {
                     setSelectionModel(selection);
                   }

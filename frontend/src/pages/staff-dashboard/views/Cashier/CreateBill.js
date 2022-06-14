@@ -55,10 +55,8 @@ export default function CreateBill() {
 
 
   const onSubmit = (data) => {
-    console.log(debt)
     data.debt = debt;
     data.creator = user.id;
-    console.log(JSON.stringify(data, null, 2));
     try {
       api.post("/staff/cashier/bill", data).then((userData) => {
         reset();

@@ -42,6 +42,7 @@ const App = () => {
             />
 
             {/* Patient Dashboard */}
+            <Route path='/patient'>
             <Route
               path="/patient/dashboard"
               element={
@@ -54,6 +55,7 @@ const App = () => {
                 )
               }
             />
+            </Route>
             <Route
               path="/patient/dashboard/add-patient"
               element={
@@ -183,7 +185,7 @@ const App = () => {
               } />
             </Route>
 
-
+            <Route path='/staff'>
             <Route
               path="/staff/dashboard"
               element={
@@ -196,6 +198,7 @@ const App = () => {
                 )
               }
             />
+            </Route>
             <Route
               path="/staff/dashboard/prescriptions"
               element={

@@ -128,7 +128,6 @@ const newClicked = ()=>{
     }else{ 
     try {
       await api.get(`/staff/cashier/bill/${selectionModel[0]}`).then((bill) => {
-        console.log(bill.data)
         setValue('paid',bill.data.paid);
         setValue('total', bill.data.total);
         setValue('patient',bill.data.patient.name)
@@ -166,7 +165,6 @@ const newClicked = ()=>{
   const fetchData = async () => {
     await api.get(`/staff/cashier/bills`).then((userData) => {
       setRecords(userData.data);
-      console.log(userData.data)
     });
   };
   const fetchPatients = async () => {
@@ -199,8 +197,6 @@ const newClicked = ()=>{
   };
 
   const onSubmit = async (data) => {
-    console.log('submit')
-    console.log(data);
     data.patient = patient;
     data.debt = debt;
     try {
@@ -300,9 +296,7 @@ const newClicked = ()=>{
                     const selectedRowData = records.filter((row) =>
                     selectionSet.has(row._id.toString())
                     );
-                    console.log(selectedRowData)
                     setSelectionModel(result);
-                    console.log(result)
                   } else {
                     setSelectionModel(selection);
                   }

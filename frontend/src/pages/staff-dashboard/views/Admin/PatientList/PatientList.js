@@ -157,7 +157,6 @@ export default function PatientList() {
       handleClickOpen3();
     }else{ try {
       await api.get(`/patient/${selectionModel[0]}`).then(staff => {
-      console.log(staff.data)
       setValue('name',staff.data.name)
       setGender(staff.data.gender)
       setValue('age',staff.data.age)
@@ -195,7 +194,6 @@ export default function PatientList() {
   const [records, setRecords] = useState([]);
   const fetchData = async () => {
     await api.get(`/patient/all`).then((userData) => {
-      console.log(userData.data)
       setRecords(userData.data);
     });
   };
@@ -225,7 +223,6 @@ export default function PatientList() {
   const deletePatient = async (e) => {
     e.preventDefault();
     try {
-      console.log(id)
       await api.delete(`/patient/${id}`).then((userData) => {
         setMessage("Deleted Successfully!");
         setSeverity("success");
@@ -320,7 +317,6 @@ export default function PatientList() {
                     const result = selection.filter((s) => !selectionSet.has(s));
 
                     setSelectionModel(result);
-                    console.log(result)
                   } else {
                     setSelectionModel(selection);
                   }

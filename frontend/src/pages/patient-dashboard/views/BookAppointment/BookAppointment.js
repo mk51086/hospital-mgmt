@@ -37,7 +37,6 @@ export default function BookAppointment() {
   });
 
   const onSubmit = (data) => {
-    console.log(JSON.stringify(data, null, 2));
     try {
       api.post("/patient/appointment", data).then((userData) => {
         reset();

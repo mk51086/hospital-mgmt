@@ -175,7 +175,6 @@ export default function StaffList() {
   const [selectionModel, setSelectionModel] = useState([]);
 
   const handleClickOpen = (e) => {
-    console.log(selectionModel[0])
     if(selectionModel[0] === undefined || selectionModel === null){
       handleClickOpen3();
     }else{
@@ -197,7 +196,6 @@ export default function StaffList() {
       handleClickOpen3();
     }else{ try {
       await api.get(`/staff/${selectionModel[0]}`).then(staff => {
-      console.log(staff.data)
       setEducation(staff.data.education)
       setValue('name',staff.data.name)
       setGender(staff.data.gender)
@@ -250,7 +248,6 @@ export default function StaffList() {
   // const id = user.id;
   const fetchData = async () => {
     await api.get(`/staff/all`).then(userData => {
-     console.log(userData.data)
      setRecords(userData.data)
 })}
 
@@ -279,7 +276,6 @@ export default function StaffList() {
   };
 
   const onSubmit = async (data) => {
-    console.log('submit')
     data.admin = admin;
     data.gender = gender;
     try {
@@ -313,7 +309,7 @@ export default function StaffList() {
 
   const [departments,setDepartments] = useState([]);
   const fetchDepartments = async () =>{
-    api.get('/staff/department/all').then(data =>{
+    await api.get('/staff/department/all').then(data =>{
       setDepartments(data.data);
     })
   }
@@ -371,7 +367,6 @@ export default function StaffList() {
                     const result = selection.filter((s) => !selectionSet.has(s));
 
                     setSelectionModel(result);
-                    console.log(result)
                   } else {
                     setSelectionModel(selection);
                   }
@@ -556,7 +551,6 @@ export default function StaffList() {
                               control={<Checkbox checked={!!admin}/>} 
                               onChange={(event, value) => {
                                     setAdmin(value);
-                                    console.log(value)
                                   }}
                                   label="This employee is an Administrator" />
 
