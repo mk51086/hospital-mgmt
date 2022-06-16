@@ -19,7 +19,9 @@ export default function Profile() {
       >
         <h2 className="dashboard-title">Profile</h2>
         <div className="profile-content">
-          <Avatar alt={`${user.name}`} />
+          <Avatar alt={`${user.name}`} src={user?.image}
+            sx={{ width: 24, height: 24 }}
+            />
           <label>
             Name: <span>{user.name}</span>
           </label>

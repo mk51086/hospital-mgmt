@@ -5,6 +5,7 @@ const patientController = require("../../controllers/patient.controller");
 router.post("/register", patientController.patient_register);
 router.post("/login", patientController.patient_login);
 router.post("/appointment", patientController.appointment_book);
+router.post("/googleauth",patientController.patient_googleauth);
 
 router.get("/all", patientController.patient_list);
 router.get("/:id", patientController.patient_get);

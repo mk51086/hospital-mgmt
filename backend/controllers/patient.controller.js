@@ -4,7 +4,7 @@ const jwt = require("jsonwebtoken");
 const Appointment = require ("../models/appointment.model");
 
 const patient_register = (req, res) => {
-  const { name, email, password, age, gender, address,town,country, dob, phone } = req.body;
+  const { name, email, password, age, gender, address,town,country, dob, phone,image } = req.body;
   console.log(req.body);
 
   Patient.findOne({ email }).then((patient) => {
@@ -22,6 +22,7 @@ const patient_register = (req, res) => {
       country,
       dob,
       phone,
+      image
     });
 
     bcrypt.genSalt(10, (err, salt) => {
@@ -45,6 +46,7 @@ const patient_register = (req, res) => {
                   name: patient.name,
                   email: patient.email,
                   isStaff: false,
+                  image: patient.image
                 },
               });
             }
@@ -79,11 +81,42 @@ const patient_login = (req, res) => {
               name: patient.name,
               email: patient.email,
               isStaff: false,
+              image: patient.image
             },
           });
         }
       );
     });
+  });
+};
+
+const patient_googleauth = (req, res) => {
+  console.log(req.body.profileObj.email)
+  const email  = req.body.profileObj.email;
+  Patient.findOne({ email: email }).then((patient) => {
+    console.log(patient)
+    if (!patient){
+      console.log('patient does not exist')
+      return res.status(200).json({ msg: "patient does not exist" });
+    }
+    jwt.sign(
+      { id: patient.id },
+      process.env.JWT_SECRET,
+      { expiresIn: 3600 },
+      (err, token) => {
+        if (err) throw err;
+        res.json({
+          token,
+          user: {
+            id: patient.id,
+            name: patient.name,
+            email: patient.email,
+            isStaff: false,
+            image: patient.image
+          },
+        });
+      }
+    );
   });
 };
 
@@ -227,5 +260,6 @@ module.exports = {
   appointment_list,
   appointment_delete,
   appointment_update,
-  appointment_cancel
+  appointment_cancel,
+  patient_googleauth
 };
