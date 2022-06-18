@@ -1,5 +1,13 @@
-import Signup from "../../components/Forms/Signup/Signup";
-
+import RegisterLayout from "../../components/Forms/Signup/RegisterLayout";
+import Footer from "../../components/Footer/Footer";
+import footer_props from "../../components/shared/footer_props";
 export default function Register() {
-  return <Signup />;
+
+  return (
+    <>
+        <RegisterLayout/>
+        <Footer {...footer_props} />
+    </>
+  );
+
 }

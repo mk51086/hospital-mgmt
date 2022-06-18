@@ -169,9 +169,6 @@ export default function Signup() {
             alignItems: "center",
           }}
         >
-          <Avatar sx={{ m: 1, bgcolor: "primary.main" }}>
-            <LockOutlinedIcon />
-          </Avatar>
           <Typography component="h1" variant="h5">
             Sign up
           </Typography>
@@ -217,7 +214,7 @@ export default function Signup() {
                   value={password}
                 />
               </Grid>
-              <Grid item xs={12}>
+              {/* <Grid item xs={12}>
                 <TextField
                   required
                   fullWidth
@@ -230,7 +227,7 @@ export default function Signup() {
                   onChange={e => setAddress(e.target.value)}
                   value={address}
                 />
-              </Grid>
+              </Grid> */}
               <Grid item xs={12}>
                 <TextField
                   required
@@ -270,7 +267,7 @@ export default function Signup() {
               )}
               />
               </Grid>
-              <Grid item xs={12}>
+              {/* <Grid item xs={12}>
                 <TextField
                   required
                   fullWidth
@@ -282,8 +279,8 @@ export default function Signup() {
                   onChange={e => setPhone(e.target.value)}
                   value={phone}
                 />
-              </Grid>
-              <Grid item xs={12}>
+              </Grid> */}
+              {/* <Grid item xs={12}>
                 <TextField
                   fullWidth
                   type="date"
@@ -295,9 +292,9 @@ export default function Signup() {
                   }}
                   required
                 />
-              </Grid>
+              </Grid> */}
               <Grid item xs={12} style={{ display: "flex", justifyContent: "space-between" }}>
-                <TextField
+                {/* <TextField
                   required
                   fullWidth
                   type="number"
@@ -307,8 +304,8 @@ export default function Signup() {
                   InputProps={{ inputProps: { min: 0, max: 125 } }}
                   onChange={e => setAge(e.target.value)}
                   value={age}
-                />
-                <Select
+                /> */}
+                {/* <Select
                   sx={{ ml: 1 }}
                   required
                   fullWidth
@@ -319,7 +316,7 @@ export default function Signup() {
                 >
                   <MenuItem value={"Male"}>Male</MenuItem>
                   <MenuItem value={"Female"}>Female</MenuItem>
-                </Select>
+                </Select> */}
               </Grid>
             </Grid>
 
@@ -336,7 +333,6 @@ export default function Signup() {
             </Grid>
           </Box>
         </Box>
-        <Copyright sx={{ mt: 5 }} text={"Hospital Management System"} />
       </Container>
     </ThemeProvider>
   );

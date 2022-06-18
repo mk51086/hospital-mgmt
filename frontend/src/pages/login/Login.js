@@ -1,5 +1,8 @@
 import { useState } from "react";
 import Auth from "../../components/Forms/Auth/Auth";
+import LoginLayout from "../../components/Forms/Auth/LoginLayout";
+import Footer from "../../components/Footer/Footer";
+import footer_props from "../../components/shared/footer_props";
 
 export default function Login() {
   const [isPatient, setIsPatient] = useState(true);
@@ -8,5 +11,10 @@ export default function Login() {
     setIsPatient(!isPatient);
   };
 
-  return <Auth isPatient={isPatient} handleSwitch={handleSwitch} />;
+  return (
+    <>
+        <LoginLayout/>
+        <Footer {...footer_props} />
+    </>
+  );
 }
