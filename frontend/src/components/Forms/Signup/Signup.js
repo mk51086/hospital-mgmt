@@ -118,7 +118,6 @@ export default function Signup() {
     const autocomplete = new window.google.maps.places.Autocomplete(searchInput.current);
     autocomplete.setFields(["address_component", "geometry"]);
     autocomplete.addListener("place_changed", () => onChangeAddress(autocomplete));
-
   }
 
   useEffect(() => {
@@ -214,7 +213,7 @@ export default function Signup() {
                   value={password}
                 />
               </Grid>
-              {/* <Grid item xs={12}>
+              <Grid item xs={12}>
                 <TextField
                   required
                   fullWidth
@@ -227,7 +226,7 @@ export default function Signup() {
                   onChange={e => setAddress(e.target.value)}
                   value={address}
                 />
-              </Grid> */}
+              </Grid>
               <Grid item xs={12}>
                 <TextField
                   required
@@ -326,7 +325,7 @@ export default function Signup() {
 
             <Grid container justifyContent="flex-end">
               <Grid item>
-                <Link onClick={() => navigate("/login")} color="secondary.main" href="#" variant="body2">
+                <Link onClick={() => navigate("/login")} color="#016FB9" href="" variant="body2">
                   Already have an account? Log In
                 </Link>
               </Grid>

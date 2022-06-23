@@ -19,7 +19,7 @@ const LoginLayout = () => {
             <FormSide>
                 <Block>
                      <LoginForm isPatient={isPatient} handleSwitch={handleSwitch} />
-                     <Link onClick={() => navigate("/register")} color="secondary.main" href="#" variant="body2">
+                     <Link onClick={() => navigate("/register")} color="#016FB9" href="" variant="body2">
                   {"Don't have an account? Sign Up"}
                 </Link>
                 </Block>

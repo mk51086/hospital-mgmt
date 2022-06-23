@@ -151,6 +151,8 @@ const patient_update = (req, res, next) => {
     gender: req.body.gender,
     address: req.body.address,
     phone: req.body.phone,
+    town: req.body.town,
+    country: req.body.country,
   });
   Patient.updateOne({ _id: req.params.id }, patient)
     .then((savedPatient) => {

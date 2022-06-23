@@ -27,7 +27,7 @@ const content = [
     body: [
       "HMS not only saves time in the hospital but also is cost-effective in decreasing the number of people working on the system of manual entry of data and paperwork. The implementation of His will decrease the human intervention into the system thereby avoiding human-caused errors.",
     ],
-    image: "4.gif",
+    image: "24.png",
     alt: "",
     list: false,
   },

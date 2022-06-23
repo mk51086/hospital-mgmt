@@ -30,6 +30,9 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
 import FormLabel from '@mui/material/FormLabel';
+import { countries } from "../../../../../components/shared/countries";
+import { Autocomplete } from "@mui/material";
+
 import {
   GridToolbarContainer,
   GridToolbarColumnsButton,
@@ -108,10 +111,20 @@ export default function PatientList() {
       .required("Address is required")
       .min(6, "Address must be at least 6 characters")
       .max(77, "Address must not exceed 77 characters"),
+    town: Yup.string()
+    .required("Town is required")
+    .min(6, "Town must be at least 6 characters")
+    .max(77, "Town must not exceed 77 characters")
+    .typeError('Town must be specified'),
+    country: Yup.string()
+    .required("Country is required")
+    .min(6, "Country must be at least 6 characters")
+    .max(77, "Country must not exceed 77 characters")
+    .typeError('Country must be specified'),
     phone: Yup.string()
       .required("Phone is required")
       .min(6, "Phone must be at least 6 characters")
-      .max(30, "Phone must not exceed 30 characters"),
+      .max(30, "Phone must not exceed 30 characters")
   });
 
   const columns = [
@@ -120,6 +133,8 @@ export default function PatientList() {
     { field: "age", headerName: "Age", width: 50 },
     { field: "gender", headerName: "Gender", width: 70 },
     { field: "address", headerName: "Address", minWidth: 120, flex:1},
+    { field: "town", headerName: "Town", minWidth: 120, flex:1},
+    { field: "country", headerName: "Country", minWidth: 120, flex:1},
     { field: "phone", headerName: "Phone", minWidth: 120, flex:1},
     { field: "email", headerName: "Email", minWidth: 180, flex:1 },
   ];
@@ -135,6 +150,7 @@ export default function PatientList() {
   };
   
   const onSubmit = async (data) => {
+    console.log(data)
     data.gender = gender;
     try {
       await api.put(`/patient/${selectionModel[0]}`, data).then(userData => {
@@ -156,13 +172,16 @@ export default function PatientList() {
     if(selectionModel[0] === undefined || selectionModel === null){
       handleClickOpen3();
     }else{ try {
-      await api.get(`/patient/${selectionModel[0]}`).then(staff => {
-      setValue('name',staff.data.name)
-      setGender(staff.data.gender)
-      setValue('age',staff.data.age)
-      setValue('email',staff.data.email)
-      setValue('phone',staff.data.phone)
-      setValue('address',staff.data.address)
+      await api.get(`/patient/${selectionModel[0]}`).then(patient => {
+      setValue('name',patient.data.name)
+      setGender(patient.data.gender)
+      setValue('age',patient.data.age)
+      setValue('email',patient.data.email)
+      setValue('phone',patient.data.phone)
+      setValue('address',patient.data.address)
+      setValue('town',patient.data.town)
+      setValue('country',patient.data.country)
+
       });
     } catch (err) {
       console.log(`Error : ${err.message}`);
@@ -212,6 +231,7 @@ export default function PatientList() {
 
   const {
     register,
+    control,
     handleSubmit,
     setValue,
     formState: { errors },
@@ -296,6 +316,8 @@ export default function PatientList() {
                     age: record.age,
                     gender: record.gender,
                     address: record.address,
+                    town: record.town,
+                    country: record.country,
                     phone: record.phone,
                     email: record.email
                   }})}
@@ -337,7 +359,7 @@ export default function PatientList() {
                         TransitionComponent={Transition}
                         aria-describedby="alert-dialog-slide-description"
                       >
-                        <DialogTitle>{"Edit staff"}</DialogTitle>
+                        <DialogTitle>{"Edit patient"}</DialogTitle>
                         <DialogContent>
                         <Grid item xs={12} md={12} lg={12}>
                           <Box component="form" onSubmit={handleSubmit}  sx={{
@@ -401,6 +423,47 @@ export default function PatientList() {
                               {...register("address")}
                               error={errors.address ? true : false}
                             />
+                             <TextField
+                              label="Town"
+                              fullWidth
+                              multiline
+                              maxRows={5}
+                              helperText={errors.town?.message}
+                              required
+                              InputLabelProps={{
+                                shrink: true,
+                              }}
+                              {...register("town")}
+                              error={errors.town ? true : false}
+                            />
+                              <FormControl  sx={{ m: 0, minWidth: 80 }}>
+                            <Controller
+                              name="country"
+                              control={control}
+                              defaultValue=''
+                              render={({ field: { ref, ...field }, fieldState: { error } }) => (
+                                <Autocomplete
+                                  {...field}
+                                  disablePortal
+                                  filterSelectedOptions
+                                  options={countries.map((option) => option.label)}
+                                  onChange={(event, value) => {
+                                    field.onChange(value);
+                                  }}
+                                  renderInput={(params) => (
+                                    <TextField
+                                      required
+                                      error={!!error}
+                                      helperText={error?.message}
+                                      label="Country"
+                                      inputRef={ref}
+                                      {...params}
+                                    />
+                                  )}
+                                />
+                              )}
+                            /> 
+                            </FormControl>
                                 <TextField
                               label="Phone"
                               fullWidth
@@ -443,7 +506,7 @@ export default function PatientList() {
         onClose={handleClose}
         aria-describedby="alert-dialog-slide-description"
       >
-        <DialogTitle>{"Delete staff"}</DialogTitle>
+        <DialogTitle>{"Delete patient"}</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-slide-description">
             Are you sure you want to delete this patient?

@@ -5,7 +5,7 @@ import { Flex } from "../styles/Flex.styled";
 import { Bluedot } from "../styles/Bluedot.styled";
 import { Image } from "../styles/Header.styled";
 import Button from "../Button/Button";
-import logo from "../../assets/images/2.gif";
+import home1 from "../../assets/images/home22.png";
 import { useAuthContext } from "../../hooks/useAuthContext";
 import content from '../../content';
 import Container from "@mui/material/Container";
@@ -49,7 +49,7 @@ const { user } = useAuthContext();
             )}
         </Flex>
       </div>
-      <Image src={logo} alt="" />
+      <Image src={home1} alt="" />
     </Flex>
     <Container>
       
