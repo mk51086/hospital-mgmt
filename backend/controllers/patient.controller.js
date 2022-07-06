@@ -2,7 +2,7 @@ const Patient = require("../models/patient.model");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const Appointment = require ("../models/appointment.model");
-
+const Bill = require("../models/bill.model");
 const patient_register = (req, res) => {
   const { name, email, password, age, gender, address,town,country, dob, phone,image } = req.body;
   console.log(req.body);
@@ -218,6 +218,15 @@ const appointment_update = (req, res, next) => {
 
 
 const appointment_cancel = (req, res, next) => {
+  Bill.findOneAndUpdate({appointment: req.params.id},  { 
+    $inc: { total:5, debt: 5, cancelation_fee: 5 } 
+ } ,{new: true}, (err, doc) => {
+    if (err) {
+        console.log("Something went wrong when updating the Bill Collection");
+    }
+
+    console.log(doc);
+  });
   Appointment.updateOne({ _id: req.params.id }, { "$set" : { 
     "status" : 'Canceled', } ,
   })

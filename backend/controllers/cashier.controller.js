@@ -6,7 +6,9 @@
     paid: req.body.paid,
     total: req.body.total,
     debt: req.body.debt,
-    creator: req.body.creator
+    creator: req.body.creator,
+    appointment: req.body.appointment,
+    patient: req.body.appointment.patient
    });
    bill.save(bill)
      .then(() => {

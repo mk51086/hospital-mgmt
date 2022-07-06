@@ -76,6 +76,7 @@ export default function Bills() {
     { field: "total", headerName: "Total", width: 120 },
     { field: "paid", headerName: "Paid", width: 120 },
     { field: "debt", headerName: "Debt", width: 120},
+    { field: "cancelation_fee", headerName: "Cancellation Fee", width: 120},
     { field: "creator", headerName: "Created by", minWidth: 120, flex:1},
   ];
 
@@ -275,6 +276,7 @@ const newClicked = ()=>{
                     total: `${record.total}€`,
                     paid: `${record.paid}€`,
                     debt: `${record.debt}€`,
+                    cancelation_fee: `${record.cancelation_fee}€`,
                     creator: record.creator.name,
                   }})}
                 columns={columns}

@@ -6,6 +6,8 @@ const billSchema = new mongoose.Schema({
   paid: { type: Number, required: true },
   total: { type: Number, required: true },
   debt: { type: Number, required: true },
+  cancelation_fee: {type: Number, default: 0},
+  appointment: {type:Schema.Types.ObjectId, ref:'Appointment'},
   creator: {type:Schema.Types.ObjectId, ref:'Staff'}
 });
 

@@ -13,19 +13,25 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import FormControl from '@mui/material/FormControl';
 
 import * as Yup from "yup";
+import { getValue } from "@testing-library/user-event/dist/utils";
 export default function CreateBill() {
-  const [patient, setPatient] = useState("");
   const [paid, setPaid] = useState("");
   const [total, setTotal] = useState("");
   const [debt, setDebt] = useState("");
+  const [patient,setPatient] = useState("");
   const { user } = useAuthContext();
   const [records, setRecords] = useState([]);
   const validationSchema = Yup.object().shape({
-    patient: Yup.object().shape({
-      name: 
+    // patient: Yup.object().shape({
+    //   name: 
+    //       Yup.string()
+    //          .required("Patient is required")
+    // }).typeError("You must specify a patient"),
+    appointment: Yup.object().shape({
+      _id: 
           Yup.string()
-             .required("Patient is required")
-    }).typeError("You must specify a patient"),
+             .required("Appointment is required")
+    }).typeError("You must specify an appointment"),
     total: Yup.number()
       .required("Total is required")
       .min(0, "Total must be a positive number")
@@ -39,6 +45,8 @@ export default function CreateBill() {
   useEffect(() => {
     fetchData()
       .catch(console.error);
+    fetchAppointments()
+      .catch(console.error);
   }, [])
 
 
@@ -47,6 +55,7 @@ export default function CreateBill() {
     control,
     handleSubmit,
     setValue,
+    getValues,
     reset,
     formState: { errors },
   } = useForm({
@@ -61,6 +70,8 @@ export default function CreateBill() {
       api.post("/staff/cashier/bill", data).then((userData) => {
         reset();
         setDebt(0);
+        setPatient('');
+        setValue('appointment','');
       });
     } catch (err) {
       console.log(`Error : ${err.message}`);
@@ -72,7 +83,12 @@ export default function CreateBill() {
       setRecords(userData.data);
     })
   }
-
+  const [appointments,setAppointments] = useState([]);
+  const fetchAppointments = async () => {
+    await api.get(`/staff/receptionist/appointments`).then(userData => {
+      setAppointments(userData.data);
+    })
+  }
   const handleDebt = async (e) => {
     setPaid(e.target.value);
     setDebt(total - e.target.value)
@@ -99,7 +115,51 @@ export default function CreateBill() {
         '& .MuiTextField-root': { m: 1, width: '40ch' },
       }}>
             <div>
-            <FormControl  sx={{ m: 0, minWidth: 80 }}>
+       
+
+    <FormControl  sx={{ m: 0, minWidth: 80 }}>
+           <Controller
+        name="appointment"
+        control={control}
+        defaultValue={[]}
+        render={({ field: { ref, ...field }, fieldState: { error } }) => (
+       <Autocomplete
+             sx={{ mb: 4 }}
+              disablePortal
+              options={appointments}
+              getOptionDisabled={(option) => option.disabled}
+              getOptionLabel={(option) => option._id}
+              onChange={(event, value) => {
+                field.onChange(value);
+                if(value){
+                  setPatient(value.patient.name);
+                }else{
+                  setPatient('');
+                }
+              }}
+             renderInput={(params) => (
+              <TextField
+              required
+              error={!!error}
+              helperText={error?.message}
+              label="Appointment"
+              inputRef={ref}
+              {...params}
+            />
+              )}
+            />
+            )}
+          />  
+    </FormControl>
+    <TextField
+        label="Patient"
+        value={patient}
+        InputProps={{
+          readOnly: true,
+        }}
+      />
+{/*     
+    <FormControl  sx={{ m: 0, minWidth: 80 }}>
            <Controller
         name="patient"
         control={control}
@@ -112,6 +172,7 @@ export default function CreateBill() {
               getOptionDisabled={(option) => option.disabled}
               getOptionLabel={(option) => option.name}
               onChange={(event, value) => {
+                console.log(value)
                 field.onChange(value);
               }}
              renderInput={(params) => (
@@ -121,14 +182,14 @@ export default function CreateBill() {
               helperText={error?.message}
               label="Patient"
               inputRef={ref}
+              {...register("patient")}
               {...params}
             />
               )}
             />
             )}
           />  
-    </FormControl>
-    
+    </FormControl> */}
          <TextField
             label="Total"
             fullWidth
