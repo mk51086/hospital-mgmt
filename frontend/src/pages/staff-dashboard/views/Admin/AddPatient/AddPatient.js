@@ -5,12 +5,12 @@ import Paper from "@mui/material/Paper";
 import { useState , useRef, useEffect } from "react";
 import { Box } from "@mui/system";
 import api from "../../../../../api/axios";
-import { useAuthContext } from "../../../../../hooks/useAuthContext";
-import {useNavigate} from "react-router-dom"
+// import { useAuthContext } from "../../../../../hooks/useAuthContext";
+// import {useNavigate} from "react-router-dom"
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
-import Select, { SelectChangeEvent } from '@mui/material/Select';
+import Select from '@mui/material/Select';
 import { useForm,Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
@@ -20,16 +20,21 @@ import { cities } from "../../../../../components/shared/xkcities";
 import { Autocomplete } from "@mui/material";
 import InputAdornment from '@mui/material/InputAdornment';
 import SearchIcon from '@mui/icons-material/Search';
+import Notifybar from "../../../../../components/shared/Notifybar";
 
 export default function AddPatient() {
-  const [gender, setGender] = useState("");
-  const { user } = useAuthContext();
-  const navigate = useNavigate();
+  // const [gender, setGender] = useState("");
+  // const { user } = useAuthContext();
+  // const navigate = useNavigate();
+  const [message, setMessage] = useState("");
+  const [severity, setSeverity] = useState("");
   const searchInput = useRef(null);
   const apiKey = 'AIzaSyCmq_w4Yo_NR8ZzoUOAB3G7kaEexaUTEXE';
   const mapApiJs = 'https://maps.googleapis.com/maps/api/js';
   const today = new Date();
   const [address2, setAddress2] = useState({});
+  const [bar, setBar] = useState(false);
+
   // const [town, setTown] = useState("");
   // const [country, setCountry] = useState("");
   const [age,setAge] = useState(0);
@@ -67,7 +72,13 @@ export default function AddPatient() {
     autocomplete.addListener("place_changed", () => onChangeAddress(autocomplete));
   }
 
-
+  const hideBar = () => {
+    setBar(false);
+  };
+  
+  const showBar = () => {
+    setBar(true);
+  };
   
   const extractAddress = (place) => {
     const address = {
@@ -155,7 +166,8 @@ export default function AddPatient() {
     }
 
   const handleChange = async (event) => {
-    setGender(event.target.value);
+    // setGender(event.target.value);
+    setValue('gender',event.target.value)
     await trigger(['gender']);
   };
   const {
@@ -178,9 +190,15 @@ export default function AddPatient() {
     try {
       api.post("/patient/register", data).then((userData) => {
         reset();
+        setMessage("Added Successfully!");
+        setSeverity("success");
+        showBar();
       });
       
     } catch (err) {
+      setMessage("Failed. Could not add!");
+      setSeverity("error");
+      showBar();
       console.log(`Error : ${err.message}`);
     }
   };
@@ -367,6 +385,13 @@ export default function AddPatient() {
           </Button>
         </Box>
       </Paper>
+
+      <Notifybar
+          open={bar}
+          onClose={hideBar}
+          severity={severity}
+          message={message}
+        />
     </Grid>
   );
 }

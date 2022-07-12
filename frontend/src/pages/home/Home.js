@@ -1,5 +1,4 @@
 import About from "./../../components/About/About";
-import Copyright from "../../components/Copyright/Copyright";
 import "./Home.css";
 import Footer from "../../components/Footer/Footer";
 import ContactUsModal from "../contactus/contactus";

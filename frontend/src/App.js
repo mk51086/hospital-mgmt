@@ -277,7 +277,7 @@ const App = () => {
                 ) : !user.isStaff ? (
                   <Navigate to="/patient/dashboard" />
                 ) : (
-                  user.jobTitle === "receptionist" && (
+                  (user.jobTitle === "receptionist" || user.jobTitle === "cashier") &&(
                     <StaffDashboard option={"/appointments"} />
                   )
                 )
@@ -371,7 +371,7 @@ const App = () => {
             />
 
             <Route
-              path="/staff/dashboard/pharmacist"
+              path="/staff/dashboard/createmedicine"
               element={
                 !user ? (
                   <Navigate to="/login" />
@@ -379,11 +379,27 @@ const App = () => {
                   <Navigate to="/patient/dashboard" />
                 ) : (
                   user.jobTitle === "pharmacist" && (
-                    <StaffDashboard option={"/pharmacist"} />
+                    <StaffDashboard option={"/createmedicine"} />
                   )
                 )
               }
             />
+
+            <Route
+              path="/staff/dashboard/medicines"
+              element={
+                !user ? (
+                  <Navigate to="/login" />
+                ) : !user.isStaff ? (
+                  <Navigate to="/patient/dashboard" />
+                ) : (
+                  user.jobTitle === "pharmacist" && (
+                    <StaffDashboard option={"/medicines"} />
+                  )
+                )
+              }
+            />
+
             {/* Default Route */}
             <Route path="*" element={<Home />} />
           </Routes>

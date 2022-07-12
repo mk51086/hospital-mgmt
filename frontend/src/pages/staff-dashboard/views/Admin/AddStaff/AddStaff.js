@@ -5,32 +5,38 @@ import Paper from "@mui/material/Paper";
 import { useState,useEffect } from "react";
 import { Box } from "@mui/system";
 import api from "../../../../../api/axios";
-import { useAuthContext } from "../../../../../hooks/useAuthContext";
-import {useNavigate} from "react-router-dom"
+// import { useAuthContext } from "../../../../../hooks/useAuthContext";
+// import {useNavigate} from "react-router-dom"
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
-import Select, { SelectChangeEvent } from '@mui/material/Select';
+import Select from '@mui/material/Select';
 import Autocomplete from '@mui/material/Autocomplete';
 import { educationList } from "../../../../../components/shared/educationList";
 import { useForm,Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
 import FormHelperText from '@mui/material/FormHelperText';
+import Notifybar from "../../../../../components/shared/Notifybar";
+import { jobTitles } from "../../../../../components/shared/jobTitles";
+
 export default function AddStaff() {
   // const [date, setaDate] = useState(new Date(Date.now()));
   // const [name, setName] = useState("");
   // const [email, setEmail] = useState("");
   // const [age, setAge] = useState("");
-  const [gender, setGender] = useState("");
+  // const [gender, setGender] = useState("");
   // const [address, setAddress] = useState("");
   // const [phone, setPhone] = useState("");
   // const [password, setPassword] = useState("");
-  const [department,setDepartment] = useState('');
+  // const [department,setDepartment] = useState('');
   const [education,setEducation] = useState([]);
   // const [job_title,setjob_title] = useState('');
-  const [admin,setAdmin] = useState(false);
+  // const [admin,setAdmin] = useState(false);
   // const { user } = useAuthContext();
+  const [bar, setBar] = useState(false);
+  const [message, setMessage] = useState("");
+  const [severity, setSeverity] = useState("");
 
   const validationSchema = Yup.object().shape({
     name: Yup.string()
@@ -64,10 +70,14 @@ export default function AddStaff() {
             Yup.string()
                .required("Department is required")
       }).typeError("You must specify a department"),
-    job_title: Yup.string()
-      .required("Job title is required")
-      .min(3, "Job title must be at least 3 characters")
-      .max(30, "Job title must not exceed 30 characters"),
+    job_title: 
+            Yup.string()
+               .required("Job title is required")
+      .typeError("You must specify a job title"),
+    // job_title: Yup.string()
+    //   .required("Job title is required")
+    //   .min(3, "Job title must be at least 3 characters")
+    //   .max(30, "Job title must not exceed 30 characters"),
     admin: Yup.string().required('Admin is a required field'),
     education: Yup.array()
     .of(
@@ -79,19 +89,19 @@ export default function AddStaff() {
     .min(1, "Education is required")
   });
 
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   
   useEffect(() => {
     fetchDepartments().catch(console.error);
   }, []);
 
   const handleChange = async (event) => {
-    setGender(event.target.value);
+    // setGender(event.target.value);
     await trigger(['gender']);
   };
 
   const handleAdminChange = async (event) => {
-    setAdmin(event.target.value);
+    // setAdmin(event.target.value);
     await trigger(['admin']);
   };
   const [departments,setDepartments] = useState([]);
@@ -107,10 +117,20 @@ export default function AddStaff() {
     handleSubmit,
     reset,
     trigger,
+    setValue,
     formState: { errors },
   } = useForm({
     resolver: yupResolver(validationSchema),
   });
+
+
+  const showBar = () => {
+    setBar(true);
+  };
+
+  const hideBar = () => {
+    setBar(false);
+  };
 
   const onSubmit = (data) => {
     data.education=education;
@@ -119,10 +139,15 @@ export default function AddStaff() {
       api.post("/staff/register", data).then((userData) => {
         reset();
         setEducation("");
-        setDepartment("");
+        setValue("department","");
+        setMessage("Added Successfully!");
+        setSeverity("success");
+        showBar();
       });
       
     } catch (err) {
+      setMessage("Failed. Could not add!");
+      setSeverity("error");
       console.log(`Error : ${err.message}`);
     }
   };
@@ -364,7 +389,8 @@ export default function AddStaff() {
         )}
       /> 
       </FormControl>
-          <TextField
+
+          {/* <TextField
             required
             fullWidth
             name="job_title"
@@ -377,7 +403,39 @@ export default function AddStaff() {
             }}
             {...register("job_title")}
             error={errors.job_title ? true : false}
-          />
+          /> */}
+<FormControl  sx={{ m: 0, minWidth: 80 }}>
+           <Controller
+        name="job_title"
+        control={control}
+        defaultValue={[]}
+        render={({ field: { ref, ...field }, fieldState: { error } }) => (
+       <Autocomplete
+             sx={{ mb: 4 }}
+              disablePortal
+              options={jobTitles}
+              getOptionDisabled={(option) => option.disabled}
+              getOptionLabel={(option) => option.label}
+              onChange={(event, value) => {
+                if(value){
+                  field.onChange(value.value);
+                }
+              }}
+             renderInput={(params) => (
+              <TextField
+              required
+              error={!!error}
+              helperText={error?.message}
+              label="Job Title"
+              inputRef={ref}
+              {...params}
+            />
+              )}
+            />
+            )}
+          />  
+    </FormControl>
+
              <FormControl  sx={{ m: 1, minWidth: 140 }}>
          <InputLabel id="gender">Gender</InputLabel>
          <Select
@@ -417,6 +475,12 @@ export default function AddStaff() {
           </Button>
         </Box>
       </Paper>
+      <Notifybar
+          open={bar}
+          onClose={hideBar}
+          severity={severity}
+          message={message}
+        />
     </Grid>
   );
 }

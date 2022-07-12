@@ -15,7 +15,7 @@ import MailOutlineIcon from '@mui/icons-material/MailOutline';
 import Badge from '@mui/material/Badge';
 import api from "../../../api/axios";
 import { useState, useEffect } from "react";
-
+import ListAlt from '@mui/icons-material/ListAlt';
 export default function MenuItems({ handleRouteChange }) {
   const { user } = useAuthContext();
 
@@ -138,7 +138,7 @@ export default function MenuItems({ handleRouteChange }) {
           <ListItemText primary="Bills" />
         </ListItem>
       )}
-      {user.jobTitle === "receptionist" && (
+      {user.jobTitle === "receptionist"  && (
         <ListItem button onClick={() => handleRouteChange("/createroom")}>
           <ListItemIcon>
             <AddCircleIcon />
@@ -154,7 +154,7 @@ export default function MenuItems({ handleRouteChange }) {
           <ListItemText primary="Create Appointment" />
         </ListItem>
       )}
-          {user.jobTitle === "receptionist" && (
+          {(user.jobTitle === "receptionist" || user.jobTitle === "cashier") && (
         <ListItem button onClick={() => handleRouteChange("/appointments")}>
           <ListItemIcon>
             <Ballot />
@@ -210,11 +210,20 @@ export default function MenuItems({ handleRouteChange }) {
       )}
 
       {user.jobTitle === "pharmacist" && (
-        <ListItem button onClick={() => handleRouteChange("/pharmacist")}>
+        <ListItem button onClick={() => handleRouteChange("/createmedicine")}>
           <ListItemIcon>
             <MedicationIcon />
           </ListItemIcon>
-          <ListItemText primary="Pharmacist" />
+          <ListItemText primary="Add Medicine" />
+        </ListItem>
+      )}
+
+    {user.jobTitle === "pharmacist" && (
+        <ListItem button onClick={() => handleRouteChange("/medicines")}>
+          <ListItemIcon>
+            <ListAlt />
+          </ListItemIcon>
+          <ListItemText primary="Medicines" />
         </ListItem>
       )}
     </div>

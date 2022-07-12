@@ -12,8 +12,6 @@ import MenuIcon from "@mui/icons-material/Menu";
 import Copyright from "../../components/Copyright/Copyright";
 import { useNavigate } from "react-router-dom";
 import StaffRoutes from "./routes/staff.route";
-
-//views
 import CreateBill from "./views/Cashier/CreateBill";
 import PrescriptionList from "./views/Doctor/PrescriptionList";
 import CreatePrescription from "./views/Doctor/CreatePrescription";
@@ -22,7 +20,7 @@ import ExaminationList from "./views/Nurse/ExaminationList";
 import Profile from "./views/Profile/Profile";
 import CreateRoom from "./views/Receptionist/CreateRoom";
 import CreateAppointment from "./views/Receptionist/CreateAppointment";
-import Pharmacist from "./views/Pharmacist/Pharmacist";
+import CreateMedicine from "./views/Pharmacist/CreateMedicine";
 import { useAuthContext } from "./../../hooks/useAuthContext";
 import AddTest from "./views/LabAssistant/AddTest";
 import Tests from "./views/LabAssistant/TestsList";
@@ -36,6 +34,7 @@ import AddDepartment from "./views/Admin/AddDepartment/AddDepartment";
 import DepartmentList from "./views/Admin/DepartmentList/DepartmentList";
 import AppointemntList from "./views/Receptionist/AppointmentList";
 import Messages from "./views/Admin/Messages/Messages";
+import MedicineList from "./views/Pharmacist/MedicineList";
 
 const drawerWidth = 220;
 
@@ -141,7 +140,7 @@ function DashboardContent(props) {
               {user.jobTitle === "receptionist" && option === "/createappointment" && (
                 <CreateAppointment />
               )}
-              {user.jobTitle === "receptionist" && option === "/appointments" && (
+              {(user.jobTitle === "receptionist" || user.jobTitle === "cashier") && option === "/appointments" && (
                 <AppointemntList />
               )}
                {user.jobTitle === "labassistant" && option === "/add-test" && <AddTest />}
@@ -152,8 +151,11 @@ function DashboardContent(props) {
               )}
               {user.jobTitle === "nurse" &&
                 option === "/createexaminations" && <Nurse />}
-              {user.jobTitle === "pharmacist" && option === "/pharmacist" && (
-                <Pharmacist />
+              {user.jobTitle === "pharmacist" && option === "/createmedicine" && (
+                <CreateMedicine />
+              )}
+              {user.jobTitle === "pharmacist" && option === "/medicines" && (
+                <MedicineList />
               )}
             </Grid>
             <Copyright sx={{ pt: 4 }} text={"Hospital Management System"} />
