@@ -5,6 +5,7 @@ import ListItemText from "@mui/material/ListItemText";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import LibraryBooksIcon from "@mui/icons-material/LibraryBooks";
+import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
 
 export default function MenuItems({ handleRouteChange }) {
   return (
@@ -26,6 +27,12 @@ export default function MenuItems({ handleRouteChange }) {
           <LibraryBooksIcon />
         </ListItemIcon>
         <ListItemText primary="View Appointments" />
+      </ListItem>
+      <ListItem button onClick={() => handleRouteChange("/account-settings")}>
+        <ListItemIcon>
+          <ManageAccountsIcon />
+        </ListItemIcon>
+        <ListItemText primary="Account Settings" />
       </ListItem>
     </div>
   );
