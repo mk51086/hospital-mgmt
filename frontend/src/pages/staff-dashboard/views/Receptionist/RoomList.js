@@ -26,10 +26,6 @@ import { useForm,Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import {useNavigate} from "react-router-dom"
 import * as Yup from "yup";
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Radio from '@mui/material/Radio';
-import RadioGroup from '@mui/material/RadioGroup';
-import FormLabel from '@mui/material/FormLabel';
 import { Autocomplete } from "@mui/material";
 import dayjs from 'dayjs';
 
@@ -75,10 +71,24 @@ const StripedDataGrid = styled(DataGrid)(({ theme }) => ({
   },
 }));
 
+const room_types = [
+  {label:'Premium',value:'premium'},
+  {label:'Standard',value:'standard'},
+  ]
+
+const room_status = [
+  {label:'Available',value:'available'},
+  {label:'Not available',value:'notavailable'},
+]
+
+
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
-export default function PatientList() {
+export default function RoomList() {
+
+  const [status,setStatus] = useState("");
+  const [type,setType] = useState("");
 
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
@@ -98,30 +108,34 @@ export default function PatientList() {
   const [date, setDate] = useState("");
 
   const validationSchema = Yup.object().shape({
-    doctor: Yup.object().shape({
-      name: 
+  number: Yup.string()
+  .required("number is required")
+  .min(2, "number must be at least 2 characters")
+  .max(260, "number must not exceed 260 characters"),
+  floor: Yup.number()
+  .required("floor is required"),
+
+  type: Yup.object().shape({
+      value: 
           Yup.string()
-             .required("Doctor is required")
-    }).typeError("You must specify a doctor"),
-    description: Yup.string()
-      .required("description is required")
-      .min(6, "description must be at least 6 characters")
-      .max(77, "description must not exceed 77 characters"),
-    date: Yup.date()
-    .required("Date is required")
-    .nullable()
-    .min(new Date(), "Please choose future date")
-    .nullable().transform((curr, orig) => orig === '' ? null : curr)
-    .default(undefined),
+             .required("type is required")
+    }).typeError("You must specify a type"),
+  status: Yup.object().shape({
+    value: 
+        Yup.string()
+           .required("status is required")
+  }).typeError("You must specify a status"),
+  description: Yup.string()
   });
 
   const columns = [
     { field: "id", headerName: "ID", minWidth: 210, flex:1 },
-    { field: "patient", headerName: "Patient", minWidth: 80, flex:1 },
-    { field: "doctor", headerName: "Doctor", minWidth: 80, flex:1 },
-    { field: "description", headerName: "Description", minWidth: 80 , flex:1},
-    { field: "date", headerName: "Date", minWidth: 120, flex:1},
-    { field: "status", headerName: "Status", minWidth: 120, flex:1}
+    { field: "number", headerName: "Number", minWidth: 80, flex:1 },
+    { field: "floor", headerName: "Floor", minWidth: 80, flex:1 },
+    { field: "type", headerName: "Type", minWidth: 80 , flex:1},
+    { field: "description", headerName: "Description", minWidth: 120, flex:1},
+    { field: "status", headerName: "Status", minWidth: 120, flex:1},
+    { field: "created", headerName: "Created", minWidth: 120, flex:1}
   ];
 
 
@@ -134,17 +148,15 @@ export default function PatientList() {
     }
   };
 
-  const fetchDoctors = async () => {
-    await api.get(`/staff/doctors/all`).then((userData) => {
-      setDoctors(userData.data);
-    });
-  };
+
   
-  const onSubmit = async (data) => {
+  const onSubmit =  (data) => {
+    data.type = type;
+    data.status = status;
     console.log(data)
-    data.gender = gender;
+    console.log(selectionModel[0])
     try {
-      await api.put(`/staff/receptionist/appointments/${selectionModel[0]}`, data).then(userData => {
+       api.put(`/staff/receptionist/room/${selectionModel[0]}`, data).then(userData => {
               handleClose();
               fetchData()
               .catch(console.error);
@@ -163,17 +175,13 @@ export default function PatientList() {
     if(selectionModel[0] === undefined || selectionModel === null){
       handleClickOpen3();
     }else{ try {
-      await api.get(`/staff/receptionist/appointment/${selectionModel[0]}`).then(appointment => {
-       
-      if(appointment.data.doctor){
-        setValue('doctor',appointment.data.doctor.name);
-      }
-      if(appointment.data.patient){
-      setPatient(appointment.data.patient.name)
-      }
-      setValue('date',dayjs(appointment.data.date).format("YYYY-MM-DDTHH:mm"))
-      setValue('description',appointment.data.description)
-
+      await api.get(`/staff/receptionist/room/${selectionModel[0]}`).then(room => {
+        console.log(room)
+      setValue('number',room.data.number)
+      setValue('description',room.data.description)
+      setValue('floor',room.data.floor)
+      setValue('type',room.data.type)
+      setValue('status',room.data.status)
       });
     } catch (err) {
       console.log(`Error : ${err.message}`);
@@ -205,7 +213,7 @@ export default function PatientList() {
 
   const [records, setRecords] = useState([]);
   const fetchData = async () => {
-    await api.get(`/staff/receptionist/appointments`).then((userData) => {
+    await api.get(`/staff/receptionist/rooms`).then((userData) => {
       setRecords(userData.data);
     });
   };
@@ -220,7 +228,6 @@ export default function PatientList() {
 
   useEffect(() => {
     fetchData().catch(console.error);
-    fetchDoctors().catch(console.error);
   }, []);
 
   const {
@@ -308,11 +315,12 @@ export default function PatientList() {
                 rows={records.map((record) => {
                   return {
                     id: record._id,
-                    patient: record.patient ? record.patient.name : 'TBD',
-                    doctor: record.doctor ? record.doctor.name : 'TBD',
+                    number: record.number,
+                    floor: record.floor,
+                    type: record.type,
                     description: record.description,
-                    date: record.date,
-                    status: record.status
+                    status: record.status,
+                    created: record.createdAt
                   }})}
                 columns={columns}
                 getRowId={(row) => row.id}
@@ -359,82 +367,110 @@ export default function PatientList() {
                           '& .MuiTextField-root': { m: 1, width: '40ch' },
                         }}>
                               <div>
-                              <TextField
-                              id="outlined-multiline-flexible"
-                              label="Patient"
-                              fullWidth
-                              value={patient}
-                              multiline
-                              required
-                              maxRows={5}
-                              disabled
-                            />
-                              <FormControl  sx={{ mr:0, minWidth: 450 }}>
-                              <Controller
-                            name="doctor"
-                            control={control}
-                            defaultValue={[]}
-                            render={({ field: { ref, ...field }, fieldState: { error } }) => (
-                          <Autocomplete
-                                sx={{ mb: 4 }}
-                                  disablePortal
-                                  options={doctors}
-                                  getOptionDisabled={(option) => option.disabled}
-                                  getOptionLabel={(option) => option.name}
-                                  onChange={(event, value) => {
-                                    field.onChange(value);
-                                  }}
-                                renderInput={(params) => (
-                                  <TextField
-                                  required
-                                  error={!!error}
-                                  helperText={error?.message}
-                                  label="Doctor"
-                                  inputRef={ref}
-                                  {...params}
-                                />
-                                  )}
-                                />
-                                )}
-                              />  
-                        </FormControl>
-                    
-                            <TextField
-                              sx={{ mb: 4 }}
-                              id="datetime-local"
-                              fullWidth
-                              defaultValue={date}
-                              type="datetime-local"
-                              label="Select Timing"
-                              maxRows={5}
-                              helperText={
-                                errors.date?.message
-                              }
-                              required
-                              InputLabelProps={{
-                                shrink: true,
-                              }}
-                              {...register("date")}
-                              error={errors.date ? true : false}
-                            />
-                            <TextField
-                              id="outlined-multiline-flexible"
-                              label="Description"
-                              fullWidth
-                              multiline
-                              required
-                              maxRows={5}
-                              minRows={4}
-                              helperText={
-                                errors.description?.message
-                              }
-                              InputLabelProps={{
-                                shrink: true,
-                              }}
-                              {...register("description")}
-                              error={errors.description ? true : false}
-                            />
-          
+                              <FormControl  sx={{ mr:5, minWidth: 450 }}>
+            <TextField
+                sx={{ mb: 4 }}
+                fullWidth
+                label="Number"
+                maxRows={5}
+                helperText={
+                  errors.number?.message
+                }
+                required
+                {...register("number")}
+                InputLabelProps={{
+                  shrink: true,
+                }}
+                error={errors.number ? true : false}
+              />
+            </FormControl>
+            <FormControl  sx={{ mr:5, minWidth: 320 }}>
+            <TextField
+                sx={{ mb: 4 }}
+                fullWidth
+                label="Floor"
+                type="number"
+                maxRows={5}
+                helperText={
+                  errors.floor?.message
+                }
+                required
+                {...register("floor")}
+                error={errors.floor ? true : false}
+              />
+            </FormControl>
+            <FormControl  sx={{ mr:5, minWidth: 450 }}>
+                  <Controller
+                name="type"
+                control={control}
+                defaultValue={[]}
+                render={({ field: { ref, ...field }, fieldState: { error } }) => (
+              <Autocomplete
+                    sx={{ mb: 4 }}
+                      disablePortal
+                      options={room_types}
+                      getOptionDisabled={(option) => option.disabled}
+                      getOptionLabel={(option) => option.label}
+                      onChange={(event, value) => {
+                        setType(value.value);
+                        field.onChange(value);
+                      }}
+                    renderInput={(params) => (
+                      <TextField
+                      required
+                      error={!!error}
+                      helperText={error?.message}
+                      label="Room type"
+                      inputRef={ref}
+                      {...params}
+                    />
+                      )}
+                    />
+                    )}
+                  />  
+            </FormControl>
+            <FormControl  sx={{ mr:5, minWidth: 450 }}>
+                  <Controller
+                name="status"
+                control={control}
+                defaultValue={[]}
+                render={({ field: { ref, ...field }, fieldState: { error } }) => (
+              <Autocomplete
+                    sx={{ mb: 4 }}
+                      disablePortal
+                      options={room_status}
+                      getOptionDisabled={(option) => option.disabled}
+                      getOptionLabel={(option) => option.label}
+                      onChange={(event, value) => {
+                        setStatus(value.value);
+                        field.onChange(value);
+                      }}
+                    renderInput={(params) => (
+                      <TextField
+                      required
+                      error={!!error}
+                      helperText={error?.message}
+                      label="Status"
+                      inputRef={ref}
+                      {...params}
+                    />
+                      )}
+                    />
+                    )}
+                  />  
+            </FormControl>
+          <TextField
+            label="Description"
+            fullWidth
+            multiline
+            maxRows={5}
+            minRows={4}
+            helperText={
+              errors.description?.message
+            }
+            {...register("description")}
+            error={errors.description ? true : false}
+          />
                                   </div>
                             </Box>
                       </Grid>

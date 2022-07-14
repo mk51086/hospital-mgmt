@@ -4,9 +4,11 @@ const Appointment = require("../models/appointment.model")
 const room_create = (req, res, next) => {
   const room = new Room({
     number: req.body.number,
-    cost: req.body.cost,
+    type: req.body.type,
+    floor: req.body.floor,
     status: req.body.status,
-    creator: req.body.creator
+    creator: req.body.creator,
+    description: req.body.description,
   });
   room.save(room)
     .then(() => {
@@ -22,6 +24,51 @@ const room_create = (req, res, next) => {
     });
 };
 
+const room_update = (req, res, next) => {
+  const room = new Room({
+    _id: req.params.id,
+    description: req.body.description,
+    status: req.body.status,
+    type: req.body.type,
+    floor: req.body.floor,
+    number: req.body.number,
+  });
+  Room.updateOne({ _id: req.params.id }, room)
+    .then(() => {
+      res.status(200).json({
+        room,
+        message: "room updated",
+      });
+    })
+    .catch((error) => {
+      res.status(404).json({
+        message: error.message,
+      });
+    });
+};
+
+
+const room_list = (req, res) => {
+  Room.find()
+    .then((room) => res.json(room));
+};
+
+
+const room_delete = (req, res) => {
+  Room.deleteOne({ _id: req.params.id }).then(() => {
+    res.status(200).json({
+      message: "room deleted",
+    });
+  });
+};
+
+const room_getId = (req,res) =>{
+  try{
+    Room.findOne({_id: req.params.id}).then((appointment)=>res.json(appointment));
+  }catch(error){
+    console.log(error);
+  }
+}
 
 const appointment_book = (req, res, next) => {
   const appointment = new Appointment({
@@ -45,6 +92,7 @@ const appointment_book = (req, res, next) => {
       });
     });
 };
+
 
 const appointment_update = (req, res, next) => {
   const appointment = new Appointment({
@@ -105,11 +153,24 @@ const appointment_delete = (req, res) => {
   });
 };
 
+const appointment_getId = (req,res) =>{
+  try{
+    Appointment.findOne({_id: req.params.id}).populate({path:'patient',select:'name'}).populate({ path: 'doctor', select: 'name' }).then((appointment)=>res.json(appointment));
+  }catch(error){
+    console.log(error);
+  }
+}
+
 module.exports = {
   room_create,
+  room_delete,
+  room_list,
+  room_update,
+  room_getId,
   appointment_book,
   appointment_delete,
   appointment_list,
   appointment_cancel,
-  appointment_update
+  appointment_update,
+  appointment_getId
 }

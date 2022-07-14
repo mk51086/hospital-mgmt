@@ -162,6 +162,14 @@ export default function MenuItems({ handleRouteChange }) {
           <ListItemText primary="View Appointments" />
         </ListItem>
       )}
+        {user.jobTitle === "receptionist" && (
+        <ListItem button onClick={() => handleRouteChange("/rooms")}>
+          <ListItemIcon>
+            <Ballot />
+          </ListItemIcon>
+          <ListItemText primary="Rooms" />
+        </ListItem>
+      )}
       {user.jobTitle === "labassistant" && (
         <ListItem button onClick={() => handleRouteChange("/add-test")}>
           <ListItemIcon>

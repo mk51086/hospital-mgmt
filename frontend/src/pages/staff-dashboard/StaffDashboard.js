@@ -37,6 +37,7 @@ import AppointemntList from "./views/Receptionist/AppointmentList";
 import Messages from "./views/Admin/Messages/Messages";
 import MedicineList from "./views/Pharmacist/MedicineList";
 import MedicineBrandList from "./views/Pharmacist/MedicineBrandList";
+import RoomList from "./views/Receptionist/RoomList";
 
 const drawerWidth = 220;
 
@@ -144,6 +145,9 @@ function DashboardContent(props) {
               )}
               {(user.jobTitle === "receptionist" || user.jobTitle === "cashier") && option === "/appointments" && (
                 <AppointemntList />
+              )}
+                {(user.jobTitle === "receptionist" || user.jobTitle === "cashier") && option === "/rooms" && (
+                <RoomList />
               )}
                {user.jobTitle === "labassistant" && option === "/add-test" && <AddTest />}
               {user.jobTitle === "labassistant" && option === "/tests" && <Tests />}
