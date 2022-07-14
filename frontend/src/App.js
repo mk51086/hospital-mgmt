@@ -185,6 +185,18 @@ const App = () => {
               } />
             </Route>
 
+            <Route path='/patient'>
+              <Route exact path='/patient/dashboard/account-settings' element={
+                !user ? (
+                  <Navigate to="/login" />
+                ) : user.isStaff ? (
+                  <Navigate to="/staff/dashboard" />
+                ) : (
+                  <PatientDashboard option={"/account-settings"} />
+                )
+              } />
+            </Route>
+
             <Route path='/staff'>
             <Route
               path="/staff/dashboard"
