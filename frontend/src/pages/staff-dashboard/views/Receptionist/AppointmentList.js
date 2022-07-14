@@ -78,7 +78,7 @@ const StripedDataGrid = styled(DataGrid)(({ theme }) => ({
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
-export default function PatientList() {
+export default function AppointmentList() {
 
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
@@ -164,7 +164,7 @@ export default function PatientList() {
       handleClickOpen3();
     }else{ try {
       await api.get(`/staff/receptionist/appointment/${selectionModel[0]}`).then(appointment => {
-       
+       console.log(appointment.data.doctor)
       if(appointment.data.doctor){
         setValue('doctor',appointment.data.doctor.name);
       }
@@ -215,7 +215,7 @@ export default function PatientList() {
   };
 
   const newClicked = (e) =>{
-    navigate('/staff/dashboard/add-patient');
+    navigate('/staff/dashboard/createappointment');
   }
 
   useEffect(() => {
@@ -236,7 +236,7 @@ export default function PatientList() {
   });
 
 
-  const deletePatient = async (e) => {
+  const deleteAppointment = async (e) => {
     e.preventDefault();
     try {
       await api.delete(`/staff/receptionist/appointment/${id}`).then((userData) => {
@@ -352,7 +352,7 @@ export default function PatientList() {
                         TransitionComponent={Transition}
                         aria-describedby="alert-dialog-slide-description"
                       >
-                        <DialogTitle>{"Edit patient"}</DialogTitle>
+                        <DialogTitle>{"Edit appointment"}</DialogTitle>
                         <DialogContent>
                         <Grid item xs={12} md={12} lg={12}>
                           <Box component="form" onSubmit={handleSubmit}  sx={{
@@ -451,7 +451,7 @@ export default function PatientList() {
         onClose={handleClose}
         aria-describedby="alert-dialog-slide-description"
       >
-        <DialogTitle>{"Delete patient"}</DialogTitle>
+        <DialogTitle>{"Delete appointment"}</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-slide-description">
             Are you sure you want to delete this patient?
@@ -459,7 +459,7 @@ export default function PatientList() {
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>NO</Button>
-          <Button onClick={(e) => {  deletePatient(e) }}>YES</Button>
+          <Button onClick={(e) => {  deleteAppointment(e) }}>YES</Button>
         </DialogActions>
       </Dialog>
 

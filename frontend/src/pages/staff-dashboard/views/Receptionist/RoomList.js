@@ -223,7 +223,7 @@ export default function RoomList() {
   };
 
   const newClicked = (e) =>{
-    navigate('/staff/dashboard/add-patient');
+    navigate('/staff/dashboard/createroom');
   }
 
   useEffect(() => {
@@ -243,7 +243,7 @@ export default function RoomList() {
   });
 
 
-  const deletePatient = async (e) => {
+  const deleteRoom = async (e) => {
     e.preventDefault();
     try {
       await api.delete(`/staff/receptionist/appointment/${id}`).then((userData) => {
@@ -360,7 +360,7 @@ export default function RoomList() {
                         TransitionComponent={Transition}
                         aria-describedby="alert-dialog-slide-description"
                       >
-                        <DialogTitle>{"Edit patient"}</DialogTitle>
+                        <DialogTitle>{"Edit room"}</DialogTitle>
                         <DialogContent>
                         <Grid item xs={12} md={12} lg={12}>
                           <Box component="form" onSubmit={handleSubmit}  sx={{
@@ -384,12 +384,13 @@ export default function RoomList() {
                 error={errors.number ? true : false}
               />
             </FormControl>
-            <FormControl  sx={{ mr:5, minWidth: 320 }}>
+            <FormControl >
             <TextField
                 sx={{ mb: 4 }}
                 fullWidth
                 label="Floor"
                 type="number"
+                InputLabelProps={{ shrink: true }}  
                 maxRows={5}
                 helperText={
                   errors.floor?.message
@@ -399,7 +400,7 @@ export default function RoomList() {
                 error={errors.floor ? true : false}
               />
             </FormControl>
-            <FormControl  sx={{ mr:5, minWidth: 450 }}>
+            <FormControl>
                   <Controller
                 name="type"
                 control={control}
@@ -421,6 +422,7 @@ export default function RoomList() {
                       error={!!error}
                       helperText={error?.message}
                       label="Room type"
+                      InputLabelProps={{ shrink: true }} 
                       inputRef={ref}
                       {...params}
                     />
@@ -429,7 +431,7 @@ export default function RoomList() {
                     )}
                   />  
             </FormControl>
-            <FormControl  sx={{ mr:5, minWidth: 450 }}>
+            <FormControl >
                   <Controller
                 name="status"
                 control={control}
@@ -464,6 +466,7 @@ export default function RoomList() {
             fullWidth
             multiline
             maxRows={5}
+            InputLabelProps={{ shrink: true }} 
             minRows={4}
             helperText={
               errors.description?.message
@@ -487,15 +490,15 @@ export default function RoomList() {
         onClose={handleClose}
         aria-describedby="alert-dialog-slide-description"
       >
-        <DialogTitle>{"Delete patient"}</DialogTitle>
+        <DialogTitle>{"Delete room"}</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-slide-description">
-            Are you sure you want to delete this patient?
+            Are you sure you want to delete this room?
           </DialogContentText>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>NO</Button>
-          <Button onClick={(e) => {  deletePatient(e) }}>YES</Button>
+          <Button onClick={(e) => {  deleteRoom(e) }}>YES</Button>
         </DialogActions>
       </Dialog>
 

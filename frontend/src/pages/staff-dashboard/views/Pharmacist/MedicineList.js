@@ -150,7 +150,7 @@ export default function MedicineList() {
         console.log(medicine)
       setValue('name',medicine.data.name)
       setValue('cost',medicine.data.cost)
-      setValue('brand',medicine.data.brand)
+      setValue('brand',medicine.data.brand.name)
       setValue('description',medicine.data.description)
       });
     } catch (err) {
@@ -371,6 +371,7 @@ export default function MedicineList() {
                               label="Brand"
                               fullWidth
                               multiline
+                              disabled
                               maxRows={5}
                               helperText={errors.brand?.message}
                               required

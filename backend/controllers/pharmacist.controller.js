@@ -32,7 +32,7 @@ const medicine_list = (req, res) => {
 };
 
 const medicine_getById = (req, res) =>{
-  Medicine.findOne({_id:req.params.id})
+  Medicine.findOne({_id:req.params.id}).populate({path: 'brand', select: 'name'})
     .then((medicine)=>res.json(medicine));
 }
 

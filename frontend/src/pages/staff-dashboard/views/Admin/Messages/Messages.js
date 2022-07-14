@@ -112,11 +112,11 @@ export default function Messages() {
                 aria-controls="panel1bh-content"
                 id="panel1bh-header"
               >
-                <Typography sx={{ width: '33%', flexShrink: 0, fontWeight: record.read ? 100 : 700 }}>
+                <Typography sx={{ width: '33%', flexShrink: 0, fontWeight: record.read ? 500 : 700 }}>
                   {record.name}
                 </Typography>
-                <Typography sx={{ color: 'text.secondary', width: '33%', fontWeight: record.read ? 100 : 700 }}>{record.email}</Typography>
-                <Typography sx={{ color: 'text.secondary', fontWeight: record.read ? 100 : 700 }}>{record.message.slice(0, 10) + "..."}</Typography>
+                <Typography sx={{ color: 'text.secondary', width: '33%', fontWeight: record.read ? 500 : 700 }}>{record.email}</Typography>
+                <Typography sx={{ color: 'text.secondary', fontWeight: record.read ? 500 : 700 }}>{record.message.slice(0, 10) + "..."}</Typography>
               </AccordionSummary>
               <AccordionDetails>
                 <Typography>

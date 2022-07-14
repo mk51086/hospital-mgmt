@@ -31,7 +31,7 @@ import FormHelperText from '@mui/material/FormHelperText';
 import InputLabel from '@mui/material/InputLabel';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
-
+import Notifybar from "../../shared/Notifybar";
 
 const clientId = "797434829804-na3mfjbrf9qir88tepbhputbk66rh3cl.apps.googleusercontent.com";
 
@@ -48,6 +48,9 @@ export default function LoginForm({ isPatient, handleSwitch }) {
   const [name,setName] = useState("");
   const [newAccount,setNewAccount] = useState(false);
   const [gender, setGender] = useState("");
+  const [message, setMessage] = useState("");
+  const [severity, setSeverity] = useState("");
+  const [bar, setBar] = useState(false);
 
   const validationSchema = Yup.object().shape({
     name: Yup.string()
@@ -69,6 +72,7 @@ export default function LoginForm({ isPatient, handleSwitch }) {
     .typeError('address is required'),
     image: Yup.string()
   });
+
   useEffect(() => {
     function start() {
       gapi.client.init({
@@ -109,10 +113,16 @@ export default function LoginForm({ isPatient, handleSwitch }) {
           setNewAccount(true);
         } else {
           login_user(userData.data);
+          setMessage("Logged in Successfully!");
+          setSeverity("success");
+          showBar();
           console.log('false');
         }
     });
   } catch (err) {
+    setMessage("Auth Failed!");
+    setSeverity("error");
+    showBar();
     console.log(`Error : ${err.message}`);
   }
   }
@@ -145,9 +155,15 @@ export default function LoginForm({ isPatient, handleSwitch }) {
     try {
         await api.post(route, data).then(userData => {
         console.log(userData.data);
+        setMessage("Logged in Successfully!");
+        setSeverity("success");
+        showBar();
         login_user(userData.data);
       });
     } catch (err) {
+      setMessage("Auth failed!");
+      setSeverity("error");
+      showBar();
       console.log(`Error : ${err.message}`);
     }
   };
@@ -155,6 +171,14 @@ export default function LoginForm({ isPatient, handleSwitch }) {
   const handleClose = ()=>{
     setNewAccount(false);
   }
+
+  const showBar = () => {
+    setBar(true);
+  };
+
+  const hideBar = () => {
+    setBar(false);
+  };
 
   const handleChange = async (event) => {
     setGender(event.target.value);
@@ -356,9 +380,15 @@ export default function LoginForm({ isPatient, handleSwitch }) {
           <Button type="submit" variant="contained" onClick={handleClose}>
             Cancel
           </Button>
-          <Button type="submit"variant="contained"onClick={handleSubmit(onSubmit)}>Save Changes</Button>
+          <Button type="submit"variant="contained" onClick={handleSubmit(onSubmit)}>Save Changes</Button>
         </DialogActions>
       </Dialog>
+      <Notifybar
+          open={bar}
+          onClose={hideBar}
+          severity={severity}
+          message={message}
+        />
     </ThemeProvider>
   );
 }

@@ -267,6 +267,7 @@ const App = () => {
                 )
               }
             />
+            <Route path='/staff'>
             <Route
               path="/staff/dashboard/createappointment"
               element={
@@ -281,6 +282,7 @@ const App = () => {
                 )
               }
             />
+          </Route>
               <Route
               path="/staff/dashboard/appointments"
               element={
@@ -310,6 +312,7 @@ const App = () => {
                 )
               }
             />
+            <Route path="/staff">
             <Route
               path="/staff/dashboard/createroom"
               element={
@@ -324,6 +327,7 @@ const App = () => {
                 )
               }
             />
+            </Route>
             
             <Route
               path="/staff/dashboard/tests"
