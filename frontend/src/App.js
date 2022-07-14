@@ -370,6 +370,24 @@ const App = () => {
               }
             />
 
+          <Route path='/staff'>
+            <Route
+              path="/staff/dashboard/createmedicinebrand"
+              element={
+                !user ? (
+                  <Navigate to="/login" />
+                ) : !user.isStaff ? (
+                  <Navigate to="/patient/dashboard" />
+                ) : (
+                  user.jobTitle === "pharmacist" && (
+                    <StaffDashboard option={"/createmedicinebrand"} />
+                  )
+                )
+              }
+            />
+            </Route>
+
+            <Route path='/staff'>
             <Route
               path="/staff/dashboard/createmedicine"
               element={
@@ -384,6 +402,8 @@ const App = () => {
                 )
               }
             />
+            </Route>
+
 
             <Route
               path="/staff/dashboard/medicines"
@@ -399,6 +419,23 @@ const App = () => {
                 )
               }
             />
+
+          <Route path='/staff'>
+            <Route
+              path="/staff/dashboard/medicinebrands"
+              element={
+                !user ? (
+                  <Navigate to="/login" />
+                ) : !user.isStaff ? (
+                  <Navigate to="/patient/dashboard" />
+                ) : (
+                  user.jobTitle === "pharmacist" && (
+                    <StaffDashboard option={"/medicinebrands"} />
+                  )
+                )
+              }
+            />
+            </Route>
 
             {/* Default Route */}
             <Route path="*" element={<Home />} />

@@ -217,7 +217,7 @@ export default function MenuItems({ handleRouteChange }) {
           <ListItemText primary="Add Medicine" />
         </ListItem>
       )}
-
+   
     {user.jobTitle === "pharmacist" && (
         <ListItem button onClick={() => handleRouteChange("/medicines")}>
           <ListItemIcon>
@@ -226,6 +226,25 @@ export default function MenuItems({ handleRouteChange }) {
           <ListItemText primary="Medicines" />
         </ListItem>
       )}
+
+    {user.jobTitle === "pharmacist" && (
+        <ListItem button onClick={() => handleRouteChange("/createmedicinebrand")}>
+          <ListItemIcon>
+            <MedicationIcon />
+          </ListItemIcon>
+          <ListItemText primary="Add Medicine Brand" />
+        </ListItem>
+      )}
+
+    {user.jobTitle === "pharmacist" && (
+        <ListItem button onClick={() => handleRouteChange("/medicinebrands")}>
+          <ListItemIcon>
+            <ListAlt />
+          </ListItemIcon>
+          <ListItemText primary="Medicine Brands" />
+        </ListItem>
+      )}
+
     </div>
   );
 }

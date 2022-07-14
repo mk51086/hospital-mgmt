@@ -148,6 +148,7 @@ export default function AddStaff() {
     } catch (err) {
       setMessage("Failed. Could not add!");
       setSeverity("error");
+      showBar();
       console.log(`Error : ${err.message}`);
     }
   };

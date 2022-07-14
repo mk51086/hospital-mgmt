@@ -21,7 +21,7 @@ import { DataGrid,GridToolbarQuickFilter,gridClasses   } from '@mui/x-data-grid'
 import {AppBar} from "@mui/material";
 import {Toolbar} from "@mui/material";
 import { alpha, styled } from '@mui/material/styles';
-import { useForm } from "react-hook-form";
+import { useForm,Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import {useNavigate} from "react-router-dom"
 import * as Yup from "yup";
@@ -72,7 +72,7 @@ const StripedDataGrid = styled(DataGrid)(({ theme }) => ({
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
-export default function MedicineList() {
+export default function MedicineBrandList() {
 
   const navigate = useNavigate();
   const [open, setOpen] = React.useState(false);
@@ -92,23 +92,13 @@ export default function MedicineList() {
       .required("Name is required")
       .min(3, "Name must be at least 3 characters")
       .max(50, "Name must not exceed 50 characters"),
-    cost: Yup.number()
-      .required("Cost is required")
-      .min(0, "Cost must be a positive number")
-      .typeError('You must specify a number'),
-    brand: Yup.string()
-      .required("Brand is required")
-      .min(3, "Brand must be at least 3 characters")
-      .max(77, "Brand must not exceed 77 characters"),
     description: Yup.string()
-    .typeError('Description must be string type'),
+    .typeError('Description must be specified'),
   });
 
   const columns = [
     { field: "id", headerName: "ID", minWidth: 210, flex:1 },
     { field: "name", headerName: "Name", minWidth: 90, flex:1 },
-    { field: "cost", headerName: "Cost", width: 40 },
-    { field: "brand", headerName: "Brand", minWidth: 60, flex:1  },
     { field: "description", headerName: "Description",minWidth: 80, flex:1 },
     { field: "creator", headerName: "Created by", minWidth: 80, flex:1},
     { field: "createdAt", headerName: "Date created", minWidth: 120, flex:1},
@@ -127,7 +117,7 @@ export default function MedicineList() {
   const onSubmit = async (data) => {
     console.log(data)
     try {
-      await api.put(`/staff/pharmacist/medicine/${selectionModel[0]}`, data).then(userData => {
+      await api.put(`/staff/pharmacist/medicinebrand/${selectionModel[0]}`, data).then(userData => {
               handleClose();
               fetchData()
               .catch(console.error);
@@ -146,11 +136,9 @@ export default function MedicineList() {
     if(selectionModel[0] === undefined || selectionModel === null){
       handleClickOpen3();
     }else{ try {
-      await api.get(`/staff/pharmacist/medicine/${selectionModel[0]}`).then(medicine => {
+      await api.get(`/staff/pharmacist/medicinebrand/${selectionModel[0]}`).then(medicine => {
         console.log(medicine)
       setValue('name',medicine.data.name)
-      setValue('cost',medicine.data.cost)
-      setValue('brand',medicine.data.brand)
       setValue('description',medicine.data.description)
       });
     } catch (err) {
@@ -182,7 +170,7 @@ export default function MedicineList() {
 
   const [records, setRecords] = useState([]);
   const fetchData = async () => {
-    await api.get(`/staff/pharmacist/medicines`).then((userData) => {
+    await api.get(`/staff/pharmacist/medicinebrands`).then((userData) => {
       setRecords(userData.data);
     });
   };
@@ -192,7 +180,7 @@ export default function MedicineList() {
   };
 
   const newClicked = (e) =>{
-    navigate('/staff/dashboard/createmedicine');
+    navigate('/staff/dashboard/createmedicinebrand');
   }
 
   useEffect(() => {
@@ -213,7 +201,7 @@ export default function MedicineList() {
   const deletemedicine = async (e) => {
     e.preventDefault();
     try {
-      await api.delete(`/staff/pharmacist/medicine/${id}`).then((userData) => {
+      await api.delete(`/staff/pharmacist/medicinebrand/${id}`).then((userData) => {
         setMessage("Deleted Successfully!");
         setSeverity("success");
         showBar();
@@ -288,8 +276,6 @@ export default function MedicineList() {
                   return {
                     id: record._id,
                     name: record.name,
-                    cost: record.cost,
-                    brand: record.brand ? record.brand.name: '',
                     description: record.description || 'No description available',
                     creator: record.creator.name,
                     createdAt: record.createdAt,
@@ -339,7 +325,7 @@ export default function MedicineList() {
                           '& .MuiTextField-root': { m: 1, width: '40ch' },
                         }}>
                               <div>
-                          <TextField
+                            <TextField
                               label="Name"
                               fullWidth
                               multiline
@@ -351,34 +337,6 @@ export default function MedicineList() {
                               }}
                               {...register("name")}
                               error={errors.name ? true : false}
-                            />
-                            <TextField
-                              label="Cost"
-                              multiline
-                              maxRows={2}
-                              helperText={
-                                errors.cost?.message
-                              }
-                              required
-                              InputLabelProps={{
-                                shrink: true,
-                              }}
-                              {...register("cost")}
-                              error={errors.cost ? true : false}
-                            />
-
-                              <TextField
-                              label="Brand"
-                              fullWidth
-                              multiline
-                              maxRows={5}
-                              helperText={errors.brand?.message}
-                              required
-                              InputLabelProps={{
-                                shrink: true,
-                              }}
-                              {...register("brand")}
-                              error={errors.brand ? true : false}
                             />
                              <TextField
                               label="Description"
@@ -410,10 +368,10 @@ export default function MedicineList() {
         onClose={handleClose}
         aria-describedby="alert-dialog-slide-description"
       >
-        <DialogTitle>{"Delete medicine"}</DialogTitle>
+        <DialogTitle>{"Delete brand"}</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-slide-description">
-            Are you sure you want to delete this medicine?
+            Are you sure you want to delete this brand?
           </DialogContentText>
         </DialogContent>
         <DialogActions>

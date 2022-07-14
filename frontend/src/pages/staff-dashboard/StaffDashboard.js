@@ -21,6 +21,7 @@ import Profile from "./views/Profile/Profile";
 import CreateRoom from "./views/Receptionist/CreateRoom";
 import CreateAppointment from "./views/Receptionist/CreateAppointment";
 import CreateMedicine from "./views/Pharmacist/CreateMedicine";
+import CreateMedicineBrand from "./views/Pharmacist/CreateMedicineBrand";
 import { useAuthContext } from "./../../hooks/useAuthContext";
 import AddTest from "./views/LabAssistant/AddTest";
 import Tests from "./views/LabAssistant/TestsList";
@@ -35,6 +36,7 @@ import DepartmentList from "./views/Admin/DepartmentList/DepartmentList";
 import AppointemntList from "./views/Receptionist/AppointmentList";
 import Messages from "./views/Admin/Messages/Messages";
 import MedicineList from "./views/Pharmacist/MedicineList";
+import MedicineBrandList from "./views/Pharmacist/MedicineBrandList";
 
 const drawerWidth = 220;
 
@@ -153,6 +155,12 @@ function DashboardContent(props) {
                 option === "/createexaminations" && <Nurse />}
               {user.jobTitle === "pharmacist" && option === "/createmedicine" && (
                 <CreateMedicine />
+              )}
+                {user.jobTitle === "pharmacist" && option === "/createmedicinebrand" && (
+                <CreateMedicineBrand />
+              )}
+                 {user.jobTitle === "pharmacist" && option === "/medicinebrands" && (
+                <MedicineBrandList />
               )}
               {user.jobTitle === "pharmacist" && option === "/medicines" && (
                 <MedicineList />
